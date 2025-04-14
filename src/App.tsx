@@ -6,9 +6,15 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { MainLayout } from "./components/layout/MainLayout";
 import Index from "./pages/Index";
+import Dashboard from "./pages/Dashboard";
+import AgentDirectory from "./pages/AgentDirectory";
+import WorkflowBuilder from "./pages/WorkflowBuilder";
+import ActivityLog from "./pages/ActivityLog";
+import ApprovalsInbox from "./pages/ApprovalsInbox";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from "@/components/ui/navigation-menu";
-import { Activity, CircleUser, HardDrive, Home, Network, Settings } from "lucide-react";
+import { Activity, CircleUser, Clock, FileCheck, HardDrive, Home, Network, Settings as SettingsIcon } from "lucide-react";
 
 const queryClient = new QueryClient();
 
@@ -24,10 +30,10 @@ const App = () => (
                   {[
                     { icon: Home, label: "Dashboard", path: "/" },
                     { icon: Network, label: "Agents", path: "/agents" },
-                    { icon: Activity, label: "Activities", path: "/activities" },
-                    { icon: HardDrive, label: "Resources", path: "/resources" },
-                    { icon: CircleUser, label: "Users", path: "/users" },
-                    { icon: Settings, label: "Settings", path: "/settings" },
+                    { icon: Activity, label: "Workflows", path: "/workflows" },
+                    { icon: Clock, label: "Activity Log", path: "/activity" },
+                    { icon: FileCheck, label: "Approvals", path: "/approvals" },
+                    { icon: SettingsIcon, label: "Settings", path: "/settings" },
                   ].map((item) => (
                     <NavigationMenuItem key={item.label}>
                       <NavigationMenuLink asChild>
@@ -49,7 +55,12 @@ const App = () => (
             <Toaster />
             <Sonner />
             <Routes>
-              <Route path="/" element={<Index />} />
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/agents" element={<AgentDirectory />} />
+              <Route path="/workflows" element={<WorkflowBuilder />} />
+              <Route path="/activity" element={<ActivityLog />} />
+              <Route path="/approvals" element={<ApprovalsInbox />} />
+              <Route path="/settings" element={<Settings />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </MainLayout>
