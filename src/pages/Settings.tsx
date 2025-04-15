@@ -9,6 +9,7 @@ import { UserRoleSettings } from "@/components/settings/UserRoleSettings";
 import { AgentPoliciesSettings } from "@/components/settings/AgentPoliciesSettings";
 import { DataConnectionsSettings } from "@/components/settings/DataConnectionsSettings";
 import { NotificationSettings } from "@/components/settings/NotificationSettings";
+import { AnalyticsSettings } from "@/components/settings/AnalyticsSettings";
 
 export default function Settings() {
   return (
@@ -19,11 +20,12 @@ export default function Settings() {
       </div>
       
       <Tabs defaultValue="users">
-        <TabsList className="grid grid-cols-4 w-full mb-6">
+        <TabsList className="grid grid-cols-5 w-full mb-6">
           <TabsTrigger value="users">User Roles & Access</TabsTrigger>
           <TabsTrigger value="agents">Agent Policies</TabsTrigger>
           <TabsTrigger value="data">Data Connections</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
+          <TabsTrigger value="analytics">Analytics & Reports</TabsTrigger>
         </TabsList>
         
         <TabsContent value="users">
@@ -40,6 +42,10 @@ export default function Settings() {
         
         <TabsContent value="notifications">
           <NotificationSettings />
+        </TabsContent>
+        
+        <TabsContent value="analytics">
+          <AnalyticsSettings />
         </TabsContent>
       </Tabs>
     </div>
