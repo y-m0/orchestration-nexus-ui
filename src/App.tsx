@@ -22,7 +22,7 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
       <TooltipProvider>
         <div className="min-h-screen bg-background">
           <BrowserRouter>
@@ -56,8 +56,6 @@ const App = () => (
               </div>
             </nav>
             <MainLayout>
-              <Toaster />
-              <Sonner />
               <Routes>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/agents" element={<AgentDirectory />} />
@@ -67,6 +65,8 @@ const App = () => (
                 <Route path="/settings" element={<Settings />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
+              <Toaster />
+              <Sonner />
             </MainLayout>
           </BrowserRouter>
         </div>
