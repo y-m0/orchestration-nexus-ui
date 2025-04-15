@@ -1,6 +1,5 @@
-
+import { AlertTriangle, AlertCircle, Info } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Alert, AlertCircle, Info } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const notifications = [
@@ -52,7 +51,7 @@ export function NotificationsWidget() {
                     'bg-blue-500/10'}
                 `}>
                   {notification.type === 'error' && <AlertCircle className="h-4 w-4 text-red-500" />}
-                  {notification.type === 'warning' && <Alert className="h-4 w-4 text-yellow-500" />}
+                  {notification.type === 'warning' && <AlertTriangle className="h-4 w-4 text-yellow-500" />}
                   {notification.type === 'info' && <Info className="h-4 w-4 text-blue-500" />}
                 </div>
                 <div>
