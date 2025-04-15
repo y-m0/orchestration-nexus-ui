@@ -1,31 +1,29 @@
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import { UserRoleSettings } from "@/components/settings/UserRoleSettings";
 import { AgentPoliciesSettings } from "@/components/settings/AgentPoliciesSettings";
 import { DataConnectionsSettings } from "@/components/settings/DataConnectionsSettings";
 import { NotificationSettings } from "@/components/settings/NotificationSettings";
 import { AnalyticsSettings } from "@/components/settings/AnalyticsSettings";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export default function Settings() {
+  const isMobile = useIsMobile();
+  
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <h1 className="text-2xl font-semibold">Settings / Admin Panel</h1>
         <Button>Save Changes</Button>
       </div>
       
       <Tabs defaultValue="users">
-        <TabsList className="grid grid-cols-5 w-full mb-6">
-          <TabsTrigger value="users">User Roles & Access</TabsTrigger>
-          <TabsTrigger value="agents">Agent Policies</TabsTrigger>
-          <TabsTrigger value="data">Data Connections</TabsTrigger>
-          <TabsTrigger value="notifications">Notifications</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics & Reports</TabsTrigger>
+        <TabsList className={`grid ${isMobile ? 'grid-cols-2' : 'grid-cols-5'} w-full mb-6`}>
+          <TabsTrigger value="users" className="text-sm">User Roles</TabsTrigger>
+          <TabsTrigger value="agents" className="text-sm">Agents</TabsTrigger>
+          <TabsTrigger value="data" className="text-sm">Data</TabsTrigger>
+          <TabsTrigger value="notifications" className="text-sm">Notifications</TabsTrigger>
+          <TabsTrigger value="analytics" className="text-sm">Analytics</TabsTrigger>
         </TabsList>
         
         <TabsContent value="users">

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,8 +8,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, BarChart, Bar } from "recharts";
 import { Download, FileText, Filter } from "lucide-react";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
-// Mock data for demonstration
 const costData = [
   { month: "Jan", cost: 120, forecast: 130 },
   { month: "Feb", cost: 150, forecast: 160 },
@@ -30,6 +29,7 @@ const usageData = [
 
 export function AnalyticsSettings() {
   const [timeframe, setTimeframe] = useState("6m");
+  const isMobile = useIsMobile();
   
   const chartConfig = {
     cost: { label: "Actual Cost", color: "#8B5CF6" },
@@ -39,16 +39,16 @@ export function AnalyticsSettings() {
   return (
     <div className="space-y-6">
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
+        <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <CardTitle>Cost Analytics</CardTitle>
             <CardDescription>View and analyze your platform costs over time</CardDescription>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-2">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
+            <div className="flex items-center gap-2 w-full sm:w-auto">
               <Label htmlFor="timeframe" className="text-sm">Timeframe</Label>
               <Select defaultValue="6m" onValueChange={setTimeframe}>
-                <SelectTrigger id="timeframe" className="w-[120px]">
+                <SelectTrigger id="timeframe" className="w-full sm:w-[120px]">
                   <SelectValue placeholder="Select timeframe" />
                 </SelectTrigger>
                 <SelectContent>
@@ -59,7 +59,7 @@ export function AnalyticsSettings() {
                 </SelectContent>
               </Select>
             </div>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" className="w-full sm:w-auto">
               <Filter className="mr-2 h-4 w-4" />
               Filters
             </Button>
@@ -72,7 +72,7 @@ export function AnalyticsSettings() {
               <TabsTrigger value="breakdown">Cost Breakdown</TabsTrigger>
             </TabsList>
             <TabsContent value="chart">
-              <div className="h-[350px]">
+              <div className={`${isMobile ? 'h-[250px]' : 'h-[350px]'}`}>
                 <ChartContainer config={chartConfig}>
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={costData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
@@ -88,7 +88,7 @@ export function AnalyticsSettings() {
               </div>
             </TabsContent>
             <TabsContent value="breakdown">
-              <div className="h-[350px]">
+              <div className={`${isMobile ? 'h-[250px]' : 'h-[350px]'}`}>
                 <ChartContainer config={chartConfig}>
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={costData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
@@ -108,48 +108,50 @@ export function AnalyticsSettings() {
       </Card>
 
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
+        <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <CardTitle>Usage Reports</CardTitle>
             <CardDescription>Generate and export detailed usage reports</CardDescription>
           </div>
-          <Button>
+          <Button className="w-full sm:w-auto">
             <Download className="mr-2 h-4 w-4" />
             Export Report
           </Button>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Service</TableHead>
-                <TableHead>Usage</TableHead>
-                <TableHead className="text-right">Cost ($)</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {usageData.map((item) => (
-                <TableRow key={item.service}>
-                  <TableCell className="font-medium">{item.service}</TableCell>
-                  <TableCell>{item.count}</TableCell>
-                  <TableCell className="text-right">${item.cost.toLocaleString()}</TableCell>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Service</TableHead>
+                  <TableHead>Usage</TableHead>
+                  <TableHead className="text-right">Cost ($)</TableHead>
                 </TableRow>
-              ))}
-              <TableRow>
-                <TableCell className="font-bold">Total</TableCell>
-                <TableCell></TableCell>
-                <TableCell className="text-right font-bold">
-                  ${usageData.reduce((total, item) => total + item.cost, 0).toLocaleString()}
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {usageData.map((item) => (
+                  <TableRow key={item.service}>
+                    <TableCell className="font-medium">{item.service}</TableCell>
+                    <TableCell>{item.count}</TableCell>
+                    <TableCell className="text-right">${item.cost.toLocaleString()}</TableCell>
+                  </TableRow>
+                ))}
+                <TableRow>
+                  <TableCell className="font-bold">Total</TableCell>
+                  <TableCell></TableCell>
+                  <TableCell className="text-right font-bold">
+                    ${usageData.reduce((total, item) => total + item.cost, 0).toLocaleString()}
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </div>
 
           <div className="mt-6 space-y-4">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h3 className="text-lg font-medium">Available Reports</h3>
               <Select defaultValue="monthly">
-                <SelectTrigger className="w-[180px]">
+                <SelectTrigger className="w-full sm:w-[180px]">
                   <SelectValue placeholder="Report Type" />
                 </SelectTrigger>
                 <SelectContent>
