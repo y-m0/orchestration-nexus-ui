@@ -22,7 +22,7 @@ export function OnboardingProgress({ currentStep, totalSteps }: OnboardingProgre
       </div>
       <div className="w-full bg-white/10 rounded-full h-2">
         <div
-          className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-300 ease-in-out"
+          className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full transition-all duration-300 ease-in-out"
           style={{ width: `${progress}%` }}
         ></div>
       </div>

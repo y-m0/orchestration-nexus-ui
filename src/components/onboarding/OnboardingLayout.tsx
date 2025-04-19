@@ -1,6 +1,7 @@
 
 import React from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Link } from "react-router-dom";
 
 interface OnboardingLayoutProps {
   children: React.ReactNode;
@@ -23,9 +24,9 @@ export function OnboardingLayout({ children }: OnboardingLayoutProps) {
         <div className="flex items-center">
           <div className="text-gradient text-2xl font-bold">Orchestration Nexus</div>
           <div className="ml-auto">
-            <a href="/" className="text-sm text-white/70 hover:text-white transition-colors">
+            <Link to="/" className="text-sm text-white/70 hover:text-white transition-colors">
               Back to Home
-            </a>
+            </Link>
           </div>
         </div>
       </div>
