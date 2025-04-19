@@ -118,6 +118,11 @@
   .text-gradient {
     @apply bg-gradient-to-br from-white via-white/90 to-white/70 bg-clip-text text-transparent;
   }
+  
+  /* Light mode variants of cosmic styles */
+  .light-mode-gradient {
+    @apply bg-gradient-to-br from-primary via-primary/90 to-primary/70 bg-clip-text text-transparent;
+  }
 
   @keyframes shine {
     0% {
