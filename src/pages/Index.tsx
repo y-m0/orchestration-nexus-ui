@@ -1,10 +1,14 @@
 
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
 export default function Index() {
   return (
     <div className="min-h-screen bg-background">
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4">
         <div className="text-center max-w-3xl">
           <h1 className="text-4xl font-bold tracking-tight sm:text-6xl mb-6 text-foreground">
