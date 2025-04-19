@@ -44,22 +44,22 @@ export function StepCredentials({ formData, updateFormData, onNext, onBack }: St
     >
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="username" className="text-white">Username</Label>
+          <Label htmlFor="username">Username</Label>
           <div className="relative">
             <Input
               id="username"
               placeholder="Choose a username"
               value={formData.username}
               onChange={(e) => updateFormData({ username: e.target.value })}
-              className="bg-black/40 border-white/20 text-white pl-10 placeholder:text-gray-500"
+              className="pl-10"
             />
-            <User className="absolute left-3 top-2.5 h-5 w-5 text-gray-500" />
+            <User className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
           </div>
-          <p className="text-xs text-gray-400">Username must be at least 3 characters long</p>
+          <p className="text-xs text-muted-foreground">Username must be at least 3 characters long</p>
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="password" className="text-white">Password</Label>
+          <Label htmlFor="password">Password</Label>
           <div className="relative">
             <Input
               id="password"
@@ -67,15 +67,15 @@ export function StepCredentials({ formData, updateFormData, onNext, onBack }: St
               placeholder="Create a password"
               value={formData.password}
               onChange={(e) => updateFormData({ password: e.target.value })}
-              className="bg-black/40 border-white/20 text-white pl-10 placeholder:text-gray-500"
+              className="pl-10"
             />
-            <Lock className="absolute left-3 top-2.5 h-5 w-5 text-gray-500" />
+            <Lock className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
           </div>
-          <p className="text-xs text-gray-400">Password must be at least 8 characters long</p>
+          <p className="text-xs text-muted-foreground">Password must be at least 8 characters long</p>
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="confirmPassword" className="text-white">Confirm Password</Label>
+          <Label htmlFor="confirmPassword">Confirm Password</Label>
           <div className="relative">
             <Input
               id="confirmPassword"
@@ -83,16 +83,16 @@ export function StepCredentials({ formData, updateFormData, onNext, onBack }: St
               placeholder="Confirm your password"
               value={confirmPassword}
               onChange={handleConfirmPasswordChange}
-              className={`bg-black/40 border-white/20 text-white pl-10 placeholder:text-gray-500 ${
+              className={`pl-10 ${
                 !passwordsMatch && confirmPassword 
-                  ? "border-red-500 focus-visible:ring-red-500" 
+                  ? "border-destructive focus-visible:ring-destructive" 
                   : ""
               }`}
             />
-            <Lock className="absolute left-3 top-2.5 h-5 w-5 text-gray-500" />
+            <Lock className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
           </div>
           {!passwordsMatch && confirmPassword && (
-            <p className="text-xs text-red-500">Passwords do not match</p>
+            <p className="text-xs text-destructive">Passwords do not match</p>
           )}
         </div>
       </div>

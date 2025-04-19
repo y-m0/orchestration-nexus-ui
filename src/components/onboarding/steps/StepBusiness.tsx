@@ -32,28 +32,28 @@ export function StepBusiness({ formData, updateFormData, onNext, onBack }: StepB
     >
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="businessName" className="text-white">Business Name</Label>
+          <Label htmlFor="businessName">Business Name</Label>
           <div className="relative">
             <Input
               id="businessName"
               placeholder="Enter your business name"
               value={formData.businessName}
               onChange={(e) => updateFormData({ businessName: e.target.value })}
-              className="bg-black/40 border-white/20 text-white pl-10 placeholder:text-gray-500"
+              className="pl-10"
             />
-            <Building className="absolute left-3 top-2.5 h-5 w-5 text-gray-500" />
+            <Building className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
           </div>
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="businessDescription" className="text-white">Business Description</Label>
+          <Label htmlFor="businessDescription">Business Description</Label>
           <Textarea
             id="businessDescription"
             placeholder="Briefly describe what your business does"
             value={formData.businessDescription}
             onChange={(e) => updateFormData({ businessDescription: e.target.value })}
             rows={4}
-            className="bg-black/40 border-white/20 text-white resize-none placeholder:text-gray-500"
+            className="resize-none"
           />
         </div>
       </div>

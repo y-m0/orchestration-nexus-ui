@@ -47,21 +47,19 @@ export function StepBusinessType({ formData, updateFormData, onNext, onBack }: S
           return (
             <Card
               key={type.id}
-              className={`relative cursor-pointer transition-all p-6 hover:bg-white/5 flex flex-col items-center justify-center gap-4 
-                ${isSelected 
-                  ? "bg-gradient-to-b from-blue-900/40 to-purple-900/40 border-blue-400" 
-                  : "bg-black/20 border-white/10"}`}
+              className={`relative cursor-pointer transition-all p-6 flex flex-col items-center justify-center gap-4 
+                ${isSelected ? "bg-primary/10 border-primary" : "hover:bg-accent"}`}
               onClick={() => handleSelect(type.id)}
             >
-              <div className={`rounded-full p-4 ${isSelected ? "bg-blue-600/30" : "bg-black/30"}`}>
-                <Icon className={`h-8 w-8 ${isSelected ? "text-blue-400" : "text-gray-400"}`} />
+              <div className={`rounded-full p-4 ${isSelected ? "bg-primary/20" : "bg-secondary"}`}>
+                <Icon className={`h-8 w-8 ${isSelected ? "text-primary" : "text-muted-foreground"}`} />
               </div>
               <div className="text-center">
-                <h3 className="text-lg font-medium text-white">{type.label}</h3>
+                <h3 className="text-lg font-medium">{type.label}</h3>
               </div>
               
               {isSelected && (
-                <div className="absolute top-2 right-2 w-3 h-3 rounded-full bg-blue-500"></div>
+                <div className="absolute top-2 right-2 w-3 h-3 rounded-full bg-primary"></div>
               )}
             </Card>
           );

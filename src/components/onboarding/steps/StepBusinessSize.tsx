@@ -50,21 +50,20 @@ export function StepBusinessSize({ formData, updateFormData, onNext, onBack }: S
               key={size.id}
               className={`p-4 rounded-md border cursor-pointer transition-all
                 ${isSelected 
-                  ? "bg-gradient-to-r from-blue-900/40 to-purple-900/40 border-blue-400" 
-                  : "bg-black/20 border-white/10 hover:bg-white/5"}`}
+                  ? "bg-primary/10 border-primary" 
+                  : "hover:bg-accent"}`}
               onClick={() => handleSelect(size.id)}
             >
               <div className="flex items-center">
                 <Checkbox 
                   checked={isSelected}
                   onCheckedChange={() => handleSelect(size.id)}
-                  className="border-white/50 data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
                 />
                 <div className="ml-3">
-                  <Label htmlFor={size.id} className="text-white font-medium cursor-pointer">
+                  <Label htmlFor={size.id} className="font-medium cursor-pointer">
                     {size.label}
                   </Label>
-                  <p className="text-gray-400 text-sm">{size.description}</p>
+                  <p className="text-muted-foreground text-sm">{size.description}</p>
                 </div>
               </div>
             </div>
