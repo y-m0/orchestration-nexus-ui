@@ -20,7 +20,14 @@ export function OnboardingLayout({ children }: OnboardingLayoutProps) {
 
       {/* Logo and branding */}
       <div className="relative z-10 pt-6 pb-4 px-6">
-        <div className="text-gradient text-2xl font-bold">Orchestration Nexus</div>
+        <div className="flex items-center">
+          <div className="text-gradient text-2xl font-bold">Orchestration Nexus</div>
+          <div className="ml-auto">
+            <a href="/" className="text-sm text-white/70 hover:text-white transition-colors">
+              Back to Home
+            </a>
+          </div>
+        </div>
       </div>
       
       {/* Main content */}
