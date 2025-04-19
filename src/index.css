@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -112,6 +113,10 @@
     background-size: 600px 600px;
     opacity: 0.2;
     animation: shine 10s linear infinite;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-br from-white via-white/90 to-white/70 bg-clip-text text-transparent;
   }
 
   @keyframes shine {

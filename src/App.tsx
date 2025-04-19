@@ -1,14 +1,14 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "next-themes";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link, Navigate } from "react-router-dom";
 import { MainLayout } from "./components/layout/MainLayout";
 import { ThemeToggle } from "./components/theme/ThemeToggle";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
+import Login from "./pages/Login";
 import AgentDirectory from "./pages/AgentDirectory";
 import WorkflowBuilder from "./pages/WorkflowBuilder";
 import ActivityLog from "./pages/ActivityLog";
@@ -27,7 +27,7 @@ const Navigation = () => (
       <NavigationMenu>
         <NavigationMenuList>
           {[
-            { icon: Home, label: "Dashboard", path: "/" },
+            { icon: Home, label: "Dashboard", path: "/dashboard" },
             { icon: Network, label: "Agent Directory", path: "/agent-directory" },
             { icon: Activity, label: "Workflows", path: "/workflows" },
             { icon: Clock, label: "Activity Log", path: "/activity" },
@@ -53,6 +53,15 @@ const Navigation = () => (
   </nav>
 );
 
+// Protected Route component
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+  return <>{children}</>;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
@@ -60,86 +69,83 @@ const App = () => (
         <div className="min-h-screen bg-background">
           <BrowserRouter>
             <Routes>
-              {/* Onboarding route without the main app layout */}
+              {/* Public routes */}
+              <Route path="/" element={<Index />} />
+              <Route path="/login" element={<Login />} />
               <Route path="/onboarding" element={<Onboarding />} />
               
-              {/* Landing page */}
-              <Route path="/" element={
-                <MainLayout>
-                  <Index />
-                </MainLayout>
-              } />
-              
-              {/* Main app routes */}
+              {/* Protected dashboard routes */}
               <Route path="/dashboard" element={
-                <>
-                  <Navigation />
-                  <MainLayout>
-                    <Dashboard />
-                    <Toaster />
-                    <Sonner />
-                  </MainLayout>
-                </>
+                <ProtectedRoute>
+                  <>
+                    <Navigation />
+                    <MainLayout>
+                      <Dashboard />
+                    </MainLayout>
+                  </>
+                </ProtectedRoute>
               } />
               
               <Route path="/agent-directory" element={
-                <>
-                  <Navigation />
-                  <MainLayout>
-                    <AgentDirectory />
-                    <Toaster />
-                    <Sonner />
-                  </MainLayout>
-                </>
+                <ProtectedRoute>
+                  <>
+                    <Navigation />
+                    <MainLayout>
+                      <AgentDirectory />
+                    </MainLayout>
+                  </>
+                </ProtectedRoute>
               } />
               
               <Route path="/workflows" element={
-                <>
-                  <Navigation />
-                  <MainLayout>
-                    <WorkflowBuilder />
-                    <Toaster />
-                    <Sonner />
-                  </MainLayout>
-                </>
+                <ProtectedRoute>
+                  <>
+                    <Navigation />
+                    <MainLayout>
+                      <WorkflowBuilder />
+                    </MainLayout>
+                  </>
+                </ProtectedRoute>
               } />
               
               <Route path="/activity" element={
-                <>
-                  <Navigation />
-                  <MainLayout>
-                    <ActivityLog />
-                    <Toaster />
-                    <Sonner />
-                  </MainLayout>
-                </>
+                <ProtectedRoute>
+                  <>
+                    <Navigation />
+                    <MainLayout>
+                      <ActivityLog />
+                    </MainLayout>
+                  </>
+                </ProtectedRoute>
               } />
               
               <Route path="/approvals" element={
-                <>
-                  <Navigation />
-                  <MainLayout>
-                    <ApprovalsInbox />
-                    <Toaster />
-                    <Sonner />
-                  </MainLayout>
-                </>
+                <ProtectedRoute>
+                  <>
+                    <Navigation />
+                    <MainLayout>
+                      <ApprovalsInbox />
+                    </MainLayout>
+                  </>
+                </ProtectedRoute>
               } />
               
               <Route path="/settings" element={
-                <>
-                  <Navigation />
-                  <MainLayout>
-                    <Settings />
-                    <Toaster />
-                    <Sonner />
-                  </MainLayout>
-                </>
+                <ProtectedRoute>
+                  <>
+                    <Navigation />
+                    <MainLayout>
+                      <Settings />
+                    </MainLayout>
+                  </>
+                </ProtectedRoute>
               } />
               
               {/* 404 route */}
               <Route path="*" element={<NotFound />} />
             </Routes>
+            <Toaster />
+            <Sonner />
           </BrowserRouter>
         </div>
       </TooltipProvider>

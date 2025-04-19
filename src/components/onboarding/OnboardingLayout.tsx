@@ -18,9 +18,9 @@ export function OnboardingLayout({ children }: OnboardingLayoutProps) {
         <div className="stars-lg"></div>
       </div>
 
-      {/* Logo placeholder */}
+      {/* Logo and branding */}
       <div className="relative z-10 pt-6 pb-4 px-6">
-        <div className="text-white text-2xl font-bold">Orchestration Nexus</div>
+        <div className="text-gradient text-2xl font-bold">Orchestration Nexus</div>
       </div>
       
       {/* Main content */}
