@@ -75,3 +75,52 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Cosmic theme styles */
+@layer utilities {
+  .stars-sm {
+    @apply absolute w-full h-full;
+    background-image: radial-gradient(2px 2px at 20px 30px, #fff, rgba(0, 0, 0, 0)), 
+                      radial-gradient(2px 2px at 40px 70px, #fff, rgba(0, 0, 0, 0)), 
+                      radial-gradient(2px 2px at 50px 160px, #fff, rgba(0, 0, 0, 0)), 
+                      radial-gradient(2px 2px at 90px 40px, #fff, rgba(0, 0, 0, 0)), 
+                      radial-gradient(2px 2px at 130px 80px, #fff, rgba(0, 0, 0, 0)), 
+                      radial-gradient(2px 2px at 160px 120px, #fff, rgba(0, 0, 0, 0));
+    background-repeat: repeat;
+    background-size: 200px 200px;
+    opacity: 0.3;
+    animation: shine 4s linear infinite;
+  }
+
+  .stars-md {
+    @apply absolute w-full h-full;
+    background-image: radial-gradient(3px 3px at 120px 100px, rgba(255, 255, 255, 0.8), rgba(0, 0, 0, 0)), 
+                      radial-gradient(3px 3px at 250px 170px, rgba(255, 255, 255, 0.8), rgba(0, 0, 0, 0)), 
+                      radial-gradient(3px 3px at 350px 280px, rgba(255, 255, 255, 0.8), rgba(0, 0, 0, 0)), 
+                      radial-gradient(3px 3px at 400px 230px, rgba(255, 255, 255, 0.8), rgba(0, 0, 0, 0));
+    background-repeat: repeat;
+    background-size: 400px 400px;
+    opacity: 0.4;
+    animation: shine 6s linear infinite;
+  }
+
+  .stars-lg {
+    @apply absolute w-full h-full;
+    background-image: radial-gradient(4px 4px at 600px 200px, rgba(255, 255, 255, 0.7), rgba(0, 0, 0, 0)), 
+                      radial-gradient(4px 4px at 400px 400px, rgba(255, 255, 255, 0.7), rgba(0, 0, 0, 0)), 
+                      radial-gradient(4px 4px at 100px 300px, rgba(255, 255, 255, 0.7), rgba(0, 0, 0, 0));
+    background-repeat: repeat;
+    background-size: 600px 600px;
+    opacity: 0.2;
+    animation: shine 10s linear infinite;
+  }
+
+  @keyframes shine {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(-200px);
+    }
+  }
+}
