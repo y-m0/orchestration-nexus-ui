@@ -40,7 +40,7 @@ const App = () => (
                         <NavigationMenuList>
                           {[
                             { icon: Home, label: "Dashboard", path: "/" },
-                            { icon: Network, label: "Agents", path: "/agents" },
+                            { icon: Network, label: "Agent Directory", path: "/agent-directory" },
                             { icon: Activity, label: "Workflows", path: "/workflows" },
                             { icon: Clock, label: "Activity Log", path: "/activity" },
                             { icon: FileCheck, label: "Approvals", path: "/approvals" },
@@ -66,11 +66,12 @@ const App = () => (
                   <MainLayout>
                     <Routes>
                       <Route index element={<Dashboard />} />
-                      <Route path="/agents" element={<AgentDirectory />} />
+                      <Route path="/agent-directory" element={<AgentDirectory />} />
                       <Route path="/workflows" element={<WorkflowBuilder />} />
                       <Route path="/activity" element={<ActivityLog />} />
                       <Route path="/approvals" element={<ApprovalsInbox />} />
                       <Route path="/settings" element={<Settings />} />
+                      <Route path="*" element={<NotFound />} />
                     </Routes>
                     <Toaster />
                     <Sonner />
