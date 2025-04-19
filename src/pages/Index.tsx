@@ -1,4 +1,7 @@
 
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+
 export default function Index() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0a192f] to-black relative overflow-hidden">
