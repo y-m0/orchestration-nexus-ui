@@ -32,7 +32,7 @@ const App = () => (
               <Route path="/onboarding" element={<Onboarding />} />
               
               {/* Main app routes with layout */}
-              <Route path="/" element={
+              <Route path="/*" element={
                 <>
                   <nav className="border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
                     <div className="flex h-14 items-center px-4">
@@ -66,11 +66,11 @@ const App = () => (
                   <MainLayout>
                     <Routes>
                       <Route index element={<Dashboard />} />
-                      <Route path="/agent-directory" element={<AgentDirectory />} />
-                      <Route path="/workflows" element={<WorkflowBuilder />} />
-                      <Route path="/activity" element={<ActivityLog />} />
-                      <Route path="/approvals" element={<ApprovalsInbox />} />
-                      <Route path="/settings" element={<Settings />} />
+                      <Route path="agent-directory" element={<AgentDirectory />} />
+                      <Route path="workflows" element={<WorkflowBuilder />} />
+                      <Route path="activity" element={<ActivityLog />} />
+                      <Route path="approvals" element={<ApprovalsInbox />} />
+                      <Route path="settings" element={<Settings />} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                     <Toaster />
