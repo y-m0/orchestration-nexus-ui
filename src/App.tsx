@@ -21,6 +21,38 @@ import { Activity, CircleUser, Clock, FileCheck, HardDrive, Home, Network, Setti
 
 const queryClient = new QueryClient();
 
+const Navigation = () => (
+  <nav className="border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <div className="flex h-14 items-center px-4">
+      <NavigationMenu>
+        <NavigationMenuList>
+          {[
+            { icon: Home, label: "Dashboard", path: "/" },
+            { icon: Network, label: "Agent Directory", path: "/agent-directory" },
+            { icon: Activity, label: "Workflows", path: "/workflows" },
+            { icon: Clock, label: "Activity Log", path: "/activity" },
+            { icon: FileCheck, label: "Approvals", path: "/approvals" },
+            { icon: SettingsIcon, label: "Settings", path: "/settings" },
+          ].map((item) => (
+            <NavigationMenuItem key={item.label}>
+              <NavigationMenuLink asChild>
+                <Link 
+                  to={item.path} 
+                  className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
+                >
+                  <item.icon className="h-4 w-4 mr-2" />
+                  <span>{item.label}</span>
+                </Link>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+          ))}
+        </NavigationMenuList>
+      </NavigationMenu>
+      <ThemeToggle />
+    </div>
+  </nav>
+);
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
@@ -31,48 +63,74 @@ const App = () => (
               {/* Onboarding route without the main app layout */}
               <Route path="/onboarding" element={<Onboarding />} />
               
-              {/* Main app routes with layout */}
-              <Route path="/*" element={
+              {/* Landing page */}
+              <Route path="/" element={
+                <MainLayout>
+                  <Index />
+                </MainLayout>
+              } />
+              
+              {/* Main app routes */}
+              <Route path="/dashboard" element={
                 <>
-                  <nav className="border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-                    <div className="flex h-14 items-center px-4">
-                      <NavigationMenu>
-                        <NavigationMenuList>
-                          {[
-                            { icon: Home, label: "Dashboard", path: "/" },
-                            { icon: Network, label: "Agent Directory", path: "/agent-directory" },
-                            { icon: Activity, label: "Workflows", path: "/workflows" },
-                            { icon: Clock, label: "Activity Log", path: "/activity" },
-                            { icon: FileCheck, label: "Approvals", path: "/approvals" },
-                            { icon: SettingsIcon, label: "Settings", path: "/settings" },
-                          ].map((item) => (
-                            <NavigationMenuItem key={item.label}>
-                              <NavigationMenuLink asChild>
-                                <Link 
-                                  to={item.path} 
-                                  className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
-                                >
-                                  <item.icon className="h-4 w-4 mr-2" />
-                                  <span>{item.label}</span>
-                                </Link>
-                              </NavigationMenuLink>
-                            </NavigationMenuItem>
-                          ))}
-                        </NavigationMenuList>
-                      </NavigationMenu>
-                      <ThemeToggle />
-                    </div>
-                  </nav>
+                  <Navigation />
                   <MainLayout>
-                    <Routes>
-                      <Route index element={<Dashboard />} />
-                      <Route path="agent-directory" element={<AgentDirectory />} />
-                      <Route path="workflows" element={<WorkflowBuilder />} />
-                      <Route path="activity" element={<ActivityLog />} />
-                      <Route path="approvals" element={<ApprovalsInbox />} />
-                      <Route path="settings" element={<Settings />} />
-                      <Route path="*" element={<NotFound />} />
-                    </Routes>
+                    <Dashboard />
+                    <Toaster />
+                    <Sonner />
+                  </MainLayout>
+                </>
+              } />
+              
+              <Route path="/agent-directory" element={
+                <>
+                  <Navigation />
+                  <MainLayout>
+                    <AgentDirectory />
+                    <Toaster />
+                    <Sonner />
+                  </MainLayout>
+                </>
+              } />
+              
+              <Route path="/workflows" element={
+                <>
+                  <Navigation />
+                  <MainLayout>
+                    <WorkflowBuilder />
+                    <Toaster />
+                    <Sonner />
+                  </MainLayout>
+                </>
+              } />
+              
+              <Route path="/activity" element={
+                <>
+                  <Navigation />
+                  <MainLayout>
+                    <ActivityLog />
+                    <Toaster />
+                    <Sonner />
+                  </MainLayout>
+                </>
+              } />
+              
+              <Route path="/approvals" element={
+                <>
+                  <Navigation />
+                  <MainLayout>
+                    <ApprovalsInbox />
+                    <Toaster />
+                    <Sonner />
+                  </MainLayout>
+                </>
+              } />
+              
+              <Route path="/settings" element={
+                <>
+                  <Navigation />
+                  <MainLayout>
+                    <Settings />
                     <Toaster />
                     <Sonner />
                   </MainLayout>
