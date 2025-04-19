@@ -1,12 +1,13 @@
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { User, Lock } from "lucide-react";
+import { User, Lock, ArrowLeft } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -33,60 +34,80 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <form onSubmit={handleLogin} className="p-6 space-y-6">
-          <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold text-foreground mb-2">Welcome Back</h1>
-            <p className="text-muted-foreground">Please sign in to continue</p>
-          </div>
+    <div className="min-h-screen bg-background flex flex-col">
+      {/* Header with back button and theme toggle */}
+      <div className="w-full p-4 flex items-center border-b border-border/40">
+        <Button variant="ghost" size="icon" asChild>
+          <Link to="/">
+            <ArrowLeft className="h-5 w-5" />
+            <span className="sr-only">Back to home</span>
+          </Link>
+        </Button>
+        <div className="flex-1 text-center font-medium">Orchestration Nexus</div>
+        <ThemeToggle />
+      </div>
 
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="username">Username</Label>
-              <div className="relative">
-                <Input
-                  id="username"
-                  type="text"
-                  placeholder="Enter your username"
-                  value={credentials.username}
-                  onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
-                />
-                <User className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
+      {/* Login form */}
+      <div className="flex-1 flex items-center justify-center p-4">
+        <Card className="w-full max-w-md">
+          <form onSubmit={handleLogin} className="p-6 space-y-6">
+            <div className="text-center mb-8">
+              <h1 className="text-2xl font-bold text-foreground mb-2">Welcome Back</h1>
+              <p className="text-muted-foreground">Please sign in to continue</p>
+            </div>
+
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="username">Username</Label>
+                <div className="relative">
+                  <div className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground">
+                    <User className="h-5 w-5" />
+                  </div>
+                  <Input
+                    id="username"
+                    type="text"
+                    placeholder="Enter your username"
+                    value={credentials.username}
+                    onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
+                    className="pl-10"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <div className="relative">
+                  <div className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground">
+                    <Lock className="h-5 w-5" />
+                  </div>
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="Enter your password"
+                    value={credentials.password}
+                    onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+                    className="pl-10"
+                  />
+                </div>
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <div className="relative">
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Enter your password"
-                  value={credentials.password}
-                  onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
-                />
-                <Lock className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
-              </div>
-            </div>
-          </div>
-
-          <Button type="submit" className="w-full">
-            Sign In
-          </Button>
-
-          <div className="text-center">
-            <Button 
-              variant="link" 
-              type="button"
-              onClick={() => navigate("/onboarding")}
-            >
-              Don't have an account? Sign up
+            <Button type="submit" className="w-full">
+              Sign In
             </Button>
-          </div>
-        </form>
-      </Card>
+
+            <div className="text-center">
+              <Button 
+                variant="link" 
+                type="button"
+                onClick={() => navigate("/onboarding")}
+              >
+                Don't have an account? Sign up
+              </Button>
+            </div>
+          </form>
+        </Card>
+      </div>
     </div>
   );
 }
-
