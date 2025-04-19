@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { User, Lock, ArrowLeft } from "lucide-react";
+import { User, Lock, Home } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
@@ -39,7 +39,7 @@ export default function Login() {
       <div className="w-full p-4 flex items-center border-b border-border/40">
         <Button variant="ghost" size="icon" asChild>
           <Link to="/">
-            <ArrowLeft className="h-5 w-5" />
+            <Home className="h-5 w-5" />
             <span className="sr-only">Back to home</span>
           </Link>
         </Button>
