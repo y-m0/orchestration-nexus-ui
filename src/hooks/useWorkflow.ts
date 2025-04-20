@@ -113,6 +113,9 @@ export const useWorkflow = () => {
         nodeId: node.id,
         status: 'running' as const,
         startTime: new Date().toISOString(),
+        output: undefined as any,
+        error: undefined as string | undefined,
+        endTime: undefined as string | undefined
       };
       
       newRun.nodeRuns.push(nodeRun);
@@ -124,10 +127,10 @@ export const useWorkflow = () => {
         
         if (success) {
           updateNodeStatus(node.id, 'completed');
-          nodeRun.status = 'completed';
+          nodeRun.status = 'completed' as const;
         } else {
           updateNodeStatus(node.id, 'error');
-          nodeRun.status = 'error';
+          nodeRun.status = 'error' as const;
           nodeRun.error = 'Simulated error during execution';
           
           // Stop the workflow on error
