@@ -1,6 +1,7 @@
 
 import { useState } from 'react';
-import { WorkflowNode, WorkflowConnection } from '@/types/workflow';
+import { WorkflowNode, WorkflowConnection, Workflow } from '@/types/workflow';
+import { predefinedWorkflows } from '@/data/workflows';
 
 export const useWorkflow = () => {
   const [nodes, setNodes] = useState<WorkflowNode[]>([]);
@@ -30,11 +31,20 @@ export const useWorkflow = () => {
     }]);
   };
 
+  const loadWorkflow = (workflowId: string) => {
+    const workflow = predefinedWorkflows.find(wf => wf.id === workflowId);
+    if (workflow) {
+      setNodes(workflow.nodes);
+      setConnections(workflow.connections);
+    }
+  };
+
   return {
     nodes,
     connections,
     addNode,
     moveNode,
     connectNodes,
+    loadWorkflow,
   };
 };
