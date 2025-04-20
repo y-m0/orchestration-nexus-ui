@@ -1,139 +1,126 @@
-
 import { useCallback } from 'react';
-import { useToast } from '@/hooks/use-toast';
-import { WorkflowNode, WorkflowRun } from '@/types/workflow';
+import { useStore } from '@/lib/store';
+import { toast } from '@/components/ui/use-toast';
 
-export const useWorkflowControl = (
-  isRunning: boolean,
-  setIsRunning: (isRunning: boolean) => void,
-  updateNodeStatus: (id: string, status: WorkflowNode['status']) => void,
-  setWorkflowRuns: (runs: WorkflowRun[] | ((prev: WorkflowRun[]) => WorkflowRun[])) => void
-) => {
-  const { toast } = useToast();
+interface Activity {
+  id: string;
+  type: string;
+  timestamp: string;
+  details: string;
+}
+
+interface UseWorkflowControlProps {
+  isRunning: boolean;
+  setIsRunning: (running: boolean) => void;
+  updateNodeStatus: (nodeId: string, status: string) => void;
+  setWorkflowRuns: (runs: any[]) => void;
+}
+
+export const useWorkflowControl = ({
+  isRunning,
+  setIsRunning,
+  updateNodeStatus,
+  setWorkflowRuns,
+}: UseWorkflowControlProps) => {
+  const { setActivities } = useStore();
 
   const stopWorkflow = useCallback(() => {
-    if (!isRunning) return;
-    
     setIsRunning(false);
+    // Update all nodes to stopped status
+    updateNodeStatus('*', 'stopped');
     
-    // Mark all running nodes as error
-    setWorkflowRuns((prev: WorkflowRun[]) => {
-      if (prev.length === 0) return prev;
-      
-      const lastRun = prev[prev.length - 1];
-      if (lastRun && lastRun.status === 'running') {
-        // Add activity log entry
-        console.log(`Activity Log: Workflow ${lastRun.workflowId} stopped manually at ${new Date().toLocaleTimeString()}`);
-        
-        return [
-          ...prev.slice(0, prev.length - 1),
-          { ...lastRun, status: 'error', endTime: new Date().toISOString() }
-        ];
-      }
-      return prev;
-    });
-    
+    // Add to activity log
+    setActivities((prev: Activity[]) => [...prev, {
+      id: Date.now().toString(),
+      type: 'workflow_stopped',
+      timestamp: new Date().toISOString(),
+      details: 'Workflow was manually stopped'
+    }]);
+
     toast({
-      title: "Workflow stopped",
-      description: "Execution was manually stopped",
+      title: 'Workflow Stopped',
+      description: 'The workflow has been stopped successfully',
     });
-  }, [isRunning, setIsRunning, setWorkflowRuns, toast]);
-  
-  const approveHumanTask = useCallback((nodeId: string) => {
-    if (!isRunning) return;
-    
-    // Log the approval action
-    console.log(`Activity Log: Task ${nodeId} approved at ${new Date().toLocaleTimeString()}`);
-    
-    // Update node status
-    updateNodeStatus(nodeId, 'completed');
-    
-    // Update workflow run to reflect the approval
-    setWorkflowRuns((prev: WorkflowRun[]) => {
-      if (prev.length === 0) return prev;
-      
-      const updatedRuns = [...prev];
-      const currentRun = updatedRuns[updatedRuns.length - 1];
-      
-      if (currentRun && currentRun.status === 'running') {
-        const updatedNodeRuns = currentRun.nodeRuns.map(nodeRun => {
-          if (nodeRun.nodeId === nodeId) {
-            return {
-              ...nodeRun,
-              status: 'completed' as 'idle' | 'running' | 'completed' | 'error',
-              endTime: new Date().toISOString(),
-              output: { approved: true }
-            };
-          }
-          return nodeRun;
-        });
-        
-        updatedRuns[updatedRuns.length - 1] = {
-          ...currentRun,
-          nodeRuns: updatedNodeRuns
-        };
-      }
-      
-      return updatedRuns;
-    });
-    
-    toast({
-      title: "Task approved",
-      description: "Workflow execution will continue",
-    });
-  }, [isRunning, updateNodeStatus, setWorkflowRuns, toast]);
-  
-  const rejectHumanTask = useCallback((nodeId: string) => {
-    if (!isRunning) return;
-    
-    // Log the rejection action
-    console.log(`Activity Log: Task ${nodeId} rejected at ${new Date().toLocaleTimeString()}`);
-    
-    // Update node status
-    updateNodeStatus(nodeId, 'error');
-    
-    // Update workflow run to reflect the rejection
-    setWorkflowRuns((prev: WorkflowRun[]) => {
-      if (prev.length === 0) return prev;
-      
-      const updatedRuns = [...prev];
-      const currentRun = updatedRuns[updatedRuns.length - 1];
-      
-      if (currentRun && currentRun.status === 'running') {
-        const updatedNodeRuns = currentRun.nodeRuns.map(nodeRun => {
-          if (nodeRun.nodeId === nodeId) {
-            return {
-              ...nodeRun,
-              status: 'error' as 'idle' | 'running' | 'completed' | 'error',
-              endTime: new Date().toISOString(),
-              error: "Task was rejected by user"
-            };
-          }
-          return nodeRun;
-        });
-        
-        updatedRuns[updatedRuns.length - 1] = {
-          ...currentRun,
-          nodeRuns: updatedNodeRuns,
-          status: 'error',
-          endTime: new Date().toISOString()
-        };
-      }
-      
-      return updatedRuns;
-    });
-    
+  }, [setIsRunning, updateNodeStatus, setActivities]);
+
+  const pauseWorkflow = useCallback(() => {
     setIsRunning(false);
+    // Update all nodes to paused status
+    updateNodeStatus('*', 'paused');
     
+    // Add to activity log
+    setActivities((prev: Activity[]) => [...prev, {
+      id: Date.now().toString(),
+      type: 'workflow_paused',
+      timestamp: new Date().toISOString(),
+      details: 'Workflow was paused'
+    }]);
+
     toast({
-      variant: "destructive",
-      title: "Task rejected",
-      description: "Workflow execution was stopped",
+      title: 'Workflow Paused',
+      description: 'The workflow has been paused',
     });
-  }, [isRunning, updateNodeStatus, setIsRunning, setWorkflowRuns, toast]);
+  }, [setIsRunning, updateNodeStatus, setActivities]);
+
+  const resumeWorkflow = useCallback(() => {
+    setIsRunning(true);
+    // Update all nodes to running status
+    updateNodeStatus('*', 'running');
+    
+    // Add to activity log
+    setActivities((prev: Activity[]) => [...prev, {
+      id: Date.now().toString(),
+      type: 'workflow_resumed',
+      timestamp: new Date().toISOString(),
+      details: 'Workflow was resumed'
+    }]);
+
+    toast({
+      title: 'Workflow Resumed',
+      description: 'The workflow has been resumed',
+    });
+  }, [setIsRunning, updateNodeStatus, setActivities]);
+
+  const approveHumanTask = useCallback((taskId: string) => {
+    // Update the specific task node to approved status
+    updateNodeStatus(taskId, 'approved');
+    
+    // Add to activity log
+    setActivities((prev: Activity[]) => [...prev, {
+      id: Date.now().toString(),
+      type: 'task_approved',
+      timestamp: new Date().toISOString(),
+      details: `Task ${taskId} was approved`
+    }]);
+
+    toast({
+      title: 'Task Approved',
+      description: 'The task has been approved successfully',
+    });
+  }, [updateNodeStatus, setActivities]);
+
+  const rejectHumanTask = useCallback((taskId: string) => {
+    // Update the specific task node to rejected status
+    updateNodeStatus(taskId, 'rejected');
+    
+    // Add to activity log
+    setActivities((prev: Activity[]) => [...prev, {
+      id: Date.now().toString(),
+      type: 'task_rejected',
+      timestamp: new Date().toISOString(),
+      details: `Task ${taskId} was rejected`
+    }]);
+
+    toast({
+      title: 'Task Rejected',
+      description: 'The task has been rejected',
+    });
+  }, [updateNodeStatus, setActivities]);
 
   return {
     stopWorkflow,
+    pauseWorkflow,
+    resumeWorkflow,
     approveHumanTask,
     rejectHumanTask,
   };

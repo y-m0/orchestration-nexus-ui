@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -8,30 +7,47 @@ import { Card } from "@/components/ui/card";
 import { User, Lock, Home } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
+import { useAuth } from "@/lib/auth";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Login() {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [credentials, setCredentials] = useState({ username: "", password: "" });
+  const { login, loading } = useAuth();
+  const [credentials, setCredentials] = useState({ email: "", password: "" });
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // For demo purposes - replace with actual auth
-    if (credentials.username && credentials.password) {
-      localStorage.setItem("isAuthenticated", "true");
+    try {
+      await login(credentials.email, credentials.password);
       toast({
         title: "Success",
         description: "Successfully logged in",
       });
       navigate("/dashboard");
-    } else {
+    } catch (error) {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Please enter valid credentials",
+        description: error instanceof Error ? error.message : "Failed to login",
       });
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Card className="w-full max-w-md p-6">
+          <Skeleton className="h-8 w-3/4 mx-auto mb-4" />
+          <Skeleton className="h-4 w-1/2 mx-auto mb-8" />
+          <div className="space-y-4">
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -58,18 +74,19 @@ export default function Login() {
 
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="username">Username</Label>
+                <Label htmlFor="email">Email</Label>
                 <div className="relative">
                   <div className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground">
                     <User className="h-5 w-5" />
                   </div>
                   <Input
-                    id="username"
-                    type="text"
-                    placeholder="Enter your username"
-                    value={credentials.username}
-                    onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
+                    id="email"
+                    type="email"
+                    placeholder="Enter your email"
+                    value={credentials.email}
+                    onChange={(e) => setCredentials({ ...credentials, email: e.target.value })}
                     className="pl-10"
+                    required
                   />
                 </div>
               </div>
@@ -87,13 +104,14 @@ export default function Login() {
                     value={credentials.password}
                     onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
                     className="pl-10"
+                    required
                   />
                 </div>
               </div>
             </div>
 
-            <Button type="submit" className="w-full">
-              Sign In
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "Signing in..." : "Sign In"}
             </Button>
 
             <div className="text-center">

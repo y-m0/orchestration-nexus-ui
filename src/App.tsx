@@ -3,7 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "next-themes";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Link, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link, Navigate } from "react-router-dom";
 import { MainLayout } from "./components/layout/MainLayout";
 import { ThemeToggle } from "./components/theme/ThemeToggle";
 import Index from "./pages/Index";
@@ -18,6 +18,10 @@ import NotFound from "./pages/NotFound";
 import Onboarding from "./pages/Onboarding";
 import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from "@/components/ui/navigation-menu";
 import { Activity, CircleUser, Clock, FileCheck, HardDrive, Home, Network, Settings as SettingsIcon } from "lucide-react";
+import { ErrorBoundary } from './components/ui/ErrorBoundary'
+import { AuthProvider, useAuth } from './lib/auth'
+import { useStore } from './lib/store'
+import { ActivityTest } from '@/components/test/ActivityTest';
 
 const queryClient = new QueryClient();
 
@@ -53,104 +57,118 @@ const Navigation = () => (
   </nav>
 );
 
-// Protected Route component
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-  return <>{children}</>;
-};
+function PrivateRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated, loading } = useAuth()
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-      <TooltipProvider>
-        <div className="min-h-screen bg-background">
-          <BrowserRouter>
-            <Routes>
-              {/* Public routes */}
-              <Route path="/" element={<Index />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/onboarding" element={<Onboarding />} />
-              
-              {/* Protected dashboard routes */}
-              <Route path="/dashboard" element={
-                <ProtectedRoute>
-                  <>
-                    <Navigation />
-                    <MainLayout>
-                      <Dashboard />
-                    </MainLayout>
-                  </>
-                </ProtectedRoute>
-              } />
-              
-              <Route path="/agent-directory" element={
-                <ProtectedRoute>
-                  <>
-                    <Navigation />
-                    <MainLayout>
-                      <AgentDirectory />
-                    </MainLayout>
-                  </>
-                </ProtectedRoute>
-              } />
-              
-              <Route path="/workflows" element={
-                <ProtectedRoute>
-                  <>
-                    <Navigation />
-                    <MainLayout>
-                      <WorkflowBuilder />
-                    </MainLayout>
-                  </>
-                </ProtectedRoute>
-              } />
-              
-              <Route path="/activity" element={
-                <ProtectedRoute>
-                  <>
-                    <Navigation />
-                    <MainLayout>
-                      <ActivityLog />
-                    </MainLayout>
-                  </>
-                </ProtectedRoute>
-              } />
-              
-              <Route path="/approvals" element={
-                <ProtectedRoute>
-                  <>
-                    <Navigation />
-                    <MainLayout>
-                      <ApprovalsInbox />
-                    </MainLayout>
-                  </>
-                </ProtectedRoute>
-              } />
-              
-              <Route path="/settings" element={
-                <ProtectedRoute>
-                  <>
-                    <Navigation />
-                    <MainLayout>
-                      <Settings />
-                    </MainLayout>
-                  </>
-                </ProtectedRoute>
-              } />
-              
-              {/* 404 route */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-            <Toaster />
-            <Sonner />
-          </BrowserRouter>
-        </div>
-      </TooltipProvider>
-    </ThemeProvider>
-  </QueryClientProvider>
-);
+  if (loading) {
+    return <div>Loading...</div>
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" />
+  }
+
+  return <>{children}</>
+}
+
+const App = () => {
+  const { settings } = useStore()
+
+  return (
+    <ErrorBoundary>
+      <AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+            <TooltipProvider>
+              <div className={settings.theme === 'dark' ? 'dark' : ''}>
+                <Router>
+                  <Routes>
+                    {/* Public routes */}
+                    <Route path="/" element={<Index />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/onboarding" element={<Onboarding />} />
+                    
+                    {/* Protected dashboard routes */}
+                    <Route path="/dashboard" element={
+                      <PrivateRoute>
+                        <>
+                          <Navigation />
+                          <MainLayout>
+                            <Dashboard />
+                          </MainLayout>
+                        </>
+                      </PrivateRoute>
+                    } />
+                    
+                    <Route path="/agent-directory" element={
+                      <PrivateRoute>
+                        <>
+                          <Navigation />
+                          <MainLayout>
+                            <AgentDirectory />
+                          </MainLayout>
+                        </>
+                      </PrivateRoute>
+                    } />
+                    
+                    <Route path="/workflows" element={
+                      <PrivateRoute>
+                        <>
+                          <Navigation />
+                          <MainLayout>
+                            <WorkflowBuilder />
+                          </MainLayout>
+                        </>
+                      </PrivateRoute>
+                    } />
+                    
+                    <Route path="/activity" element={
+                      <PrivateRoute>
+                        <>
+                          <Navigation />
+                          <MainLayout>
+                            <ActivityLog />
+                          </MainLayout>
+                        </>
+                      </PrivateRoute>
+                    } />
+                    
+                    <Route path="/approvals" element={
+                      <PrivateRoute>
+                        <>
+                          <Navigation />
+                          <MainLayout>
+                            <ApprovalsInbox />
+                          </MainLayout>
+                        </>
+                      </PrivateRoute>
+                    } />
+                    
+                    <Route path="/settings" element={
+                      <PrivateRoute>
+                        <>
+                          <Navigation />
+                          <MainLayout>
+                            <Settings />
+                          </MainLayout>
+                        </>
+                      </PrivateRoute>
+                    } />
+                    
+                    {/* 404 route */}
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                  <Toaster />
+                  <Sonner />
+                </Router>
+                <ActivityTest />
+              </div>
+            </TooltipProvider>
+          </ThemeProvider>
+        </QueryClientProvider>
+      </AuthProvider>
+    </ErrorBoundary>
+  )
+}
 
 export default App;
