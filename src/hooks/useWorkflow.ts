@@ -111,7 +111,7 @@ export const useWorkflow = () => {
       // Mock node execution with random success/failure
       const nodeRun = {
         nodeId: node.id,
-        status: 'running' as const,
+        status: 'running' as 'idle' | 'running' | 'completed' | 'error',
         startTime: new Date().toISOString(),
         output: undefined as any,
         error: undefined as string | undefined,
