@@ -2,7 +2,17 @@
 import { Bot, AlertCircle, Clock } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
-export function AgentStatusCards() {
+interface AgentStatusCardsProps {
+  activeAgents?: number;
+  idleAgents?: number;
+  errorAgents?: number;
+}
+
+export function AgentStatusCards({ 
+  activeAgents = 16, 
+  idleAgents = 5, 
+  errorAgents = 3 
+}: AgentStatusCardsProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       <Card className="border-l-4 border-l-green-500">
@@ -11,7 +21,7 @@ export function AgentStatusCards() {
             <Bot className="h-6 w-6 text-green-500" />
           </div>
           <div>
-            <p className="font-semibold text-2xl">16</p>
+            <p className="font-semibold text-2xl">{activeAgents}</p>
             <p className="text-sm text-muted-foreground">Active Agents</p>
           </div>
         </CardContent>
@@ -23,7 +33,7 @@ export function AgentStatusCards() {
             <Clock className="h-6 w-6 text-yellow-500" />
           </div>
           <div>
-            <p className="font-semibold text-2xl">5</p>
+            <p className="font-semibold text-2xl">{idleAgents}</p>
             <p className="text-sm text-muted-foreground">Idle Agents</p>
           </div>
         </CardContent>
@@ -35,7 +45,7 @@ export function AgentStatusCards() {
             <AlertCircle className="h-6 w-6 text-red-500" />
           </div>
           <div>
-            <p className="font-semibold text-2xl">3</p>
+            <p className="font-semibold text-2xl">{errorAgents}</p>
             <p className="text-sm text-muted-foreground">Error State</p>
           </div>
         </CardContent>

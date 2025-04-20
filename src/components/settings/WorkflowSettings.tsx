@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { applyWorkflowSettings } from "@/components/workflow/WorkflowIntegrations";
 
 export function WorkflowSettings() {
   const [autoApprove, setAutoApprove] = useState(false);
@@ -31,6 +32,21 @@ export function WorkflowSettings() {
   const [notifyAdmin, setNotifyAdmin] = useState(true);
   const [settingsSaved, setSettingsSaved] = useState(false);
   const { toast } = useToast();
+
+  // Load saved settings if they exist
+  useEffect(() => {
+    // Check if we have stored settings
+    if (typeof window !== 'undefined' && window.workflowDefaults) {
+      const settings = window.workflowDefaults;
+      
+      setAutoApprove(settings.autoApprove);
+      setErrorRetries(settings.errorRetries.toString());
+      setLoggingLevel(settings.loggingLevel);
+      setConcurrentRuns(settings.concurrentRuns.toString());
+      setDefaultTimeout(settings.defaultTimeout.toString());
+      setNotifyAdmin(settings.notifyAdmin);
+    }
+  }, []);
 
   // Set default workflow settings in global state
   useEffect(() => {
@@ -49,9 +65,16 @@ export function WorkflowSettings() {
       window.workflowDefaults = workflowDefaults;
     }
     
-    // Log for debugging
+    // Apply settings to any active workflows
     if (settingsSaved) {
       console.log("Workflow defaults updated:", workflowDefaults);
+      
+      // Apply to all current and future workflows
+      const mockWorkflowId = 'workflow-all';
+      applyWorkflowSettings(mockWorkflowId);
+      
+      // Log to activity log
+      console.log(`Activity Log: Workflow settings updated at ${new Date().toLocaleTimeString()}`);
     }
   }, [autoApprove, errorRetries, loggingLevel, concurrentRuns, defaultTimeout, notifyAdmin, settingsSaved]);
   
@@ -63,6 +86,13 @@ export function WorkflowSettings() {
       title: "Settings saved",
       description: "Workflow settings have been updated successfully",
     });
+    
+    // Broadcast the settings change event for components to listen to
+    if (typeof window !== 'undefined') {
+      // Use localStorage event as a simple pub-sub mechanism
+      localStorage.setItem('workflow_settings_updated', Date.now().toString());
+      // This triggers a storage event that components can listen to
+    }
     
     // Log the action to activity log
     console.log(`Activity Log: Workflow settings updated at ${new Date().toLocaleTimeString()}`);
@@ -76,6 +106,13 @@ export function WorkflowSettings() {
           Configure how workflows run throughout the platform
         </p>
       </div>
+      
+      {settingsSaved && (
+        <div className="bg-green-50 text-green-800 p-3 rounded-md text-sm flex items-center mb-4">
+          <Check className="h-4 w-4 mr-2" />
+          Settings applied to all workflows. New runs will use these settings.
+        </div>
+      )}
       
       <Card>
         <CardHeader>
@@ -234,3 +271,6 @@ export function WorkflowSettings() {
     </div>
   );
 }
+
+// Import missing Check icon at the top of file
+import { Check } from "lucide-react";

@@ -10,6 +10,7 @@ interface WorkflowActivityLoggerProps {
 export function WorkflowActivityLogger({ onLogActivity }: WorkflowActivityLoggerProps) {
   const { workflowRuns, currentWorkflow } = useWorkflow();
   const [previousRunsCount, setPreviousRunsCount] = useState<number>(0);
+  const [previousRunStatuses, setPreviousRunStatuses] = useState<Record<string, string>>({});
   
   useEffect(() => {
     // If there's a new run, log it
@@ -27,12 +28,84 @@ export function WorkflowActivityLogger({ onLogActivity }: WorkflowActivityLogger
         onLogActivity(logMessage);
       }
       
-      // Log to console as fallback
-      console.log("Workflow Activity:", logMessage);
+      // Log to console for activity log integration
+      console.log(`Activity Log: Workflow ${currentWorkflow.id} ${latestRun.status} at ${timestamp}`);
       
       setPreviousRunsCount(workflowRuns.length);
     }
-  }, [workflowRuns, previousRunsCount, currentWorkflow, onLogActivity]);
+    
+    // Check for status changes in existing runs
+    const newRunStatuses: Record<string, string> = {};
+    
+    workflowRuns.forEach(run => {
+      newRunStatuses[run.id] = run.status;
+      
+      // If status changed, log it
+      if (previousRunStatuses[run.id] && previousRunStatuses[run.id] !== run.status) {
+        const timestamp = new Date().toLocaleTimeString();
+        const statusText = run.status === 'completed' ? 'completed successfully' : 
+                           run.status === 'error' ? 'failed' : 'is running';
+        
+        const logMessage = `[${timestamp}] • Workflow ${run.workflowId} ${statusText}`;
+        
+        if (onLogActivity) {
+          onLogActivity(logMessage);
+        }
+        
+        // Log to console for activity log integration
+        console.log(`Activity Log: Workflow ${run.workflowId} ${statusText} at ${timestamp}`);
+      }
+    });
+    
+    setPreviousRunStatuses(newRunStatuses);
+  }, [workflowRuns, previousRunsCount, previousRunStatuses, currentWorkflow, onLogActivity]);
+  
+  // Also log workflow creation and modifications
+  useEffect(() => {
+    if (currentWorkflow) {
+      // Create a simple event listener for workflow-related actions
+      const handleStorageEvent = (event: StorageEvent) => {
+        if (event.key?.startsWith('workflow_')) {
+          const action = event.key.split('_')[1];
+          const workflowId = event.key.split('_')[2];
+          
+          if (action && workflowId) {
+            const timestamp = new Date().toLocaleTimeString();
+            let actionText = '';
+            
+            switch (action) {
+              case 'created':
+                actionText = 'was created';
+                break;
+              case 'updated':
+                actionText = 'was updated';
+                break;
+              case 'deleted':
+                actionText = 'was deleted';
+                break;
+              default:
+                return;
+            }
+            
+            const logMessage = `[${timestamp}] • Workflow ${workflowId} ${actionText}`;
+            
+            if (onLogActivity) {
+              onLogActivity(logMessage);
+            }
+            
+            // Log to console for activity log integration
+            console.log(`Activity Log: Workflow ${workflowId} ${actionText} at ${timestamp}`);
+          }
+        }
+      };
+      
+      window.addEventListener('storage', handleStorageEvent);
+      
+      return () => {
+        window.removeEventListener('storage', handleStorageEvent);
+      };
+    }
+  }, [currentWorkflow, onLogActivity]);
   
   // This is a "silent" component that doesn't render anything visible
   return null;
