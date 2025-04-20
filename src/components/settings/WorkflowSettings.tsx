@@ -44,8 +44,10 @@ export function WorkflowSettings() {
       notifyAdmin,
     };
     
-    // Store defaults in a global location
-    window.workflowDefaults = workflowDefaults;
+    // Store defaults in window object
+    if (typeof window !== 'undefined') {
+      window.workflowDefaults = workflowDefaults;
+    }
     
     // Log for debugging
     if (settingsSaved) {

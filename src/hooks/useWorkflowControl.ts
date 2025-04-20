@@ -60,7 +60,7 @@ export const useWorkflowControl = (
           if (nodeRun.nodeId === nodeId) {
             return {
               ...nodeRun,
-              status: 'completed',
+              status: 'completed' as 'idle' | 'running' | 'completed' | 'error',
               endTime: new Date().toISOString(),
               output: { approved: true }
             };
@@ -104,7 +104,7 @@ export const useWorkflowControl = (
           if (nodeRun.nodeId === nodeId) {
             return {
               ...nodeRun,
-              status: 'error',
+              status: 'error' as 'idle' | 'running' | 'completed' | 'error',
               endTime: new Date().toISOString(),
               error: "Task was rejected by user"
             };
