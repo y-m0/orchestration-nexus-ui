@@ -1,12 +1,13 @@
 
 import { useState } from "react";
-import { ChevronRight, Play, Square, Clock } from "lucide-react";
+import { ChevronRight, Play, Square, Clock, Calendar, Activity, User } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { WorkflowCanvas } from "./WorkflowCanvas";
 import { cn } from "@/lib/utils";
+import { useWorkflow } from "@/hooks/useWorkflow";
 
 interface WorkflowCardProps {
   title: string;
@@ -17,6 +18,9 @@ interface WorkflowCardProps {
   successRate?: number;
   avgRunTime?: string;
   workflowId: string;
+  lastModifiedBy?: string;
+  updatedAt?: string;
+  totalRuns?: number;
 }
 
 export function WorkflowCard({ 
@@ -27,13 +31,21 @@ export function WorkflowCard({
   status = "idle", 
   successRate, 
   avgRunTime,
-  workflowId
+  workflowId,
+  lastModifiedBy,
+  updatedAt,
+  totalRuns = 0
 }: WorkflowCardProps) {
-  const [isRunning, setIsRunning] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const { runWorkflow, stopWorkflow, isRunning, loadWorkflow } = useWorkflow();
   
-  const handleRun = () => {
-    setIsRunning(!isRunning);
+  const handleToggleRun = () => {
+    if (isRunning) {
+      stopWorkflow();
+    } else {
+      loadWorkflow(workflowId);
+      runWorkflow();
+    }
   };
   
   const complexityColors = {
@@ -57,6 +69,12 @@ export function WorkflowCard({
             <div>
               <h3 className="text-lg font-semibold">{title}</h3>
               <p className="text-muted-foreground text-sm mb-2">{description}</p>
+              {lastModifiedBy && updatedAt && (
+                <p className="text-xs text-muted-foreground flex items-center">
+                  <User className="h-3 w-3 mr-1" />
+                  Last modified by {lastModifiedBy} • {updatedAt}
+                </p>
+              )}
             </div>
             <Badge className={complexityColors[complexity]}>
               {complexity.charAt(0).toUpperCase() + complexity.slice(1)} Complexity
@@ -82,13 +100,19 @@ export function WorkflowCard({
                 Avg. Run: {avgRunTime}
               </Badge>
             )}
+            {totalRuns > 0 && (
+              <Badge variant="outline" className="bg-background flex gap-1 items-center">
+                <Activity className="h-3 w-3" />
+                {totalRuns} Runs
+              </Badge>
+            )}
           </div>
           
           <div className="flex justify-between items-center">
             <Button variant="outline" onClick={() => setIsOpen(true)}>
               Open Workflow <ChevronRight className="h-4 w-4 ml-1" />
             </Button>
-            <Button onClick={handleRun}>
+            <Button onClick={handleToggleRun}>
               {isRunning ? (
                 <>
                   <Square className="h-4 w-4 mr-1" /> Stop
@@ -104,29 +128,41 @@ export function WorkflowCard({
       </Card>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="max-w-3xl h-[80vh] flex flex-col">
+        <DialogContent className="max-w-4xl h-[80vh] flex flex-col">
           <DialogHeader>
-            <DialogTitle>{title}</DialogTitle>
+            <DialogTitle className="flex justify-between items-center">
+              <span>{title}</span>
+              <Badge className={statusColors[status]}>
+                {status.charAt(0).toUpperCase() + status.slice(1)}
+              </Badge>
+            </DialogTitle>
+            <p className="text-sm text-muted-foreground">{description}</p>
           </DialogHeader>
           <div className="flex-1 overflow-auto p-2 bg-muted/20">
             <WorkflowCanvas workflowId={workflowId} />
           </div>
-          <div className="flex justify-end gap-2 mt-4">
-            <Button variant="outline" onClick={() => setIsOpen(false)}>
-              Close
-            </Button>
-            <Button onClick={handleRun}>
-              {isRunning ? (
-                <>
-                  <Square className="h-4 w-4 mr-1" /> Stop
-                </>
-              ) : (
-                <>
-                  <Play className="h-4 w-4 mr-1" /> Run
-                </>
-              )}
-            </Button>
-          </div>
+          <DialogFooter className="flex justify-between items-center border-t pt-2">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Calendar className="h-4 w-4" />
+              <span>Last Run: {updatedAt || 'Never'}</span>
+            </div>
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => setIsOpen(false)}>
+                Close
+              </Button>
+              <Button onClick={handleToggleRun}>
+                {isRunning ? (
+                  <>
+                    <Square className="h-4 w-4 mr-1" /> Stop
+                  </>
+                ) : (
+                  <>
+                    <Play className="h-4 w-4 mr-1" /> Run
+                  </>
+                )}
+              </Button>
+            </div>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </>
