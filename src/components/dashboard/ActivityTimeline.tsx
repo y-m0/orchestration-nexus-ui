@@ -1,4 +1,3 @@
-
 import { Activity } from "lucide-react";
 import { WorkflowRun } from "@/types/workflow";
 import { useWorkflow } from "@/hooks/useWorkflow";
@@ -25,25 +24,21 @@ export function ActivityTimeline({ items: propItems, maxItems = 5, onItemClick }
   const [items, setItems] = useState<TimelineItem[]>(propItems || []);
   
   useEffect(() => {
-    // If items are provided as props, use those
     if (propItems) {
       setItems(propItems);
       return;
     }
     
-    // Listen for workflow activity logs from console
     const consoleLog = console.log;
     const activityLogs: TimelineItem[] = [];
     
     console.log = function(message: any, ...optionalParams: any[]) {
       consoleLog.apply(console, [message, ...optionalParams]);
       
-      // Check if this is an activity log message
       if (typeof message === 'string' && message.startsWith('Activity Log:')) {
         const logMessage = message.substring('Activity Log:'.length).trim();
         const timestamp = new Date().toISOString();
         
-        // Extract workflow ID and status from log message if possible
         const workflowMatch = logMessage.match(/Workflow\s+([a-zA-Z0-9-]+)/i);
         const workflowId = workflowMatch ? workflowMatch[1] : undefined;
         
@@ -63,12 +58,10 @@ export function ActivityTimeline({ items: propItems, maxItems = 5, onItemClick }
           workflowId
         });
         
-        // Update the timeline with the new log
         setItems(prev => [...activityLogs, ...prev].slice(0, maxItems));
       }
     };
     
-    // Generate items from workflow runs
     const generatedItems: TimelineItem[] = workflowRuns
       .slice()
       .reverse()
@@ -89,7 +82,6 @@ export function ActivityTimeline({ items: propItems, maxItems = 5, onItemClick }
     
     setItems([...activityLogs, ...generatedItems].slice(0, maxItems));
     
-    // Cleanup
     return () => {
       console.log = consoleLog;
     };
@@ -99,38 +91,37 @@ export function ActivityTimeline({ items: propItems, maxItems = 5, onItemClick }
     if (onItemClick) {
       onItemClick(item);
     } else {
-      // Default behavior - maybe open the workflow detail view
       console.log("Activity item clicked:", item);
     }
   };
   
   return (
-    <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100">
+    <div className="bg-card rounded-lg p-6 shadow-sm border border-border dark:bg-[#1A1F2C] dark:border-[#403E43]">
       <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-        <Activity className="h-5 w-5 text-[#9b87f5]" />
-        Recent Activity
+        <Activity className="h-5 w-5 text-primary dark:text-[#9b87f5]" />
+        <span className="dark:text-foreground">Recent Activity</span>
       </h2>
       <div className="space-y-4">
         {items.length > 0 ? (
           items.map((item) => (
             <div 
               key={item.id} 
-              className="flex gap-4 cursor-pointer hover:bg-slate-50 p-1 rounded transition-colors"
+              className="flex gap-4 cursor-pointer hover:bg-accent/10 dark:hover:bg-accent/20 p-1 rounded transition-colors"
               onClick={() => handleItemClick(item)}
             >
               <div className={`w-2 h-2 mt-2 rounded-full ${
-                item.status === 'success' ? 'bg-green-500' :
-                item.status === 'pending' ? 'bg-yellow-500' : 'bg-red-500'
+                item.status === 'success' ? 'bg-green-500 dark:bg-green-400' :
+                item.status === 'pending' ? 'bg-yellow-500 dark:bg-yellow-400' : 'bg-red-500 dark:bg-red-400'
               }`} />
               <div className="flex-1">
-                <p className="font-medium">{item.title}</p>
-                <p className="text-sm text-gray-600">{item.description}</p>
-                <p className="text-xs text-gray-500 mt-1">{item.timestamp}</p>
+                <p className="font-medium dark:text-foreground">{item.title}</p>
+                <p className="text-sm text-muted-foreground dark:text-muted-foreground/80">{item.description}</p>
+                <p className="text-xs text-muted-foreground dark:text-muted-foreground/60 mt-1">{item.timestamp}</p>
               </div>
             </div>
           ))
         ) : (
-          <p className="text-center text-muted-foreground py-4">No recent activity</p>
+          <p className="text-center text-muted-foreground dark:text-muted-foreground/70 py-4">No recent activity</p>
         )}
       </div>
     </div>
