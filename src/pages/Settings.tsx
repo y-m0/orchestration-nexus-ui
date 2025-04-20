@@ -5,6 +5,7 @@ import { NotificationSettings } from "@/components/settings/NotificationSettings
 import { AgentPoliciesSettings } from "@/components/settings/AgentPoliciesSettings";
 import { DataConnectionsSettings } from "@/components/settings/DataConnectionsSettings";
 import { AnalyticsSettings } from "@/components/settings/AnalyticsSettings";
+import { WorkflowSettings } from "@/components/settings/WorkflowSettings";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function Settings() {
@@ -27,6 +28,7 @@ export default function Settings() {
               <TabsTrigger value="user-roles">User Roles</TabsTrigger>
               <TabsTrigger value="notifications">Notifications</TabsTrigger>
               <TabsTrigger value="agent-policies">Agent Policies</TabsTrigger>
+              <TabsTrigger value="workflows">Workflows</TabsTrigger>
               <TabsTrigger value="data-connections">Data Connections</TabsTrigger>
               <TabsTrigger value="analytics">Analytics</TabsTrigger>
             </TabsList>
@@ -41,6 +43,10 @@ export default function Settings() {
             
             <TabsContent value="agent-policies">
               <AgentPoliciesSettings />
+            </TabsContent>
+            
+            <TabsContent value="workflows">
+              <WorkflowSettings />
             </TabsContent>
             
             <TabsContent value="data-connections">

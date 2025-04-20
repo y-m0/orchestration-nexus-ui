@@ -5,6 +5,8 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { WorkflowApprovals } from "@/components/approvals/WorkflowApprovals";
+import { useNavigate } from 'react-router-dom';
 
 const mockApprovals = [
   {
@@ -44,6 +46,7 @@ const mockApprovals = [
 export default function ApprovalsInbox() {
   const [searchQuery, setSearchQuery] = useState("");
   const [view, setView] = useState("cards");
+  const navigate = useNavigate();
   
   // Filter approvals based on search query
   const filteredApprovals = mockApprovals.filter(approval => 
@@ -51,6 +54,10 @@ export default function ApprovalsInbox() {
     approval.action.toLowerCase().includes(searchQuery.toLowerCase()) ||
     approval.context.toLowerCase().includes(searchQuery.toLowerCase())
   );
+  
+  const navigateToWorkflow = (workflowId: string, nodeId: string) => {
+    navigate(`/workflows?id=${workflowId}&node=${nodeId}`);
+  };
   
   return (
     <div className="space-y-6">
@@ -73,6 +80,9 @@ export default function ApprovalsInbox() {
           </TabsList>
         </Tabs>
       </div>
+      
+      {/* Workflow approvals section */}
+      <WorkflowApprovals onViewWorkflow={navigateToWorkflow} />
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {filteredApprovals.map((approval) => (
@@ -113,11 +123,19 @@ export default function ApprovalsInbox() {
         ))}
       </div>
       
-      {filteredApprovals.length === 0 && (
+      {filteredApprovals.length === 0 && !searchQuery && (
         <div className="flex flex-col items-center justify-center py-12 text-center">
           <CheckCircle className="h-12 w-12 text-muted-foreground mb-4" />
           <h3 className="text-xl font-medium mb-2">No pending approvals</h3>
           <p className="text-muted-foreground">You're all caught up! Check back later for new items.</p>
+        </div>
+      )}
+      
+      {filteredApprovals.length === 0 && searchQuery && (
+        <div className="flex flex-col items-center justify-center py-12 text-center">
+          <Search className="h-12 w-12 text-muted-foreground mb-4" />
+          <h3 className="text-xl font-medium mb-2">No matching approvals</h3>
+          <p className="text-muted-foreground">Try adjusting your search terms</p>
         </div>
       )}
     </div>

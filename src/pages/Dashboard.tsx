@@ -6,6 +6,7 @@ import { AgentStatusCards } from "@/components/dashboard/AgentStatusCards";
 import { NotificationsWidget } from "@/components/dashboard/NotificationsWidget";
 import { TaskCompletionChart } from "@/components/dashboard/TaskCompletionChart";
 import { QuickFilters } from "@/components/dashboard/QuickFilters";
+import { WorkflowInsights } from "@/components/dashboard/WorkflowInsights";
 
 export default function Dashboard() {
   return (
@@ -29,9 +30,7 @@ export default function Dashboard() {
             </CardContent>
           </Card>
         </div>
-        <div>
-          <NotificationsWidget />
-        </div>
+        <WorkflowInsights />
       </div>
     </div>
   );
