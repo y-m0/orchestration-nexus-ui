@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { 
   Card, 
   CardContent, 
@@ -20,6 +20,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
 
 export function WorkflowSettings() {
   const [autoApprove, setAutoApprove] = useState(false);
@@ -28,6 +29,42 @@ export function WorkflowSettings() {
   const [concurrentRuns, setConcurrentRuns] = useState("3");
   const [defaultTimeout, setDefaultTimeout] = useState("60");
   const [notifyAdmin, setNotifyAdmin] = useState(true);
+  const [settingsSaved, setSettingsSaved] = useState(false);
+  const { toast } = useToast();
+
+  // Set default workflow settings in global state
+  useEffect(() => {
+    // This would typically connect to a global state or API
+    const workflowDefaults = {
+      autoApprove,
+      errorRetries: parseInt(errorRetries),
+      loggingLevel,
+      concurrentRuns: parseInt(concurrentRuns),
+      defaultTimeout: parseInt(defaultTimeout),
+      notifyAdmin,
+    };
+    
+    // Store defaults in a global location
+    window.workflowDefaults = workflowDefaults;
+    
+    // Log for debugging
+    if (settingsSaved) {
+      console.log("Workflow defaults updated:", workflowDefaults);
+    }
+  }, [autoApprove, errorRetries, loggingLevel, concurrentRuns, defaultTimeout, notifyAdmin, settingsSaved]);
+  
+  const handleSaveSettings = () => {
+    // This would typically save to an API or global state
+    setSettingsSaved(true);
+    
+    toast({
+      title: "Settings saved",
+      description: "Workflow settings have been updated successfully",
+    });
+    
+    // Log the action to activity log
+    console.log(`Activity Log: Workflow settings updated at ${new Date().toLocaleTimeString()}`);
+  };
 
   return (
     <div className="space-y-6">
@@ -190,7 +227,7 @@ export function WorkflowSettings() {
       </Card>
       
       <div className="flex justify-end">
-        <Button>Save Changes</Button>
+        <Button onClick={handleSaveSettings}>Save Changes</Button>
       </div>
     </div>
   );

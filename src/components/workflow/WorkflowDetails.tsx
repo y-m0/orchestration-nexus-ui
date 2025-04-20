@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { 
   AlertCircle, 
   Clock, 
@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { WorkflowRun, Workflow, WorkflowNode } from "@/types/workflow";
 import { useWorkflow } from "@/hooks/useWorkflow";
+import { useToast } from "@/hooks/use-toast";
 
 interface WorkflowDetailsProps {
   workflowId: string;
@@ -33,8 +34,10 @@ export function WorkflowDetails({ workflowId, onClose }: WorkflowDetailsProps) {
     isRunning, 
     runWorkflow, 
     stopWorkflow,
-    approveHumanTask
+    approveHumanTask,
+    rejectHumanTask
   } = useWorkflow();
+  const { toast } = useToast();
   
   // Filter runs for this workflow
   const filteredRuns = workflowRuns.filter(run => run.workflowId === workflowId);
@@ -43,8 +46,78 @@ export function WorkflowDetails({ workflowId, onClose }: WorkflowDetailsProps) {
   const humanApprovalNodes = nodes.filter(node => 
     node.type === 'human' && node.requiresApproval && node.status === 'running'
   );
+
+  // Track workflow runs for activity logging
+  useEffect(() => {
+    if (filteredRuns.length > 0) {
+      const latestRun = filteredRuns[filteredRuns.length - 1];
+      
+      // Log to the activity log system when a run changes status
+      if (latestRun.status === 'completed') {
+        console.log(`Activity Log: Workflow ${workflowId} completed successfully at ${new Date().toLocaleTimeString()}`);
+      } else if (latestRun.status === 'error') {
+        console.log(`Activity Log: Workflow ${workflowId} failed at ${new Date().toLocaleTimeString()}`);
+      }
+    }
+  }, [filteredRuns, workflowId]);
+  
+  // Apply workflow settings
+  useEffect(() => {
+    // Get workflow settings from global state
+    const workflowDefaults = (window as any).workflowDefaults;
+    
+    if (workflowDefaults && currentWorkflow) {
+      // Apply default settings to current workflow
+      console.log(`Applied workflow settings to "${currentWorkflow.title}":`, workflowDefaults);
+    }
+  }, [currentWorkflow]);
   
   if (!currentWorkflow) return <div>No workflow selected</div>;
+
+  const handleApproveTask = (nodeId: string) => {
+    approveHumanTask(nodeId);
+    
+    // Push notification to activity log
+    console.log(`Activity Log: Human task in workflow ${workflowId} approved at ${new Date().toLocaleTimeString()}`);
+    
+    // Remove approval from approvals inbox if applicable
+    // This would integrate with a global approvals system
+  };
+  
+  const handleRejectTask = (nodeId: string) => {
+    rejectHumanTask(nodeId);
+    
+    // Push notification to activity log
+    console.log(`Activity Log: Human task in workflow ${workflowId} rejected at ${new Date().toLocaleTimeString()}`);
+    
+    // Remove approval from approvals inbox if applicable
+    // This would integrate with a global approvals system
+  };
+  
+  const handleRunWorkflow = () => {
+    runWorkflow();
+    
+    // Log to activity log
+    console.log(`Activity Log: Workflow ${workflowId} started manually at ${new Date().toLocaleTimeString()}`);
+    
+    // Check for any missing agents
+    const missingAgents = nodes
+      .filter(node => node.type === 'agent' && node.agentId)
+      .filter(node => {
+        // Check if agent exists in directory
+        // This is simplified - in a real app we'd check against agent directory
+        const mockAgentDirectory = ["1", "2", "3", "4", "5"];
+        return !mockAgentDirectory.includes(node.agentId || "");
+      });
+    
+    if (missingAgents.length > 0) {
+      toast({
+        variant: "destructive",
+        title: "Warning: Missing Agents",
+        description: `${missingAgents.length} agent(s) in this workflow are not in the directory.`,
+      });
+    }
+  };
 
   return (
     <div className="flex flex-col h-full">
@@ -241,12 +314,13 @@ export function WorkflowDetails({ workflowId, onClose }: WorkflowDetailsProps) {
                       variant="outline" 
                       size="sm" 
                       className="text-red-500 border-red-200 hover:bg-red-50"
+                      onClick={() => handleRejectTask(node.id)}
                     >
                       Reject
                     </Button>
                     <Button 
                       size="sm"
-                      onClick={() => approveHumanTask(node.id)}
+                      onClick={() => handleApproveTask(node.id)}
                     >
                       Approve
                     </Button>
@@ -285,7 +359,7 @@ export function WorkflowDetails({ workflowId, onClose }: WorkflowDetailsProps) {
           ) : (
             <Button 
               size="sm"
-              onClick={runWorkflow}
+              onClick={handleRunWorkflow}
             >
               Run Workflow
             </Button>

@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, Filter, MoreHorizontal } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { useLocation } from "react-router-dom";
 
 const mockAgents = [
   {
@@ -58,6 +59,29 @@ const mockAgents = [
 
 export default function AgentDirectory() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [highlightedAgentId, setHighlightedAgentId] = useState<string | null>(null);
+  const location = useLocation();
+  
+  // Get agentId from query parameters
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const agentId = params.get('agentId');
+    if (agentId) {
+      setHighlightedAgentId(agentId);
+      
+      // Scroll to the agent row
+      setTimeout(() => {
+        const agentRow = document.getElementById(`agent-row-${agentId}`);
+        if (agentRow) {
+          agentRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          agentRow.classList.add('bg-primary/5');
+          setTimeout(() => {
+            agentRow.classList.remove('bg-primary/5');
+          }, 2000);
+        }
+      }, 100);
+    }
+  }, [location]);
   
   // Filter agents based on search query
   const filteredAgents = mockAgents.filter(agent => 
@@ -117,7 +141,15 @@ export default function AgentDirectory() {
             </TableHeader>
             <TableBody>
               {filteredAgents.map((agent) => (
-                <TableRow key={agent.id}>
+                <TableRow 
+                  key={agent.id}
+                  id={`agent-row-${agent.id}`}
+                  className={
+                    agent.id === highlightedAgentId 
+                    ? "transition-colors duration-1000" 
+                    : ""
+                  }
+                >
                   <TableCell className="font-medium">{agent.name}</TableCell>
                   <TableCell>{agent.owner}</TableCell>
                   <TableCell>

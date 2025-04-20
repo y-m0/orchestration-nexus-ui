@@ -6,6 +6,11 @@ import { useNodeOperations } from './useNodeOperations';
 import { useConnectionOperations } from './useConnectionOperations';
 import { useWorkflowExecution } from './useWorkflowExecution';
 import { useWorkflowControl } from './useWorkflowControl';
+import { 
+  registerWorkflow, 
+  logWorkflowActivity,
+  updateDashboardMetrics 
+} from '@/components/workflow/WorkflowIntegrations';
 
 export const useWorkflow = () => {
   const {
@@ -45,8 +50,29 @@ export const useWorkflow = () => {
       setNodes(workflow.nodes);
       setConnections(workflow.connections);
       setCurrentWorkflow(workflow);
+      
+      // Log workflow loading in activity log
+      logWorkflowActivity(workflowId, 'updated', 'Current User', { action: 'loaded' });
     }
   }, [setNodes, setConnections, setCurrentWorkflow]);
+  
+  const createWorkflow = useCallback((workflow: any) => {
+    // Register the new workflow
+    registerWorkflow(workflow.id, workflow.title);
+    
+    // Set as current workflow
+    setCurrentWorkflow(workflow);
+    setNodes(workflow.nodes || []);
+    setConnections(workflow.connections || []);
+    
+    // Log creation in activity log
+    logWorkflowActivity(workflow.id, 'created', 'Current User', { workflow });
+    
+    // Update dashboard metrics
+    updateDashboardMetrics(workflow.id, 'run');
+    
+    return workflow;
+  }, [setCurrentWorkflow, setNodes, setConnections]);
 
   return {
     nodes,
@@ -59,6 +85,7 @@ export const useWorkflow = () => {
     connectNodes,
     updateNodeStatus,
     loadWorkflow,
+    createWorkflow,
     runWorkflow,
     stopWorkflow,
     approveHumanTask,

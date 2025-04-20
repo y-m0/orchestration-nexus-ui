@@ -7,8 +7,17 @@ import { NotificationsWidget } from "@/components/dashboard/NotificationsWidget"
 import { TaskCompletionChart } from "@/components/dashboard/TaskCompletionChart";
 import { QuickFilters } from "@/components/dashboard/QuickFilters";
 import { WorkflowInsights } from "@/components/dashboard/WorkflowInsights";
+import { ActivityTimeline } from "@/components/dashboard/ActivityTimeline";
+import { WorkflowActivityLogger } from "@/components/activity/WorkflowActivityLogger";
+import { useState } from "react";
 
 export default function Dashboard() {
+  const [activityLogs, setActivityLogs] = useState<string[]>([]);
+
+  const handleLogActivity = (logEntry: string) => {
+    setActivityLogs(prev => [logEntry, ...prev].slice(0, 10));
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -32,6 +41,14 @@ export default function Dashboard() {
         </div>
         <WorkflowInsights />
       </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <ActivityTimeline />
+        <NotificationsWidget />
+      </div>
+      
+      {/* Silent component that logs workflow activity */}
+      <WorkflowActivityLogger onLogActivity={handleLogActivity} />
     </div>
   );
 }

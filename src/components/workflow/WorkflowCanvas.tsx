@@ -36,8 +36,27 @@ export function WorkflowCanvas({ workflowId }: WorkflowCanvasProps) {
   useEffect(() => {
     if (workflowId) {
       loadWorkflow(workflowId);
+      
+      // Log that the workflow was viewed for activity tracking
+      console.log(`Activity Log: Workflow ${workflowId} viewed at ${new Date().toLocaleTimeString()}`);
     }
   }, [workflowId, loadWorkflow]);
+
+  // Check if settings have been loaded
+  useEffect(() => {
+    // Access workflow defaults if set by the WorkflowSettings component
+    const workflowDefaults = (window as any).workflowDefaults;
+    
+    if (workflowDefaults) {
+      console.log("Applying workflow defaults:", workflowDefaults);
+      
+      // Apply any relevant defaults to the workflow canvas
+      // This would typically affect things like node timeouts, logging level, etc.
+    } else {
+      // Log warning about missing defaults
+      console.warn("Workflow defaults not found, using system defaults");
+    }
+  }, []);
 
   const handleDragStart = (e: React.DragEvent, nodeId: string) => {
     setDraggingNodeId(nodeId);
@@ -67,6 +86,12 @@ export function WorkflowCanvas({ workflowId }: WorkflowCanvasProps) {
   const handleNodeClick = (e: React.MouseEvent, nodeId: string) => {
     e.preventDefault();
     setSelectedNodeId(nodeId);
+    
+    // Log node inspection for activity tracking
+    const node = nodes.find(n => n.id === nodeId);
+    if (node) {
+      console.log(`Activity Log: Node "${node.title}" inspected at ${new Date().toLocaleTimeString()}`);
+    }
   };
 
   const getNodeIcon = (type: string) => {
@@ -224,7 +249,7 @@ export function WorkflowCanvas({ workflowId }: WorkflowCanvasProps) {
                 {node.type === 'agent' && node.agentId && (
                   <div className="mt-4 text-xs">
                     <Button variant="ghost" size="sm" className="p-0 h-auto" asChild>
-                      <a href={`/directory/agent/${node.agentId}`} className="text-primary hover:underline flex items-center">
+                      <a href={`/agent-directory?agentId=${node.agentId}`} className="text-primary hover:underline flex items-center">
                         View in Agent Directory
                         <ChevronRight className="h-3 w-3 ml-1" />
                       </a>
