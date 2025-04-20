@@ -1,13 +1,13 @@
 
 import { useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { WorkflowNode } from '@/types/workflow';
+import { WorkflowNode, WorkflowRun } from '@/types/workflow';
 
 export const useWorkflowControl = (
   isRunning: boolean,
   setIsRunning: (isRunning: boolean) => void,
   updateNodeStatus: (id: string, status: WorkflowNode['status']) => void,
-  setWorkflowRuns: (runs: any[]) => void
+  setWorkflowRuns: (runs: WorkflowRun[] | ((prev: WorkflowRun[]) => WorkflowRun[])) => void
 ) => {
   const { toast } = useToast();
 
@@ -17,7 +17,7 @@ export const useWorkflowControl = (
     setIsRunning(false);
     
     // Mark all running nodes as error
-    setWorkflowRuns(prev => {
+    setWorkflowRuns((prev: WorkflowRun[]) => {
       const lastRun = prev[prev.length - 1];
       if (lastRun && lastRun.status === 'running') {
         return [

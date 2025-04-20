@@ -10,7 +10,7 @@ export const useWorkflowExecution = (
   isRunning: boolean,
   setIsRunning: (isRunning: boolean) => void,
   updateNodeStatus: (id: string, status: WorkflowNode['status']) => void,
-  setWorkflowRuns: (runs: WorkflowRun[]) => void,
+  setWorkflowRuns: (runs: WorkflowRun[] | ((prev: WorkflowRun[]) => WorkflowRun[])) => void,
 ) => {
   const { toast } = useToast();
 
@@ -45,7 +45,7 @@ export const useWorkflowExecution = (
         setIsRunning(false);
         newRun.status = 'completed';
         newRun.endTime = new Date().toISOString();
-        setWorkflowRuns(prev => [...prev, newRun]);
+        setWorkflowRuns((prev: WorkflowRun[]) => [...prev, newRun]);
         
         toast({
           title: "Workflow completed",
@@ -67,7 +67,7 @@ export const useWorkflowExecution = (
 
       const nodeRun = {
         nodeId: node.id,
-        status: 'running' as 'idle' | 'running' | 'completed' | 'error',
+        status: 'running' as const,
         startTime: new Date().toISOString(),
         output: undefined as any,
         error: undefined as string | undefined,
@@ -90,7 +90,7 @@ export const useWorkflowExecution = (
           setIsRunning(false);
           newRun.status = 'error';
           newRun.endTime = new Date().toISOString();
-          setWorkflowRuns(prev => [...prev, newRun]);
+          setWorkflowRuns((prev: WorkflowRun[]) => [...prev, newRun]);
           
           toast({
             variant: "destructive",
