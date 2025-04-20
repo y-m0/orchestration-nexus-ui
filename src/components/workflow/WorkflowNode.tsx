@@ -1,5 +1,6 @@
 
 import { DragEvent, ReactNode } from "react";
+import { cn } from "@/lib/utils";
 
 interface WorkflowNodeProps {
   title: string;
@@ -10,23 +11,23 @@ interface WorkflowNodeProps {
 
 export function WorkflowNode({ title, icon, type, draggable = false }: WorkflowNodeProps) {
   const handleDragStart = (e: DragEvent<HTMLDivElement>) => {
-    // Set data for drag and drop
-    e.dataTransfer.setData("application/reactflow", JSON.stringify({ type, title }));
+    e.dataTransfer.setData("application/workflow", JSON.stringify({ type, title }));
     e.dataTransfer.effectAllowed = "move";
   };
   
   return (
     <div
-      className={`
-        p-3 rounded-md border border-border/40 flex items-center gap-3 cursor-pointer
-        ${type === 'agent' ? 'bg-primary/10' : 
-          type === 'logic' ? 'bg-blue-500/10' : 'bg-yellow-500/10'}
-      `}
+      className={cn(
+        "p-3 rounded-md border flex items-center gap-3 cursor-pointer hover:bg-accent transition-colors",
+        type === 'agent' ? 'border-primary/50 bg-primary/5' : 
+        type === 'logic' ? 'border-blue-500/50 bg-blue-500/5' : 
+        'border-yellow-500/50 bg-yellow-500/5'
+      )}
       draggable={draggable}
       onDragStart={draggable ? handleDragStart : undefined}
     >
       {icon}
-      <span className="text-sm">{title}</span>
+      <span className="text-sm font-medium">{title}</span>
     </div>
   );
 }
