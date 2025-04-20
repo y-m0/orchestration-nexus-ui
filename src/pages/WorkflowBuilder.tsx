@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Save, Play, PanelLeft, ChevronRight, Bot, GitBranch, User, Database } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -111,7 +112,7 @@ export default function WorkflowBuilder() {
             </Button>
           </div>
         </div>
-        <WorkflowCanvas onDrop={handleDrop} />
+        <WorkflowCanvas />
       </div>
     </div>
   );
