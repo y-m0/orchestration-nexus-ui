@@ -55,7 +55,7 @@ export interface WorkflowRun {
   nodeRuns: {
     nodeId: string;
     status: 'idle' | 'running' | 'completed' | 'error';
-    startTime?: string;
+    startTime: string;
     endTime?: string;
     input?: any;
     output?: any;

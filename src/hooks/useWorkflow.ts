@@ -127,10 +127,10 @@ export const useWorkflow = () => {
         
         if (success) {
           updateNodeStatus(node.id, 'completed');
-          nodeRun.status = 'completed' as const;
+          nodeRun.status = 'completed';
         } else {
           updateNodeStatus(node.id, 'error');
-          nodeRun.status = 'error' as const;
+          nodeRun.status = 'error';
           nodeRun.error = 'Simulated error during execution';
           
           // Stop the workflow on error
