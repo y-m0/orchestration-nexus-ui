@@ -6,10 +6,18 @@ import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Plus, Filter, Search, FolderOpen } from 'lucide-react';
 import { ProjectCard } from '@/components/projects/ProjectCard';
-import { ProjectWithDetails, Project, Goal } from '@/types/project';
-import { getProjects, getProjectWithCompletion } from '@/data/projects';
+import { ProjectWithDetails, Project } from '@/types/project';
+import { getProjects } from '@/data/projects';
 import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { useIsMobile } from '@/hooks/useIsMobile';
+
+const PROJECT_STATUSES = [
+  { label: "All Projects", value: "all" },
+  { label: "Active", value: "active" },
+  { label: "Completed", value: "completed" },
+  { label: "Archived", value: "archived" }
+];
 
 export default function Projects() {
   const [projects, setProjects] = useState<ProjectWithDetails[]>([]);
@@ -18,21 +26,37 @@ export default function Projects() {
   const [activeTab, setActiveTab] = useState('all');
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const { toast } = useToast();
+  const isMobile = useIsMobile();
 
-  // Load projects on initial render
+  // Load demo sample projects matching all tab types
   useEffect(() => {
-    const allProjects = getProjects();
-    const projectsWithDetails = allProjects.map(project => {
+    const allProjects = getProjects().map(project => {
       const totalGoals = project.goals.length;
       const completedGoals = project.goals.filter(g => g.status === 'completed').length;
       const completionPercentage = totalGoals > 0 ? Math.round((completedGoals / totalGoals) * 100) : 0;
-      
-      return {
-        ...project,
-        completionPercentage
-      };
+      return { ...project, completionPercentage };
     });
-    
+    // Ensure one project per status (active, completed, archived) for the example
+    const requiredStatuses = ["active", "completed", "archived"];
+    let projectsWithDetails = [...allProjects];
+    requiredStatuses.forEach(status => {
+      if (!projectsWithDetails.some(p => p.status === status)) {
+        projectsWithDetails.push({
+          ...allProjects[0],
+          id: `sample-${status}`,
+          name: `Sample ${status.charAt(0).toUpperCase()+status.slice(1)} Project`,
+          status,
+          completionPercentage: status === "active" ? 48 : status === "completed" ? 100 : 10,
+          tags: ["demo"],
+          description: `This is a sample ${status} project for demonstration.`,
+          goals: [],
+          owner: 'Demo',
+          collaborators: [],
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        });
+      }
+    });
     setProjects(projectsWithDetails);
     setFilteredProjects(projectsWithDetails);
   }, []);
@@ -40,8 +64,6 @@ export default function Projects() {
   // Filter projects when search query or tab changes
   useEffect(() => {
     let filtered = [...projects];
-    
-    // Apply search filter
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(project => 
@@ -50,74 +72,82 @@ export default function Projects() {
         project.tags?.some(tag => tag.toLowerCase().includes(query))
       );
     }
-    
-    // Apply tab filter
     if (activeTab !== 'all') {
       filtered = filtered.filter(project => project.status === activeTab);
     }
-    
     setFilteredProjects(filtered);
   }, [searchQuery, activeTab, projects]);
 
   const handleCreateProject = (newProject: Partial<Project>) => {
-    // In a real app, we'd call an API to create the project
-    console.log('Creating project:', newProject);
+    // In a real app, this would call an API and refresh
     toast({
       title: "Project Created",
       description: "Your new project has been created successfully.",
     });
     setIsCreateDialogOpen(false);
-    
-    // In a real app, we'd refetch the projects or add the new project to the state
   };
 
   const handleEditProject = (projectId: string) => {
-    // Navigate to edit page or open modal
+    // For edit action
     console.log('Edit project:', projectId);
   };
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      {/* Top heading and action */}
+      <div className="flex items-center justify-between flex-wrap gap-2">
         <div>
           <h1 className="text-2xl font-semibold">Projects</h1>
           <div className="flex items-center text-sm text-muted-foreground">
             <span>Plan, organize, and track your goals and workflows</span>
           </div>
         </div>
-        
         <Button onClick={() => setIsCreateDialogOpen(true)}>
           <Plus className="h-4 w-4 mr-2" /> New Project
         </Button>
       </div>
       
       <Card className="p-4">
-        <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <div className="flex justify-between mb-4 flex-col sm:flex-row gap-4">
+        {/* Responsive status selection */}
+        <div className="flex justify-between mb-4 flex-col sm:flex-row gap-4">
+          {/* Tab navigation (desktop) or dropdown (mobile) */}
+          {isMobile ? (
+            <select
+              value={activeTab}
+              onChange={e => setActiveTab(e.target.value)}
+              className="block w-full rounded border-input bg-background py-2 px-3 text-base focus:outline-none focus:ring-2 focus:ring-primary"
+            >
+              {PROJECT_STATUSES.map(tab => (
+                <option value={tab.value} key={tab.value}>{tab.label}</option>
+              ))}
+            </select>
+          ) : (
             <TabsList>
-              <TabsTrigger value="all">All Projects</TabsTrigger>
-              <TabsTrigger value="active">Active</TabsTrigger>
-              <TabsTrigger value="completed">Completed</TabsTrigger>
-              <TabsTrigger value="archived">Archived</TabsTrigger>
+              {PROJECT_STATUSES.map(tab => (
+                <TabsTrigger value={tab.value} key={tab.value}>
+                  {tab.label}
+                </TabsTrigger>
+              ))}
             </TabsList>
-            
-            <div className="flex gap-2">
-              <div className="relative">
-                <Input
-                  placeholder="Search projects..."
-                  className="pl-8"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-                <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-              </div>
-              
-              <Button variant="outline" size="icon">
-                <Filter className="h-4 w-4" />
-              </Button>
+          )}
+          <div className="flex gap-2">
+            <div className="relative">
+              <Input
+                placeholder="Search projects..."
+                className="pl-8"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
             </div>
+            <Button variant="outline" size="icon">
+              <Filter className="h-4 w-4" />
+            </Button>
           </div>
-          
+        </div>
+
+        {/* Tab content: filtered project cards or empty state */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsContent value={activeTab} className="mt-6">
             {filteredProjects.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -148,8 +178,8 @@ export default function Projects() {
           </TabsContent>
         </Tabs>
       </Card>
-      
-      {/* Create Project Dialog - Would be a separate component in a real app */}
+
+      {/* Create Project Dialog */}
       <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
@@ -161,12 +191,10 @@ export default function Projects() {
           
           <div className="py-4">
             <p className="text-center py-4">
-              Project creation form would go here.
-              <br />
+              Project creation form would go here.<br />
               This would be implemented as a separate component.
             </p>
           </div>
-          
           <div className="flex justify-end gap-2">
             <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
               Cancel
