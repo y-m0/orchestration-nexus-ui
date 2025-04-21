@@ -18,7 +18,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { WorkflowApprovals } from "@/components/approvals/WorkflowApprovals";
 import { StatusCard } from "@/components/dashboard/StatusCard";
 import { useIsMobile } from "@/hooks/useIsMobile";
-import { PendingApprovalsFeed } from "@/components/dashboard/PendingApprovalsFeed";
+import { PendingApprovalsFeed, Approval } from "@/components/dashboard/PendingApprovalsFeed";
 
 function useDashboardActivity() {
   const { workflowRuns, currentWorkflow } = useWorkflow();
@@ -81,13 +81,13 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const { systemHealth } = useDashboardActivity();
   const isMobile = useIsMobile();
-  const [mockApprovals, setMockApprovals] = useState([
+  const [mockApprovals, setMockApprovals] = useState<Approval[]>([
     {
       id: "appr-1",
       workflowName: "Expense Approval",
       requester: "Anna",
       submittedAt: new Date(Date.now() - 1000 * 60 * 20).toISOString(),
-      status: "pending" as "pending",
+      status: "pending",
       stakeholder: "John Appleseed"
     },
     {
@@ -95,7 +95,7 @@ export default function Dashboard() {
       workflowName: "Content Review",
       requester: "Ben",
       submittedAt: new Date(Date.now() - 1000 * 60 * 120).toISOString(),
-      status: "approved" as "approved",
+      status: "approved",
       stakeholder: "Sarah Connor"
     },
     {
@@ -103,7 +103,7 @@ export default function Dashboard() {
       workflowName: "Data Analysis",
       requester: "Charlie",
       submittedAt: new Date(Date.now() - 1000 * 60 * 300).toISOString(),
-      status: "pending" as "pending",
+      status: "pending",
       stakeholder: "Priya Patel"
     },
   ]);
@@ -182,10 +182,6 @@ export default function Dashboard() {
     navigate(`/workflows?id=${workflowId}${nodeId ? `&nodeId=${nodeId}` : ''}`);
   };
 
-  const recentWorkflows = [...workflowRuns]
-    .sort((a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime())
-    .slice(0, 3);
-
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -250,115 +246,11 @@ export default function Dashboard() {
           <WorkflowInsights />
         </div>
         <div className={`${isMobile ? 'order-1' : ''}`}>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Recent Workflows</CardTitle>
-            </CardHeader>
-            <CardContent className="p-0">
-              <div className="divide-y">
-                {recentWorkflows.map((workflow) => (
-                  <div key={workflow.id} className="p-4 hover:bg-muted/50 cursor-pointer" 
-                       onClick={() => navigate(`/workflows?id=${workflow.workflowId}`)}>
-                    <div className="flex items-center justify-between mb-1">
-                      <h4 className="font-medium">Workflow {workflow.workflowId.slice(-8)}</h4>
-                      <Badge className={
-                        workflow.status === 'completed' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' :
-                        workflow.status === 'error' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300' :
-                        'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
-                      }>
-                        {workflow.status}
-                      </Badge>
-                    </div>
-                    <div className="text-xs text-muted-foreground flex items-center gap-2">
-                      <span className="flex items-center gap-1">
-                        <Calendar className="h-3 w-3" />
-                        {new Date(workflow.startTime).toLocaleDateString()}
-                      </span>
-                      <span>•</span>
-                      <span className="flex items-center gap-1">
-                        <Clock className="h-3 w-3" />
-                        {new Date(workflow.startTime).toLocaleTimeString()}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-                {recentWorkflows.length === 0 && (
-                  <div className="p-4 text-center text-muted-foreground">
-                    No recent workflows
-                  </div>
-                )}
-              </div>
-              <div className="p-3 border-t">
-                <Button variant="outline" size="sm" className="w-full" onClick={() => navigate('/workflows')}>
-                  View All Workflows
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+          <PendingApprovalsFeed approvals={mockApprovals.filter(a => a.status === "pending")} onView={handleViewWorkflow} />
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader className="pb-2 flex flex-col gap-2">
-            <div>
-              <CardTitle>Workflow Activity</CardTitle>
-              <CardDescription>Recent workflow executions and events</CardDescription>
-            </div>
-            <div>
-              <input
-                type="text"
-                placeholder="Search memory..."
-                className="px-3 py-1 text-sm border rounded-md w-[180px]"
-                value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
-              />
-              {memoryResults.length > 0 && (
-                <div className="absolute z-10 mt-1 w-[250px] right-0 bg-white dark:bg-gray-800 rounded-md shadow-lg border">
-                  {memoryResults.map((result, idx) => (
-                    <div key={idx} className="p-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
-                      <div className="flex items-center">
-                        <Badge variant="outline" className="mr-2 text-xs">
-                          {result.item.metadata.type || 'memory'}
-                        </Badge>
-                        <span className="truncate">{result.item.text.substring(0, 50)}</span>
-                      </div>
-                      <div className="text-xs text-muted-foreground mt-1">
-                        Score: {result.score.toFixed(2)}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </CardHeader>
-          <CardContent>
-            <WorkflowActivityLogger onLogActivity={handleLogActivity} />
-            <div className="space-y-2 mt-4">
-              {activityLogs.map((log, index) => (
-                <div key={index} className="text-sm border-l-2 border-l-primary pl-3 py-1">
-                  {log}
-                </div>
-              ))}
-              {activityLogs.length === 0 && (
-                <div className="text-center py-8 text-sm text-muted-foreground">
-                  No recent workflow activity to display
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-        <div>
-          <PendingApprovalsFeed approvals={mockApprovals.filter(a => a.status === "pending")} onView={handleViewWorkflow} />
-        </div>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <ActivityTimeline 
-          onItemClick={handleTimelineItemClick}
-          showFilters
-          maxItems={10}
-        />
         <Card>
           <CardHeader>
             <CardTitle>System Activity</CardTitle>
@@ -368,11 +260,14 @@ export default function Dashboard() {
             <ActivityTimeline 
               onItemClick={handleTimelineItemClick}
               showFilters
-              maxItems={5}
+              maxItems={10}
               items={[]} // In a real implementation, filter only system/tool events
             />
           </CardContent>
         </Card>
+        <div>
+          <PendingApprovalsFeed approvals={mockApprovals.filter(a => a.status === "pending")} onView={handleViewWorkflow} />
+        </div>
       </div>
     </div>
   );
