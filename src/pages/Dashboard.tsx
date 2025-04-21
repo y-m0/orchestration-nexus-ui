@@ -1,3 +1,4 @@
+
 import { Bot, BarChart3, CheckCircle2, AlertCircle, User, FolderOpen, Calendar, Clock } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -296,7 +297,7 @@ export default function Dashboard() {
       <div>
         <Card>
           <CardHeader>
-            <CardTitle>Sample Projects</CardTitle>
+            <CardTitle>Ongoing Projects</CardTitle>
             <CardDescription>
               Explore featured blueprints for automating and optimizing real-world processes
             </CardDescription>
@@ -357,3 +358,4 @@ export default function Dashboard() {
     </div>
   );
 }
+
