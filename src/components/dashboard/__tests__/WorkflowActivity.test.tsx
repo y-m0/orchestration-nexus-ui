@@ -6,12 +6,11 @@ import { useWorkflow } from '@/hooks/useWorkflow';
 import type { Activity } from '@/lib/store';
 
 // Mock the store and workflow hooks
-jest.mock('@/lib/store', () => ({
-  useStore: jest.fn().mockImplementation(() => ({
-    activities: [],
-    setActivities: jest.fn(),
-  })),
-}));
+jest.mock('@/lib/store', () => {
+  return {
+    useStore: jest.fn()
+  };
+});
 
 jest.mock('@/hooks/useWorkflow', () => ({
   useWorkflow: jest.fn(),
@@ -45,11 +44,13 @@ describe('WorkflowActivity', () => {
   ];
 
   beforeEach(() => {
-    // Cast the mock implementation to avoid type errors
+    // Reset mocks before each test
+    jest.clearAllMocks();
+    
     (useStore as jest.Mock).mockReturnValue({
       activities: mockActivities,
       setActivities: jest.fn(),
-    } as any);
+    });
 
     (useWorkflow as jest.Mock).mockReturnValue({
       currentWorkflow: null,

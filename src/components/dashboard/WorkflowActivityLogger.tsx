@@ -55,7 +55,7 @@ export function WorkflowActivityLogger({
   useEffect(() => {
     const fetchWorkflowLogs = async () => {
       try {
-        const results = await searchMemory('workflow activity', limit);
+        const results = await searchMemory('workflow activity', { limit });
         const logItems = results.map(result => result.item);
         setLogs(logItems);
       } catch (err) {
