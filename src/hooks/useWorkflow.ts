@@ -1,4 +1,3 @@
-
 import { useCallback } from 'react';
 import { predefinedWorkflows } from '@/data/workflows';
 import { useWorkflowState } from './useWorkflowState';
@@ -57,8 +56,8 @@ export const useWorkflow = () => {
   }, [setNodes, setConnections, setCurrentWorkflow]);
   
   const createWorkflow = useCallback((workflow: any) => {
-    // Register the new workflow
-    registerWorkflow(workflow);
+    // Register the new workflow with correct args
+    registerWorkflow(workflow.id, workflow.title);
     
     // Set as current workflow
     setCurrentWorkflow(workflow);
@@ -68,8 +67,8 @@ export const useWorkflow = () => {
     // Log creation in activity log
     logWorkflowActivity(workflow.id, 'created');
     
-    // Update dashboard metrics
-    updateDashboardMetrics();
+    // Update dashboard metrics with appropriate event
+    updateDashboardMetrics(workflow.id, 'run');
     
     return workflow;
   }, [setCurrentWorkflow, setNodes, setConnections]);
