@@ -1,3 +1,4 @@
+
 import { render, screen, waitFor } from '@testing-library/react';
 import { WorkflowActivity } from '../WorkflowActivity';
 import { useStore } from '@/lib/store';
@@ -6,7 +7,10 @@ import type { Activity } from '@/lib/store';
 
 // Mock the store and workflow hooks
 jest.mock('@/lib/store', () => ({
-  useStore: jest.fn(),
+  useStore: jest.fn().mockImplementation(() => ({
+    activities: [],
+    setActivities: jest.fn(),
+  })),
 }));
 
 jest.mock('@/hooks/useWorkflow', () => ({

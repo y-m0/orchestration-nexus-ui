@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useStore } from '@/lib/store';
 import { useWorkflow } from '@/hooks/useWorkflow';
@@ -23,6 +24,17 @@ export const ActivityTest = () => {
   const handleWorkflowSelect = (workflowId: string) => {
     setSelectedWorkflowId(workflowId);
     loadWorkflow(workflowId);
+  };
+
+  // Helper function to convert details object to string
+  const formatDetails = (details: any): string => {
+    if (typeof details === 'string') return details;
+    if (details && typeof details === 'object') {
+      return Object.entries(details)
+        .map(([key, value]) => `${key}: ${value}`)
+        .join(', ');
+    }
+    return String(details || '');
   };
 
   return (
@@ -101,7 +113,7 @@ export const ActivityTest = () => {
               <div key={activity.id} className="p-2 border rounded">
                 <div className="font-medium">{activity.type}</div>
                 <div className="text-sm text-gray-500">{activity.timestamp}</div>
-                <div className="text-sm">{activity.details}</div>
+                <div className="text-sm">{formatDetails(activity.details)}</div>
               </div>
             ))}
           </div>

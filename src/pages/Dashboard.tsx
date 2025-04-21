@@ -1,3 +1,4 @@
+
 import { Bot, BarChart3, CheckCircle2, AlertCircle, User, FolderOpen, Calendar, Clock } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -10,7 +11,7 @@ import { ActivityTimeline } from "@/components/dashboard/ActivityTimeline";
 import { useState, useEffect } from "react";
 import { useWorkflow } from "@/hooks/useWorkflow";
 import { useNavigate } from "react-router-dom";
-import { useMemory } from "@/lib/memory/MemoryContext";
+import { useMemory } from "@/lib/memory";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { WorkflowApprovals } from "@/components/approvals/WorkflowApprovals";
 import { StatusCard } from "@/components/dashboard/StatusCard";
@@ -30,8 +31,7 @@ function useDashboardActivity() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      searchMemory({ content: "system status" })
-        .then(() => {}) // No need to handle result here
+      searchMemory("system status")
         .catch(err => console.error("Error searching memory:", err));
     }, 60000);
     
@@ -166,7 +166,7 @@ export default function Dashboard() {
 
     const searchMemoryItems = async () => {
       try {
-        const results = await searchMemory({ content: searchQuery, limit: 5 });
+        const results = await searchMemory(searchQuery);
         setMemoryResults(results);
         if (results.length > 0) {
           console.log(`Activity Log: Memory searched for "${searchQuery}" with ${results.length} results`);

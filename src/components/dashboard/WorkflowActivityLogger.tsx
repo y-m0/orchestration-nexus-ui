@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from 'react';
-import { useMemory } from '@/lib/memory/memoryContext';
+import { useMemory } from '@/lib/memory';
 import { useWorkflow } from '@/hooks/useWorkflow';
 import { formatDateTime } from '@/lib/utils';
 import { MemoryItem } from '@/types/memory';
