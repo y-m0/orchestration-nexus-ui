@@ -35,8 +35,8 @@ import {
 import { ErrorBoundary } from './components/ui/ErrorBoundary'
 import { AuthProvider, useAuth } from './lib/auth'
 import { useStore } from './lib/store'
-import { ActivityTest } from '@/components/test/ActivityTest';
-import { MemoryProvider } from './lib/memory/memoryContext';
+
+// Removed import { ActivityTest } from '@/components/test/ActivityTest';
 
 const queryClient = new QueryClient();
 
@@ -212,7 +212,7 @@ const App = () => {
                     <Toaster />
                     <Sonner />
                   </Router>
-                  <ActivityTest />
+                  {/* Removed <ActivityTest /> from here */}
                 </div>
               </MemoryProvider>
             </TooltipProvider>
@@ -224,3 +224,4 @@ const App = () => {
 }
 
 export default App;
+
