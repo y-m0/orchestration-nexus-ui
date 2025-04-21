@@ -8,14 +8,19 @@ import { TaskCompletionChart } from "@/components/dashboard/TaskCompletionChart"
 import { QuickFilters } from "@/components/dashboard/QuickFilters";
 import { WorkflowInsights } from "@/components/dashboard/WorkflowInsights";
 import { ActivityTimeline } from "@/components/dashboard/ActivityTimeline";
-import { WorkflowActivityLogger } from "@/components/activity/WorkflowActivityLogger";
+import { WorkflowActivityLogger } from "@/components/dashboard/WorkflowActivityLogger";
 import { useState, useEffect } from "react";
 import { useWorkflow } from "@/hooks/useWorkflow";
 import { useNavigate } from "react-router-dom";
+import { useMemory } from "@/lib/memory/memoryContext";
+import { Badge } from "@/components/ui/badge";
 
 export default function Dashboard() {
   const [activityLogs, setActivityLogs] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [memoryResults, setMemoryResults] = useState<any[]>([]);
   const { workflowRuns } = useWorkflow();
+  const { searchMemory } = useMemory();
   const navigate = useNavigate();
 
   // Stats for workflows that impact the agent counts
@@ -28,6 +33,26 @@ export default function Dashboard() {
   const handleLogActivity = (logEntry: string) => {
     setActivityLogs(prev => [logEntry, ...prev].slice(0, 10));
   };
+
+  // Search memory when query changes
+  useEffect(() => {
+    if (!searchQuery || searchQuery.length < 3) {
+      setMemoryResults([]);
+      return;
+    }
+
+    const searchMemoryItems = async () => {
+      try {
+        const results = await searchMemory(searchQuery, 5);
+        setMemoryResults(results);
+      } catch (error) {
+        console.error("Error searching memory:", error);
+      }
+    };
+
+    const debounceTimer = setTimeout(searchMemoryItems, 500);
+    return () => clearTimeout(debounceTimer);
+  }, [searchQuery, searchMemory]);
 
   // Update agent stats based on workflow runs
   useEffect(() => {
@@ -100,14 +125,56 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <ActivityTimeline 
-          onItemClick={handleTimelineItemClick}
-        />
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <div>
+              <CardTitle>Workflow Activity</CardTitle>
+              <CardDescription>Recent workflow executions and events</CardDescription>
+            </div>
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search memory..."
+                className="px-3 py-1 text-sm border rounded-md w-[180px]"
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+              />
+              {memoryResults.length > 0 && (
+                <div className="absolute z-10 mt-1 w-[250px] right-0 bg-white dark:bg-gray-800 rounded-md shadow-lg border">
+                  {memoryResults.map((result, idx) => (
+                    <div key={idx} className="p-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
+                      <div className="flex items-center">
+                        <Badge variant="outline" className="mr-2 text-xs">
+                          {result.item.metadata.type || 'memory'}
+                        </Badge>
+                        <span className="truncate">{result.item.text.substring(0, 50)}</span>
+                      </div>
+                      <div className="text-xs text-muted-foreground mt-1">
+                        Score: {result.score.toFixed(2)}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </CardHeader>
+          <CardContent>
+            <WorkflowActivityLogger onLogActivity={handleLogActivity} />
+            {activityLogs.length === 0 && (
+              <div className="text-center py-8 text-sm text-muted-foreground">
+                No recent workflow activity to display
+              </div>
+            )}
+          </CardContent>
+        </Card>
         <NotificationsWidget />
       </div>
       
-      {/* Silent component that logs workflow activity */}
-      <WorkflowActivityLogger onLogActivity={handleLogActivity} />
+      <div className="grid grid-cols-1 gap-6">
+        <ActivityTimeline 
+          onItemClick={handleTimelineItemClick}
+        />
+      </div>
     </div>
   );
 }
