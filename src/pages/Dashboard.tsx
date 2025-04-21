@@ -1,4 +1,3 @@
-
 import { Bot, BarChart3, CheckCircle2, AlertCircle, User, FolderOpen, Calendar, Clock } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -19,6 +18,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { WorkflowApprovals } from "@/components/approvals/WorkflowApprovals";
 import { StatusCard } from "@/components/dashboard/StatusCard";
 import { useIsMobile } from "@/hooks/useIsMobile";
+import { PendingApprovalsFeed } from "@/components/dashboard/PendingApprovalsFeed";
 
 // Custom hook to centralize dashboard activity tracking
 function useDashboardActivity() {
@@ -91,6 +91,32 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const { systemHealth } = useDashboardActivity();
   const isMobile = useIsMobile();
+  const [mockApprovals, setMockApprovals] = useState([
+    {
+      id: "appr-1",
+      workflowName: "Expense Approval",
+      requester: "Anna",
+      submittedAt: new Date(Date.now() - 1000 * 60 * 20).toISOString(),
+      status: "pending",
+      stakeholder: "John Appleseed"
+    },
+    {
+      id: "appr-2",
+      workflowName: "Content Review",
+      requester: "Ben",
+      submittedAt: new Date(Date.now() - 1000 * 60 * 120).toISOString(),
+      status: "approved",
+      stakeholder: "Sarah Connor"
+    },
+    {
+      id: "appr-3",
+      workflowName: "Data Analysis",
+      requester: "Charlie",
+      submittedAt: new Date(Date.now() - 1000 * 60 * 300).toISOString(),
+      status: "pending",
+      stakeholder: "Priya Patel"
+    },
+  ]);
 
   // Stats for workflows that impact the agent counts
   const [agentStats, setAgentStats] = useState({
@@ -185,6 +211,7 @@ export default function Dashboard() {
     .sort((a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime())
     .slice(0, 3);
 
+  // NEW: Separated Activity Panels
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -220,23 +247,23 @@ export default function Dashboard() {
               <div className="grid grid-cols-2 gap-3">
                 <StatusCard
                   title="Workflows Running"
-                  value={systemHealth.workflowsRunning.toString()}
-                  icon={<FolderOpen className="h-4 w-4" />}
+                  value="4"
+                  icon={<FolderOpen className="h-4 w-4 text-primary" />}
                 />
                 <StatusCard
                   title="Active Agents"
-                  value={systemHealth.agentsActive.toString()}
-                  icon={<User className="h-4 w-4" />}
+                  value="23"
+                  icon={<User className="h-4 w-4 text-[#9b87f5]" />}
                 />
                 <StatusCard
                   title="Pending Approvals"
-                  value={systemHealth.pendingApprovals.toString()}
-                  icon={<Clock className="h-4 w-4" />}
+                  value="7"
+                  icon={<Clock className="h-4 w-4 text-yellow-500" />}
                 />
                 <StatusCard
                   title="Memory Usage"
-                  value={`${systemHealth.memoryUsage}%`}
-                  icon={<BarChart3 className="h-4 w-4" />}
+                  value="44%"
+                  icon={<BarChart3 className="h-4 w-4 text-[#7E69AB]" />}
                 />
               </div>
             </CardContent>
@@ -299,12 +326,12 @@ export default function Dashboard() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardHeader className="pb-2 flex flex-col gap-2">
             <div>
               <CardTitle>Workflow Activity</CardTitle>
               <CardDescription>Recent workflow executions and events</CardDescription>
             </div>
-            <div className="relative">
+            <div>
               <input
                 type="text"
                 placeholder="Search memory..."
@@ -347,23 +374,32 @@ export default function Dashboard() {
             </div>
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Pending Approvals</CardTitle>
-            <CardDescription>Workflows awaiting human verification</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <WorkflowApprovals onViewWorkflow={handleViewWorkflow} />
-          </CardContent>
-        </Card>
+        <div>
+          <PendingApprovalsFeed approvals={mockApprovals.filter(a => a.status === "pending")} onView={handleViewWorkflow} />
+        </div>
       </div>
       
-      <div className="grid grid-cols-1 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <ActivityTimeline 
           onItemClick={handleTimelineItemClick}
           showFilters
           maxItems={10}
         />
+        <Card>
+          <CardHeader>
+            <CardTitle>System Activity</CardTitle>
+            <CardDescription>Platform events: configuration updates, tool runs, errors, integrations, and settings changes</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {/* You may want to build a filtered ActivityTimeline, but for demo, use the same */}
+            <ActivityTimeline 
+              onItemClick={handleTimelineItemClick}
+              showFilters
+              maxItems={5}
+              items={[]} // In a real implementation, filter only system/tool events
+            />
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
