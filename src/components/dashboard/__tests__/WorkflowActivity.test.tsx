@@ -47,11 +47,12 @@ describe('WorkflowActivity', () => {
     // Reset mocks before each test
     jest.clearAllMocks();
     
-    // Explicitly cast useStore mock to avoid type errors
-    (useStore as jest.Mock).mockReturnValue({
+    // Use a mock implementation that returns a minimal store object
+    (useStore as jest.MockedFunction<typeof useStore>).mockImplementation(() => ({
       activities: mockActivities,
       setActivities: jest.fn(),
-    } as any);
+      // Add any other required properties from the store
+    }));
 
     (useWorkflow as jest.Mock).mockReturnValue({
       currentWorkflow: null,
