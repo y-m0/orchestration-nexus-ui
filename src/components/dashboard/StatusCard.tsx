@@ -1,7 +1,9 @@
 
+import React, { ReactNode } from 'react';
+
 interface StatusCardProps {
   title: string;
-  value: string | number;
+  value: string | number | ReactNode;
   icon: React.ReactNode;
   trend?: string;
   trendValue?: string;
