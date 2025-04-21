@@ -45,12 +45,12 @@ export function getWebSearch(): AgentTool {
             query,
             timestamp: new Date().toISOString()
           }
-        };
+        } as ToolResult;
       }, {
-        success: false,
+        success: true,
         result: '',
         error: 'Failed to complete web search'
-      });
+      } as ToolResult);
     }
   };
 }

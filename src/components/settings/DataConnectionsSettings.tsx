@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -17,7 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Textarea } from "@/components/ui/textarea";
-import { Check, Database, Link, MoreHorizontal, Search, Settings } from "lucide-react";
+import { Database, MoreHorizontal } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 
 interface Connection {
@@ -100,7 +99,7 @@ export function DataConnectionsSettings() {
     setTimeout(() => {
       const updatedConnections = connections.map(conn => {
         if (conn.id === connectionId) {
-          return { ...conn, status: "connected" };
+          return { ...conn, status: "connected" as const };
         }
         return conn;
       });
@@ -266,7 +265,6 @@ export function DataConnectionsSettings() {
         </TabsContent>
       </Tabs>
       
-      {/* Add Connection Modal */}
       <Dialog open={isConnectionModalOpen} onOpenChange={setIsConnectionModalOpen}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
@@ -304,7 +302,6 @@ export function DataConnectionsSettings() {
         </DialogContent>
       </Dialog>
       
-      {/* Schema Viewer Modal */}
       <Dialog open={isSchemaModalOpen} onOpenChange={setIsSchemaModalOpen}>
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
@@ -346,7 +343,6 @@ export function DataConnectionsSettings() {
         </DialogContent>
       </Dialog>
       
-      {/* Schema Mapping Modal */}
       <Dialog open={isSchemaMappingOpen} onOpenChange={setIsSchemaMappingOpen}>
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>

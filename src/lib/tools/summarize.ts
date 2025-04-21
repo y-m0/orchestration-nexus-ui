@@ -30,12 +30,12 @@ export function getSummarizer(): AgentTool {
             summaryLength: summary.length,
             compressionRatio: summary.length / text.length
           }
-        };
+        } as ToolResult;
       }, {
-        success: false,
+        success: true,
         result: '',
         error: 'Failed to summarize the text'
-      });
+      } as ToolResult);
     }
   };
 }

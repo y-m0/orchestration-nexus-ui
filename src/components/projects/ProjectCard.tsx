@@ -31,7 +31,7 @@ export const ProjectCard: FC<ProjectCardProps> = ({ project, onEdit }) => {
           </div>
           <Badge
             variant={project.status === 'active' ? 'default' : 
-                   project.status === 'completed' ? 'success' : 'secondary'}
+                   project.status === 'completed' ? 'secondary' : 'outline'}
           >
             {project.status}
           </Badge>

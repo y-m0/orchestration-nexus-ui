@@ -30,7 +30,7 @@ import {
   Home, 
   Network, 
   Settings as SettingsIcon, 
-  Tool 
+  Wrench 
 } from "lucide-react";
 import { ErrorBoundary } from './components/ui/ErrorBoundary'
 import { AuthProvider, useAuth } from './lib/auth'
@@ -50,7 +50,7 @@ const Navigation = () => (
             { icon: Network, label: "Agent Directory", path: "/agent-directory" },
             { icon: Activity, label: "Workflows", path: "/workflows" },
             { icon: FolderOpen, label: "Projects", path: "/projects" },
-            { icon: Tool, label: "Tools", path: "/tools" },
+            { icon: Wrench, label: "Tools", path: "/tools" },
             { icon: Clock, label: "Activity Log", path: "/activity" },
             { icon: FileCheck, label: "Approvals", path: "/approvals" },
             { icon: SettingsIcon, label: "Settings", path: "/settings" },

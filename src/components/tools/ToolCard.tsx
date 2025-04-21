@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { AgentTool } from '@/types/tool';
-import { Tool, Settings, Play } from 'lucide-react';
+import { Settings, Play, Wrench } from 'lucide-react';
 
 interface ToolCardProps {
   tool: AgentTool;
@@ -29,7 +29,7 @@ export function ToolCard({ tool, onToggle, onConfigure, onTest }: ToolCardProps)
         <div className="flex justify-between items-start">
           <div className="flex items-center gap-2">
             <div className="p-2 rounded-full bg-primary/10 text-primary">
-              <Tool className="h-4 w-4" />
+              <Wrench className="h-4 w-4" />
             </div>
             <CardTitle>{tool.name}</CardTitle>
           </div>

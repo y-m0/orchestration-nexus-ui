@@ -52,7 +52,7 @@ export const useWorkflow = () => {
       setCurrentWorkflow(workflow);
       
       // Log workflow loading in activity log
-      logWorkflowActivity(workflowId, 'updated', 'Current User', { action: 'loaded' });
+      logWorkflowActivity(workflowId, 'updated', 'Current User');
     }
   }, [setNodes, setConnections, setCurrentWorkflow]);
   
@@ -66,10 +66,10 @@ export const useWorkflow = () => {
     setConnections(workflow.connections || []);
     
     // Log creation in activity log
-    logWorkflowActivity(workflow.id, 'created', 'Current User', { workflow });
+    logWorkflowActivity(workflow.id, 'created', 'Current User');
     
     // Update dashboard metrics
-    updateDashboardMetrics(workflow.id, 'run');
+    updateDashboardMetrics(workflow.id);
     
     return workflow;
   }, [setCurrentWorkflow, setNodes, setConnections]);

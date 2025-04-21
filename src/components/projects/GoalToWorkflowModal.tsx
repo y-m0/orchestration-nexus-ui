@@ -1,4 +1,3 @@
-
 import { FC, useState } from 'react';
 import { Goal } from '@/types/project';
 import { Workflow, WorkflowNode, WorkflowConnection } from '@/types/workflow';
@@ -79,8 +78,8 @@ export const GoalToWorkflowModal: FC<GoalToWorkflowModalProps> = ({
       target: endNode.id
     };
 
-    // Create workflow
-    const newWorkflow: Partial<Workflow> = {
+    // Create workflow with metadata in a custom property
+    const newWorkflow: Partial<Workflow> & { customMetadata?: any } = {
       title: workflowTitle,
       description: workflowDescription,
       complexity: complexity,
@@ -88,7 +87,7 @@ export const GoalToWorkflowModal: FC<GoalToWorkflowModalProps> = ({
       nodes: [startNode, agentNode, endNode],
       connections: [startToAgentConnection, agentToEndConnection],
       // Add origin project and goal to metadata
-      metadata: {
+      customMetadata: {
         originProjectId: goal.projectId,
         originGoalId: goal.id
       }

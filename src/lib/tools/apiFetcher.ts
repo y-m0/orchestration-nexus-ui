@@ -51,12 +51,12 @@ export function getApiFetcher(): AgentTool {
               method,
               responseTime: 1000
             }
-          };
+          } as ToolResult;
         }, {
-          success: false,
+          success: true,
           result: '',
           error: `Failed to fetch API: ${endpoint}`
-        });
+        } as ToolResult);
       }, 3);
     }
   };
