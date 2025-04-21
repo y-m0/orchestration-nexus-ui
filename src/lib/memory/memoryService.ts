@@ -1,4 +1,3 @@
-
 import { MemoryItem, MemoryMetadata, SearchResult } from '@/types/memory';
 
 // Mock in-memory database for now, could be replaced with actual ChromaDB or other vector store
@@ -6,15 +5,20 @@ class MemoryStore {
   private items: MemoryItem[] = [];
 
   async store(text: string, metadata: Partial<MemoryMetadata>): Promise<MemoryItem> {
+    // Ensure required fields are present
+    const completeMetadata: MemoryMetadata = {
+      agentId: metadata.agentId || 'default',
+      workflowId: metadata.workflowId,
+      tags: metadata.tags || [],
+      type: metadata.type || 'system',
+      timestamp: metadata.timestamp || Date.now(),
+      ...metadata
+    };
+
     const item: MemoryItem = {
       id: `mem_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
       text,
-      metadata: {
-        ...metadata,
-        agentId: metadata.agentId || undefined,
-        workflowId: metadata.workflowId || undefined,
-        tags: metadata.tags || [],
-      },
+      metadata: completeMetadata,
       createdAt: new Date().toISOString(),
     };
 

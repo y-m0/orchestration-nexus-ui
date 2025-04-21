@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -36,7 +35,7 @@ import {
 import { ErrorBoundary } from './components/ui/ErrorBoundary'
 import { AuthProvider, useAuth } from './lib/auth'
 import { useStore } from './lib/store'
-import { MemoryProvider } from './lib/memory/memoryContext'
+import { MemoryProvider } from './lib/memory'
 import * as React from "react";
 import { useIsMobile } from "./hooks/use-mobile";
 import {
@@ -252,5 +251,3 @@ const App = () => {
 }
 
 export default App;
-
-// App.tsx is getting too long; please consider refactoring it into smaller files after reviewing these changes.

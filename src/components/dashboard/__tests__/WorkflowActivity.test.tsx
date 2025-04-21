@@ -1,4 +1,3 @@
-
 import { render, screen, waitFor } from '@testing-library/react';
 import { WorkflowActivity } from '../WorkflowActivity';
 import { useStore } from '@/lib/store';
@@ -42,10 +41,11 @@ describe('WorkflowActivity', () => {
   ];
 
   beforeEach(() => {
+    // Cast the mock implementation to avoid type errors
     (useStore as jest.Mock).mockReturnValue({
       activities: mockActivities,
       setActivities: jest.fn(),
-    });
+    } as any);
 
     (useWorkflow as jest.Mock).mockReturnValue({
       currentWorkflow: null,

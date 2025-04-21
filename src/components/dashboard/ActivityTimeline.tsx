@@ -1,4 +1,3 @@
-
 import { Activity, Calendar, Clock, User, CheckCircle2, XCircle, CirclePause, MessageSquare, Settings, FolderOpen } from "lucide-react";
 import { WorkflowRun } from "@/types/workflow";
 import { useWorkflow } from "@/hooks/useWorkflow";
@@ -127,10 +126,15 @@ export function ActivityTimeline({
       else if (activity.type.includes('memory')) type = 'memory';
       else if (activity.type.includes('tool')) type = 'tool';
       
+      // Convert complex details to string if necessary
+      let description: string = typeof activity.details === 'string' 
+        ? activity.details 
+        : JSON.stringify(activity.details);
+      
       return {
         id: activity.id,
         title: activity.type.replace(/_/g, ' '),
-        description: activity.details,
+        description,
         timestamp: new Date(activity.timestamp).toLocaleString(),
         status,
         type,

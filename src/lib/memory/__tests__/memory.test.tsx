@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { renderHook, act } from '@testing-library/react';
 import { MemoryProvider, useMemory } from '../MemoryContext';
@@ -31,17 +30,18 @@ describe('Memory Module', () => {
   it('should store and retrieve long-term memory', async () => {
     const { result } = renderHook(() => useMemory(), { wrapper });
 
-    const metadata: Partial<MemoryMetadata> = {
+    const completeMetadata: MemoryMetadata = {
       agentId: 'test-agent',
       tags: ['important'],
-      type: 'agent'
+      type: 'agent',
+      timestamp: Date.now()
     };
 
     const testMemory = {
       type: 'long_term' as const,
       agentId: 'test-agent',
       content: 'test content',
-      metadata
+      metadata: completeMetadata
     };
 
     await act(async () => {

@@ -30,7 +30,9 @@ function useDashboardActivity() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      searchMemory("system status", 1).catch(() => {});
+      searchMemory({ content: "system status" })
+        .then(() => {}) // No need to handle result here
+        .catch(err => console.error("Error searching memory:", err));
     }, 60000);
     
     return () => clearInterval(interval);
@@ -78,6 +80,7 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const { systemHealth } = useDashboardActivity();
   const isMobile = useIsMobile();
+  
   const [mockApprovals, setMockApprovals] = useState<Approval[]>([
     {
       id: "appr-1",
@@ -163,7 +166,7 @@ export default function Dashboard() {
 
     const searchMemoryItems = async () => {
       try {
-        const results = await searchMemory(searchQuery, 5);
+        const results = await searchMemory({ content: searchQuery, limit: 5 });
         setMemoryResults(results);
         if (results.length > 0) {
           console.log(`Activity Log: Memory searched for "${searchQuery}" with ${results.length} results`);
@@ -276,7 +279,7 @@ export default function Dashboard() {
                       {systemHealth.pendingApprovals}
                     </span>
                   }
-                  icon={<Clock className="h-4 w-4 text-yellow-500" />}
+                  icon={<Clock className="h-3 w-3 mr-1" />}
                 />
                 <StatusCard
                   title="Memory Usage"
