@@ -1,11 +1,18 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-interface Activity {
+export interface Activity {
   id: string;
-  type: string;
+  type: 'workflow';
+  status: 'completed' | 'error' | 'running' | 'pending';
+  workflowId: string;
+  workflowName: string;
   timestamp: string;
-  details: string;
+  details: {
+    steps?: number;
+    duration?: number;
+    error?: string;
+  };
 }
 
 interface AppState {
