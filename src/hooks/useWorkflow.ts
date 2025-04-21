@@ -1,4 +1,3 @@
-
 import { useCallback } from 'react';
 import { predefinedWorkflows } from '@/data/workflows';
 import { useWorkflowState } from './useWorkflowState';
@@ -37,12 +36,12 @@ export const useWorkflow = () => {
     updateNodeStatus,
     setWorkflowRuns,
   );
-  const { stopWorkflow, approveHumanTask, rejectHumanTask } = useWorkflowControl(
+  const { stopWorkflow, approveHumanTask, rejectHumanTask } = useWorkflowControl({
     isRunning,
     setIsRunning,
     updateNodeStatus,
     setWorkflowRuns,
-  );
+  });
 
   const loadWorkflow = useCallback((workflowId: string) => {
     const workflow = predefinedWorkflows.find(wf => wf.id === workflowId);
@@ -52,12 +51,12 @@ export const useWorkflow = () => {
       setCurrentWorkflow(workflow);
       
       // Log workflow loading in activity log
-      logWorkflowActivity(workflowId, 'updated', 'Current User', { action: 'loaded' });
+      logWorkflowActivity(workflowId, 'updated');
     }
   }, [setNodes, setConnections, setCurrentWorkflow]);
   
   const createWorkflow = useCallback((workflow: any) => {
-    // Register the new workflow
+    // Register the new workflow with correct args
     registerWorkflow(workflow.id, workflow.title);
     
     // Set as current workflow
@@ -66,9 +65,9 @@ export const useWorkflow = () => {
     setConnections(workflow.connections || []);
     
     // Log creation in activity log
-    logWorkflowActivity(workflow.id, 'created', 'Current User', { workflow });
+    logWorkflowActivity(workflow.id, 'created');
     
-    // Update dashboard metrics
+    // Update dashboard metrics with appropriate event
     updateDashboardMetrics(workflow.id, 'run');
     
     return workflow;
