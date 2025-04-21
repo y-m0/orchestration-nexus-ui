@@ -4,12 +4,17 @@ import { persist } from 'zustand/middleware'
 
 export interface Activity {
   id: string;
-  type: 'workflow';
-  status: 'completed' | 'error' | 'running' | 'pending';
+  type: 'workflow' | 'workflow_loaded' | 'workflow_created' | 'workflow_started' | 'workflow_stopped' | 'task_approved' | 'task_rejected';
+  status: 'completed' | 'error' | 'running' | 'pending' | 'success';
   workflowId: string;
-  workflowName: string;
+  workflowName?: string;
   timestamp: string;
-  details: string;
+  details: string | {
+    steps?: number;
+    duration?: number;
+    error?: string;
+    [key: string]: any;
+  };
 }
 
 interface AppState {
@@ -81,4 +86,4 @@ export const useStore = create<AppState>()(
       name: 'orchestration-nexus-storage',
     }
   )
-) 
+)

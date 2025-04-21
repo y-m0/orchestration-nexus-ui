@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useStore } from '@/lib/store';
 import { useWorkflow } from '@/hooks/useWorkflow';
@@ -32,6 +33,8 @@ export const WorkflowActivity = () => {
         return 'bg-blue-500';
       case 'pending':
         return 'bg-yellow-500';
+      case 'success':
+        return 'bg-green-500';
       default:
         return 'bg-gray-500';
     }
@@ -87,12 +90,20 @@ export const WorkflowActivity = () => {
                 </div>
                 {selectedActivity.status === 'error' ? (
                   <div className="p-4 bg-red-50 rounded-lg">
-                    <p className="text-red-600">{selectedActivity.details.error}</p>
+                    <p className="text-red-600">
+                      {typeof selectedActivity.details === 'string' 
+                        ? selectedActivity.details 
+                        : selectedActivity.details.error || 'Unknown error'}
+                    </p>
                   </div>
                 ) : (
                   <div className="space-y-2">
-                    <p>Steps: {selectedActivity.details.steps}</p>
-                    <p>Duration: {selectedActivity.details.duration}ms</p>
+                    <p>Steps: {typeof selectedActivity.details === 'string' 
+                      ? 'N/A' 
+                      : selectedActivity.details.steps || 'N/A'}</p>
+                    <p>Duration: {typeof selectedActivity.details === 'string' 
+                      ? 'N/A' 
+                      : (selectedActivity.details.duration ? `${selectedActivity.details.duration}ms` : 'N/A')}</p>
                   </div>
                 )}
               </div>

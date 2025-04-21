@@ -1,4 +1,3 @@
-
 import { Bot, BarChart3, CheckCircle2, AlertCircle, User, FolderOpen, Calendar, Clock } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -11,7 +10,7 @@ import { ActivityTimeline } from "@/components/dashboard/ActivityTimeline";
 import { useState, useEffect } from "react";
 import { useWorkflow } from "@/hooks/useWorkflow";
 import { useNavigate } from "react-router-dom";
-import { useMemory } from "@/lib/memory/memoryContext";
+import { useMemory } from "@/lib/memory/MemoryContext";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { WorkflowApprovals } from "@/components/approvals/WorkflowApprovals";
 import { StatusCard } from "@/components/dashboard/StatusCard";
@@ -358,4 +357,3 @@ export default function Dashboard() {
     </div>
   );
 }
-

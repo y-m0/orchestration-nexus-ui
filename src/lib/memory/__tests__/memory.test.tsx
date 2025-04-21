@@ -1,7 +1,8 @@
+
 import React from 'react';
 import { renderHook, act } from '@testing-library/react';
 import { MemoryProvider, useMemory } from '../MemoryContext';
-import type { Memory } from '../types';
+import type { Memory, MemoryMetadata } from '../types';
 
 describe('Memory Module', () => {
   const wrapper = ({ children }: { children: React.ReactNode }) => (
@@ -30,11 +31,17 @@ describe('Memory Module', () => {
   it('should store and retrieve long-term memory', async () => {
     const { result } = renderHook(() => useMemory(), { wrapper });
 
+    const metadata: Partial<MemoryMetadata> = {
+      agentId: 'test-agent',
+      tags: ['important'],
+      type: 'agent'
+    };
+
     const testMemory = {
       type: 'long_term' as const,
       agentId: 'test-agent',
       content: 'test content',
-      metadata: { importance: 'high' },
+      metadata
     };
 
     await act(async () => {
@@ -60,7 +67,12 @@ describe('Memory Module', () => {
         type: 'long_term',
         agentId: 'agent2',
         content: 'memory 2',
-        metadata: { tag: 'important' },
+        metadata: {
+          agentId: 'agent2',
+          tags: ['important'],
+          type: 'agent',
+          timestamp: Date.now()
+        },
       },
     ];
 
@@ -120,4 +132,4 @@ describe('Memory Module', () => {
     expect(retrievedMemory).toBeDefined();
     expect(retrievedMemory).toEqual(storedMemory);
   });
-}); 
+});

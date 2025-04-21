@@ -8,12 +8,14 @@ export interface MemoryItem {
 }
 
 export interface MemoryMetadata {
-  agentId?: string;
+  agentId: string;
   workflowId?: string;
-  tags?: string[];
+  tags: string[];
   source?: string;
-  type?: 'workflow' | 'agent' | 'system' | 'user';
+  type: 'workflow' | 'agent' | 'system' | 'user';
   importance?: number;
+  timestamp: number;
+  [key: string]: any;
 }
 
 export interface SearchResult {

@@ -1,13 +1,8 @@
+
 import { useCallback } from 'react';
 import { useStore } from '@/lib/store';
 import { toast } from '@/components/ui/use-toast';
-
-interface Activity {
-  id: string;
-  type: string;
-  timestamp: string;
-  details: string;
-}
+import type { Activity } from '@/lib/store';
 
 interface UseWorkflowControlProps {
   isRunning: boolean;
@@ -33,6 +28,8 @@ export const useWorkflowControl = ({
     setActivities((prev: Activity[]) => [...prev, {
       id: Date.now().toString(),
       type: 'workflow_stopped',
+      status: 'error',
+      workflowId: 'current',
       timestamp: new Date().toISOString(),
       details: 'Workflow was manually stopped'
     }]);
@@ -51,7 +48,9 @@ export const useWorkflowControl = ({
     // Add to activity log
     setActivities((prev: Activity[]) => [...prev, {
       id: Date.now().toString(),
-      type: 'workflow_paused',
+      type: 'workflow',
+      status: 'pending',
+      workflowId: 'current',
       timestamp: new Date().toISOString(),
       details: 'Workflow was paused'
     }]);
@@ -70,7 +69,9 @@ export const useWorkflowControl = ({
     // Add to activity log
     setActivities((prev: Activity[]) => [...prev, {
       id: Date.now().toString(),
-      type: 'workflow_resumed',
+      type: 'workflow',
+      status: 'running',
+      workflowId: 'current',
       timestamp: new Date().toISOString(),
       details: 'Workflow was resumed'
     }]);
@@ -89,6 +90,8 @@ export const useWorkflowControl = ({
     setActivities((prev: Activity[]) => [...prev, {
       id: Date.now().toString(),
       type: 'task_approved',
+      status: 'success',
+      workflowId: 'current',
       timestamp: new Date().toISOString(),
       details: `Task ${taskId} was approved`
     }]);
@@ -107,6 +110,8 @@ export const useWorkflowControl = ({
     setActivities((prev: Activity[]) => [...prev, {
       id: Date.now().toString(),
       type: 'task_rejected',
+      status: 'error',
+      workflowId: 'current',
       timestamp: new Date().toISOString(),
       details: `Task ${taskId} was rejected`
     }]);

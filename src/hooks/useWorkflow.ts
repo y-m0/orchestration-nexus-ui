@@ -12,6 +12,7 @@ import {
   updateDashboardMetrics 
 } from '@/components/workflow/WorkflowIntegrations';
 import { useStore } from '@/lib/store';
+import type { Activity } from '@/lib/store';
 
 export const useWorkflow = () => {
   const {
@@ -58,10 +59,11 @@ export const useWorkflow = () => {
       
       // Add to global activity store
       addActivity({
-        type: 'workflow_loaded',
+        type: 'workflow',
         details: `Workflow ${workflow.title} (${workflowId}) loaded`,
         workflowId,
-        status: 'success'
+        status: 'success',
+        workflowName: workflow.title
       });
     }
   }, [setNodes, setConnections, setCurrentWorkflow, addActivity]);
@@ -83,10 +85,11 @@ export const useWorkflow = () => {
     
     // Add to global activity store
     addActivity({
-      type: 'workflow_created',
+      type: 'workflow',
       details: `New workflow "${workflow.title}" (${workflow.id}) created`,
       workflowId: workflow.id,
-      status: 'success'
+      status: 'success',
+      workflowName: workflow.title
     });
     
     return workflow;
@@ -98,10 +101,11 @@ export const useWorkflow = () => {
     if (currentWorkflow) {
       // Add to global activity store
       addActivity({
-        type: 'workflow_started',
+        type: 'workflow',
         details: `Workflow "${currentWorkflow.title}" (${currentWorkflow.id}) started execution`,
         workflowId: currentWorkflow.id,
-        status: 'pending'
+        status: 'pending',
+        workflowName: currentWorkflow.title
       });
     }
     
@@ -114,10 +118,11 @@ export const useWorkflow = () => {
     if (currentWorkflow) {
       // Add to global activity store
       addActivity({
-        type: 'workflow_stopped',
+        type: 'workflow',
         details: `Workflow "${currentWorkflow.title}" (${currentWorkflow.id}) manually stopped`,
         workflowId: currentWorkflow.id,
-        status: 'error'
+        status: 'error',
+        workflowName: currentWorkflow.title
       });
     }
   }, [stopWorkflow, currentWorkflow, addActivity]);
@@ -130,10 +135,11 @@ export const useWorkflow = () => {
       
       // Add to global activity store
       addActivity({
-        type: 'task_approved',
+        type: 'workflow',
         details: `Human task "${node?.title || nodeId}" in workflow ${currentWorkflow.id} approved`,
         workflowId: currentWorkflow.id,
-        status: 'success'
+        status: 'success',
+        workflowName: currentWorkflow.title
       });
     }
   }, [approveHumanTask, currentWorkflow, nodes, addActivity]);
@@ -146,10 +152,11 @@ export const useWorkflow = () => {
       
       // Add to global activity store
       addActivity({
-        type: 'task_rejected',
+        type: 'workflow',
         details: `Human task "${node?.title || nodeId}" in workflow ${currentWorkflow.id} rejected`,
         workflowId: currentWorkflow.id,
-        status: 'error'
+        status: 'error',
+        workflowName: currentWorkflow.title
       });
     }
   }, [rejectHumanTask, currentWorkflow, nodes, addActivity]);

@@ -1,8 +1,9 @@
+
 import { render, screen, waitFor } from '@testing-library/react';
 import { WorkflowActivity } from '../WorkflowActivity';
 import { useStore } from '@/lib/store';
 import { useWorkflow } from '@/hooks/useWorkflow';
-import type { Activity } from '../WorkflowActivity';
+import type { Activity } from '@/lib/store';
 
 // Mock the store and workflow hooks
 jest.mock('@/lib/store', () => ({
@@ -106,4 +107,4 @@ describe('WorkflowActivity', () => {
       expect(screen.getByText('Test error message')).toBeInTheDocument();
     });
   });
-}); 
+});
