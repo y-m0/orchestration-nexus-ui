@@ -111,6 +111,45 @@ export default function Dashboard() {
     error: 3
   });
 
+  const sampleProjects = [
+    {
+      id: 'proj-crm',
+      name: "Sales CRM Automation",
+      description: "Automate pipeline updates, lead scoring, and task assignments across your CRM tools.",
+      owner: "Dana Nguyen",
+      tags: ["automation", "crm", "sales"],
+      completion: 91,
+      updatedAt: "2024-03-10T14:20:00Z"
+    },
+    {
+      id: 'proj-marketing',
+      name: "Social Channel Orchestration",
+      description: "Manage campaigns, schedule posts, and automate reporting across all major platforms.",
+      owner: "Victor Li",
+      tags: ["marketing", "automation", "reporting"],
+      completion: 62,
+      updatedAt: "2024-04-05T11:00:00Z"
+    },
+    {
+      id: 'proj-support',
+      name: "Customer Support Routing",
+      description: "Use AI to classify tickets and dynamically assign to best-fit teams with escalation logic.",
+      owner: "Priya Patel",
+      tags: ["support", "ai", "classification"],
+      completion: 75,
+      updatedAt: "2024-04-14T09:15:00Z"
+    },
+    {
+      id: 'proj-risk',
+      name: "Automated Risk Monitoring",
+      description: "Continuously monitor critical KPIs and generate real-time alerts for risk mitigation.",
+      owner: "Jamal Blue",
+      tags: ["risk", "monitoring", "alerts"],
+      completion: 55,
+      updatedAt: "2024-04-19T17:45:00Z"
+    }
+  ];
+
   const handleLogActivity = (logEntry: string) => {
     setActivityLogs(prev => [logEntry, ...prev].slice(0, 10));
     console.log(`Activity Log: ${logEntry}`);
@@ -199,7 +238,7 @@ export default function Dashboard() {
               <CardTitle>Task Completion</CardTitle>
               <CardDescription>Tasks completed over time</CardDescription>
             </CardHeader>
-            <CardContent className="h-[300px]">
+            <CardContent className="h-[300px] pb-2">
               <TaskCompletionChart />
             </CardContent>
           </Card>
@@ -208,34 +247,88 @@ export default function Dashboard() {
           <Card className="h-full">
             <CardHeader>
               <CardTitle>System Health</CardTitle>
-              <CardDescription>Current system metrics</CardDescription>
+              <CardDescription>Live system metrics</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <StatusCard
                   title="Workflows Running"
-                  value="4"
+                  value={
+                    <span className="font-semibold text-2xl text-[#9b87f5] dark:text-[#D6BCFA]">
+                      {systemHealth.workflowsRunning}
+                    </span>
+                  }
                   icon={<FolderOpen className="h-4 w-4 text-primary" />}
                 />
                 <StatusCard
                   title="Active Agents"
-                  value="23"
+                  value={
+                    <span className="font-semibold text-2xl text-[#7E69AB] dark:text-[#D6BCFA]">
+                      {systemHealth.agentsActive}
+                    </span>
+                  }
                   icon={<User className="h-4 w-4 text-[#9b87f5]" />}
                 />
                 <StatusCard
                   title="Pending Approvals"
-                  value="7"
+                  value={
+                    <span className="font-semibold text-2xl text-yellow-500 dark:text-yellow-200">
+                      {systemHealth.pendingApprovals}
+                    </span>
+                  }
                   icon={<Clock className="h-4 w-4 text-yellow-500" />}
                 />
                 <StatusCard
                   title="Memory Usage"
-                  value="44%"
+                  value={
+                    <span className="font-semibold text-2xl text-[#7E69AB] dark:text-[#D6BCFA]">
+                      {systemHealth.memoryUsage}%
+                    </span>
+                  }
                   icon={<BarChart3 className="h-4 w-4 text-[#7E69AB]" />}
                 />
               </div>
             </CardContent>
           </Card>
         </div>
+      </div>
+
+      <div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Sample Projects</CardTitle>
+            <CardDescription>
+              Explore featured blueprints for automating and optimizing real-world processes
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {sampleProjects.map(project => (
+                <div key={project.id} className="bg-white dark:bg-gray-900/50 rounded-lg shadow border p-4 flex flex-col justify-between">
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="font-semibold text-lg text-gradient-primary">{project.name}</span>
+                      <span className={`rounded text-xs px-2 py-1 ${project.completion > 75 ? "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-200"
+                        : project.completion > 60 ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-200"
+                        : "bg-purple-100 text-purple-800 dark:bg-[#7E69AB] dark:text-white"}`}>
+                        {project.completion}% complete
+                      </span>
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-2">{project.description}</p>
+                    <div className="flex flex-wrap gap-1 mb-1">
+                      {project.tags.map(tag => (
+                        <span key={tag} className="bg-gray-100 dark:bg-gray-800/70 rounded px-2 py-0.5 text-xs text-gray-700 dark:text-gray-200">{tag}</span>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="mt-2 text-xs text-gray-400">
+                    Last updated {new Date(project.updatedAt).toLocaleDateString()}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
