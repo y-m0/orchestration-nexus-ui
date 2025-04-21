@@ -7,13 +7,10 @@ import { TaskCompletionChart } from "@/components/dashboard/TaskCompletionChart"
 import { QuickFilters } from "@/components/dashboard/QuickFilters";
 import { WorkflowInsights } from "@/components/dashboard/WorkflowInsights";
 import { ActivityTimeline } from "@/components/dashboard/ActivityTimeline";
-import { WorkflowActivityLogger } from "@/components/dashboard/WorkflowActivityLogger";
 import { useState, useEffect } from "react";
 import { useWorkflow } from "@/hooks/useWorkflow";
 import { useNavigate } from "react-router-dom";
 import { useMemory } from "@/lib/memory/memoryContext";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { WorkflowApprovals } from "@/components/approvals/WorkflowApprovals";
 import { StatusCard } from "@/components/dashboard/StatusCard";
@@ -250,25 +247,20 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>System Activity</CardTitle>
-            <CardDescription>Platform events: configuration updates, tool runs, errors, integrations, and settings changes</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ActivityTimeline 
-              onItemClick={handleTimelineItemClick}
-              showFilters
-              maxItems={10}
-              items={[]} // In a real implementation, filter only system/tool events
-            />
-          </CardContent>
-        </Card>
-        <div>
-          <PendingApprovalsFeed approvals={mockApprovals.filter(a => a.status === "pending")} onView={handleViewWorkflow} />
-        </div>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>System Activity</CardTitle>
+          <CardDescription>Platform events: configuration updates, tool runs, errors, integrations, and settings changes</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ActivityTimeline 
+            onItemClick={handleTimelineItemClick}
+            showFilters
+            maxItems={10}
+            items={[]} // In a real implementation, filter only system/tool events
+          />
+        </CardContent>
+      </Card>
     </div>
   );
 }
