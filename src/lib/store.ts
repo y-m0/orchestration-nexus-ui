@@ -1,3 +1,4 @@
+
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
@@ -6,6 +7,10 @@ interface Activity {
   type: string;
   timestamp: string;
   details: string;
+  workflowId?: string;
+  agentId?: string;
+  status?: 'success' | 'pending' | 'error';
+  metadata?: Record<string, any>;
 }
 
 interface AppState {
@@ -22,6 +27,7 @@ interface AppState {
     theme: 'light' | 'dark'
     notifications: boolean
     autoSave: boolean
+    dashboardRefreshInterval: number
   }
   // Actions
   setWorkflows: (workflows: any[]) => void
@@ -29,12 +35,13 @@ interface AppState {
   setAgents: (agents: any[]) => void
   setSelectedAgent: (id: string | null) => void
   setActivities: (activities: Activity[] | ((prev: Activity[]) => Activity[])) => void
+  addActivity: (activity: Omit<Activity, 'id' | 'timestamp'>) => void
   updateSettings: (settings: Partial<AppState['settings']>) => void
 }
 
 export const useStore = create<AppState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       workflows: [],
       selectedWorkflow: null,
       agents: [],
@@ -44,6 +51,7 @@ export const useStore = create<AppState>()(
         theme: 'light',
         notifications: true,
         autoSave: true,
+        dashboardRefreshInterval: 30, // seconds
       },
       setWorkflows: (workflows) => set({ workflows }),
       setSelectedWorkflow: (id) => set({ selectedWorkflow: id }),
@@ -52,6 +60,21 @@ export const useStore = create<AppState>()(
       setActivities: (activities) => set((state) => ({
         activities: typeof activities === 'function' ? activities(state.activities) : activities
       })),
+      addActivity: (activity) => set((state) => {
+        const newActivity = {
+          ...activity,
+          id: `activity-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
+          timestamp: new Date().toISOString()
+        };
+        
+        // Log to console for ActivityTimeline to pick up
+        const activityType = activity.type.replace(/_/g, ' ');
+        console.log(`Activity Log: ${activityType} - ${activity.details}`);
+        
+        return {
+          activities: [newActivity, ...state.activities].slice(0, 100) // Keep last 100 activities
+        };
+      }),
       updateSettings: (settings) => 
         set((state) => ({ settings: { ...state.settings, ...settings } })),
     }),
