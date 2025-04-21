@@ -19,6 +19,9 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
+// Token storage constants
+const TOKEN_KEY = 'mock-auth-token'
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
@@ -26,13 +29,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const checkAuth = useCallback(async () => {
     try {
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem(TOKEN_KEY)
       if (token) {
         const user = await mockAuth.getCurrentUser(token)
         setUser(user)
       }
     } catch (err) {
-      localStorage.removeItem('token')
+      console.error('Auth check failed:', err)
+      localStorage.removeItem(TOKEN_KEY)
       setUser(null)
     } finally {
       setLoading(false)
@@ -48,10 +52,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setLoading(true)
       setError(null)
       const response = await mockAuth.login(email, password)
-      localStorage.setItem('token', response.token)
+      localStorage.setItem(TOKEN_KEY, response.token)
       setUser(response.user)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed')
+      const errorMessage = err instanceof Error ? err.message : 'Login failed'
+      setError(errorMessage)
+      console.error('Login failed:', errorMessage)
       throw err
     } finally {
       setLoading(false)
@@ -61,8 +67,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logout = useCallback(async () => {
     try {
       await mockAuth.logout()
+    } catch (err) {
+      console.error('Logout failed:', err)
     } finally {
-      localStorage.removeItem('token')
+      localStorage.removeItem(TOKEN_KEY)
       setUser(null)
     }
   }, [])

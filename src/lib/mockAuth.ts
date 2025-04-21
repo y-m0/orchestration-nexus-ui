@@ -19,7 +19,7 @@ const mockUsers = [
 // Mock delay to simulate network request
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
-// Mock token storage
+// Token storage constants
 const TOKEN_KEY = 'mock-auth-token'
 const TOKEN_EXPIRY = 24 * 60 * 60 * 1000 // 24 hours
 
@@ -38,8 +38,9 @@ export const mockAuth = {
     
     // Generate mock token with expiry
     const token = {
-      value: 'mock-jwt-token',
-      expiry: Date.now() + TOKEN_EXPIRY
+      value: `mock-jwt-token-${Date.now()}`,
+      expiry: Date.now() + TOKEN_EXPIRY,
+      userId: user.id
     }
     
     localStorage.setItem(TOKEN_KEY, JSON.stringify(token))
@@ -64,7 +65,7 @@ export const mockAuth = {
       throw new Error('No token found')
     }
 
-    const { value, expiry } = JSON.parse(storedToken)
+    const { value, expiry, userId } = JSON.parse(storedToken)
     
     if (token !== value) {
       throw new Error('Invalid token')
@@ -75,8 +76,12 @@ export const mockAuth = {
       throw new Error('Token expired')
     }
 
-    // Return the admin user for now
-    const { password: _, ...userWithoutPassword } = mockUsers[0]
+    const user = mockUsers.find(u => u.id === userId)
+    if (!user) {
+      throw new Error('User not found')
+    }
+
+    const { password: _, ...userWithoutPassword } = user
     return userWithoutPassword
   }
 } 
