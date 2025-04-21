@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react'
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react'
 import { mockAuth } from './mockAuth'
 
 interface User {
@@ -19,16 +19,12 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    checkAuth()
-  }, [])
-
-  const checkAuth = async () => {
+  const checkAuth = useCallback(async () => {
     try {
       const token = localStorage.getItem('token')
       if (token) {
@@ -37,12 +33,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     } catch (err) {
       localStorage.removeItem('token')
+      setUser(null)
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
-  const login = async (email: string, password: string) => {
+  useEffect(() => {
+    checkAuth()
+  }, [checkAuth])
+
+  const login = useCallback(async (email: string, password: string) => {
     try {
       setLoading(true)
       setError(null)
@@ -55,30 +56,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     try {
       await mockAuth.logout()
     } finally {
       localStorage.removeItem('token')
       setUser(null)
     }
-  }
+  }, [])
 
-  const value = {
+  const value = React.useMemo(() => ({
     user,
     loading,
     error,
     login,
     logout,
     isAuthenticated: !!user,
-  }
+  }), [user, loading, error, login, logout])
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
-export function useAuth() {
+export const useAuth = () => {
   const context = useContext(AuthContext)
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider')
