@@ -37,12 +37,12 @@ export const useWorkflow = () => {
     updateNodeStatus,
     setWorkflowRuns,
   );
-  const { stopWorkflow, approveHumanTask, rejectHumanTask } = useWorkflowControl(
+  const { stopWorkflow, approveHumanTask, rejectHumanTask } = useWorkflowControl({
     isRunning,
     setIsRunning,
     updateNodeStatus,
     setWorkflowRuns,
-  );
+  });
 
   const loadWorkflow = useCallback((workflowId: string) => {
     const workflow = predefinedWorkflows.find(wf => wf.id === workflowId);
@@ -52,13 +52,13 @@ export const useWorkflow = () => {
       setCurrentWorkflow(workflow);
       
       // Log workflow loading in activity log
-      logWorkflowActivity(workflowId, 'updated', 'Current User');
+      logWorkflowActivity(workflowId, 'updated');
     }
   }, [setNodes, setConnections, setCurrentWorkflow]);
   
   const createWorkflow = useCallback((workflow: any) => {
     // Register the new workflow
-    registerWorkflow(workflow.id, workflow.title);
+    registerWorkflow(workflow);
     
     // Set as current workflow
     setCurrentWorkflow(workflow);
@@ -66,10 +66,10 @@ export const useWorkflow = () => {
     setConnections(workflow.connections || []);
     
     // Log creation in activity log
-    logWorkflowActivity(workflow.id, 'created', 'Current User');
+    logWorkflowActivity(workflow.id, 'created');
     
     // Update dashboard metrics
-    updateDashboardMetrics(workflow.id);
+    updateDashboardMetrics();
     
     return workflow;
   }, [setCurrentWorkflow, setNodes, setConnections]);
