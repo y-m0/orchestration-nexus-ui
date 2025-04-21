@@ -20,7 +20,6 @@ import { StatusCard } from "@/components/dashboard/StatusCard";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { PendingApprovalsFeed } from "@/components/dashboard/PendingApprovalsFeed";
 
-// Custom hook to centralize dashboard activity tracking
 function useDashboardActivity() {
   const { workflowRuns, currentWorkflow } = useWorkflow();
   const { searchMemory } = useMemory();
@@ -32,23 +31,17 @@ function useDashboardActivity() {
     memoryUsage: 0
   });
 
-  // Track memory usage
   useEffect(() => {
-    // This would be replaced by real memory tracking in a production system
     const interval = setInterval(() => {
-      // Simulate memory activity
       searchMemory("system status", 1).catch(() => {});
-    }, 60000); // Every minute
+    }, 60000);
     
     return () => clearInterval(interval);
   }, [searchMemory]);
   
-  // Track system health 
   useEffect(() => {
-    // Count running workflows
     const runningWorkflows = workflowRuns.filter(run => run.status === 'running').length;
     
-    // Count active agents - this is from workflowRuns nodeRuns that are running
     let activeAgents = 0;
     workflowRuns.forEach(run => {
       if (run.status === 'running') {
@@ -56,11 +49,9 @@ function useDashboardActivity() {
       }
     });
     
-    // Count pending approvals - from workflowRuns nodeRuns that need human approval
     let pendingApprovals = 0;
     workflowRuns.forEach(run => {
       if (run.status === 'running') {
-        // In a real system, we'd check nodes that are of type 'human' and require approval
         pendingApprovals += run.nodeRuns.filter(node => 
           node.status === 'running' && node.nodeId?.includes('human')
         ).length;
@@ -71,9 +62,8 @@ function useDashboardActivity() {
       workflowsRunning: runningWorkflows,
       agentsActive: activeAgents,
       pendingApprovals: pendingApprovals,
-      memoryUsage: Math.floor(Math.random() * 100) // Simulated value
+      memoryUsage: Math.floor(Math.random() * 100)
     });
-    
   }, [workflowRuns]);
   
   return {
@@ -97,7 +87,7 @@ export default function Dashboard() {
       workflowName: "Expense Approval",
       requester: "Anna",
       submittedAt: new Date(Date.now() - 1000 * 60 * 20).toISOString(),
-      status: "pending",
+      status: "pending" as "pending",
       stakeholder: "John Appleseed"
     },
     {
@@ -105,7 +95,7 @@ export default function Dashboard() {
       workflowName: "Content Review",
       requester: "Ben",
       submittedAt: new Date(Date.now() - 1000 * 60 * 120).toISOString(),
-      status: "approved",
+      status: "approved" as "approved",
       stakeholder: "Sarah Connor"
     },
     {
@@ -113,26 +103,22 @@ export default function Dashboard() {
       workflowName: "Data Analysis",
       requester: "Charlie",
       submittedAt: new Date(Date.now() - 1000 * 60 * 300).toISOString(),
-      status: "pending",
+      status: "pending" as "pending",
       stakeholder: "Priya Patel"
     },
   ]);
 
-  // Stats for workflows that impact the agent counts
   const [agentStats, setAgentStats] = useState({
-    active: 16, // Default values
+    active: 16,
     idle: 5,
     error: 3
   });
 
   const handleLogActivity = (logEntry: string) => {
     setActivityLogs(prev => [logEntry, ...prev].slice(0, 10));
-    
-    // Also log to console for ActivityTimeline to pick up
     console.log(`Activity Log: ${logEntry}`);
   };
 
-  // Search memory when query changes
   useEffect(() => {
     if (!searchQuery || searchQuery.length < 3) {
       setMemoryResults([]);
@@ -143,8 +129,6 @@ export default function Dashboard() {
       try {
         const results = await searchMemory(searchQuery, 5);
         setMemoryResults(results);
-        
-        // Log memory search to activity log
         if (results.length > 0) {
           console.log(`Activity Log: Memory searched for "${searchQuery}" with ${results.length} results`);
         }
@@ -157,19 +141,15 @@ export default function Dashboard() {
     return () => clearTimeout(debounceTimer);
   }, [searchQuery, searchMemory]);
 
-  // Update agent stats based on workflow runs
   useEffect(() => {
     if (workflowRuns.length > 0) {
-      // Get the most recent runs
       const recentRuns = [...workflowRuns].sort(
         (a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime()
       ).slice(0, 5);
 
-      // Count active runs and nodes
       const activeRuns = recentRuns.filter(run => run.status === 'running');
       
       if (activeRuns.length > 0) {
-        // Count active, error, and idle nodes
         let activeAgents = 0;
         let errorAgents = 0;
         
@@ -178,8 +158,6 @@ export default function Dashboard() {
           errorAgents += run.nodeRuns.filter(node => node.status === 'error').length;
         });
         
-        // Calculate idle as the difference between total and active/error
-        // Using the default total as reference
         const totalAgents = agentStats.active + agentStats.idle + agentStats.error;
         const idleAgents = Math.max(0, totalAgents - activeAgents - errorAgents);
         
@@ -192,7 +170,6 @@ export default function Dashboard() {
     }
   }, [workflowRuns]);
 
-  // Handle timeline item click to navigate to the workflow
   const handleTimelineItemClick = (item: any) => {
     if (item.workflowId) {
       navigate(`/workflows?id=${item.workflowId}`);
@@ -200,18 +177,15 @@ export default function Dashboard() {
       navigate(`/agents?id=${item.agentId}`);
     }
   };
-  
-  // Handle workflow approval navigation
+
   const handleViewWorkflow = (workflowId: string, nodeId?: string) => {
     navigate(`/workflows?id=${workflowId}${nodeId ? `&nodeId=${nodeId}` : ''}`);
   };
 
-  // Get recent workflows from runs
   const recentWorkflows = [...workflowRuns]
     .sort((a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime())
     .slice(0, 3);
 
-  // NEW: Separated Activity Panels
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -391,7 +365,6 @@ export default function Dashboard() {
             <CardDescription>Platform events: configuration updates, tool runs, errors, integrations, and settings changes</CardDescription>
           </CardHeader>
           <CardContent>
-            {/* You may want to build a filtered ActivityTimeline, but for demo, use the same */}
             <ActivityTimeline 
               onItemClick={handleTimelineItemClick}
               showFilters

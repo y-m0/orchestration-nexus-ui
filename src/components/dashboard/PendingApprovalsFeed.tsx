@@ -2,7 +2,7 @@
 import { Check, XCircle, Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
-interface Approval {
+export interface Approval {
   id: string;
   workflowName: string;
   requester: string;
