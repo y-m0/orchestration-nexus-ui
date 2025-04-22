@@ -146,15 +146,16 @@ export default function Login() {
       </div>
 
       <div className="flex-1 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md">
+        <Card className="w-full max-w-md shadow-lg">
           <form onSubmit={handleLogin} className="p-6 space-y-6">
-            <div className="text-center mb-8">
-              <h1 className="text-2xl font-bold text-foreground mb-2">Welcome Back</h1>
-              <p className="text-muted-foreground">Please sign in to continue</p>
+            <div className="text-center mb-6">
+              <h1 className="text-2xl font-bold text-foreground">Welcome Back</h1>
+              <p className="text-muted-foreground mt-1">Please sign in to continue</p>
             </div>
 
-            <div className="space-y-4">
-              <div className="flex justify-center mb-4">
+            <div className="space-y-5">
+              {/* Captcha centered and with proper spacing */}
+              <div className="flex justify-center my-4">
                 <HCaptcha
                   sitekey={import.meta.env.VITE_HCAPTCHA_SITE_KEY || "10000000-ffff-ffff-ffff-000000000001"} 
                   onVerify={handleCaptchaVerify}
@@ -194,21 +195,21 @@ export default function Login() {
                 Continue with Google
               </Button>
 
-              <div className="relative">
+              <div className="relative my-6">
                 <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t" />
+                  <span className="w-full border-t border-border" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">
+                  <span className="bg-background px-3 text-muted-foreground">
                     Or continue with email
                   </span>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email" className="text-sm font-medium">Email</Label>
                 <div className="relative">
-                  <div className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground">
+                  <div className="absolute left-3 top-2.5 text-muted-foreground">
                     <User className="h-5 w-5" />
                   </div>
                   <Input
@@ -224,9 +225,9 @@ export default function Login() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password" className="text-sm font-medium">Password</Label>
                 <div className="relative">
-                  <div className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground">
+                  <div className="absolute left-3 top-2.5 text-muted-foreground">
                     <Lock className="h-5 w-5" />
                   </div>
                   <Input
@@ -250,10 +251,11 @@ export default function Login() {
               {loading || captchaVerifying ? "Processing..." : "Sign In"}
             </Button>
 
-            <div className="text-center">
+            <div className="text-center mt-4">
               <Button 
                 variant="link" 
                 type="button"
+                className="text-sm"
                 onClick={() => navigate("/onboarding")}
               >
                 Don't have an account? Sign up
