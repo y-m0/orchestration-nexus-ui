@@ -2,7 +2,8 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { usePineconeProject } from '@/hooks/usePineconeProject';
-import type { Project, ProjectContextType, Goal } from '@/types/project';
+import type { Project, Goal } from '@/types/project';
+import type { ProjectContextType } from '@/lib/types/project';
 
 const ProjectContext = createContext<ProjectContextType | undefined>(undefined);
 
@@ -69,7 +70,7 @@ export const ProjectProvider: React.FC<{ children: React.ReactNode }> = ({ child
       id: uuidv4(),
       projectId, // Add projectId as required by the Goal type in types/project.ts
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      // Remove updatedAt as it's not in the Goal type in types/project.ts
     };
     setProjects(prev => prev.map(p => 
       p.id === projectId 
