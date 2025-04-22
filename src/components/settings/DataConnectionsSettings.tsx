@@ -75,6 +75,18 @@ export function DataConnectionsSettings() {
         customers: ["id", "name", "email", "status", "created_at", "last_contact"],
         deals: ["id", "customer_id", "status", "value", "created_at"]
       }
+    },
+    {
+      id: "conn-pinecone",
+      name: "Pinecone Vector DB",
+      type: "Pinecone",
+      status: "connected",
+      lastUsed: "Just now",
+      lastSync: "2023-04-21T10:00:00Z",
+      schema: {
+        vectors: ["id", "values", "namespace", "metadata", "last_updated"],
+        namespaces: ["name", "count"]
+      }
     }
   ]);
 
