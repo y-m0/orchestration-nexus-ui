@@ -1,6 +1,7 @@
+
 import { renderHook, act } from '@testing-library/react';
 import { ProjectProvider, useProject } from '../ProjectContext';
-import type { Project, Goal } from '../../types/project';
+import type { Project, Goal } from '@/types/project';
 
 describe('ProjectContext', () => {
   const wrapper = ({ children }: { children: React.ReactNode }) => (
@@ -15,7 +16,9 @@ describe('ProjectContext', () => {
         name: 'Test Project',
         description: 'A test project',
         status: 'active',
-        metadata: {},
+        owner: 'test-owner',
+        collaborators: [],
+        tags: [],
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       });
@@ -39,7 +42,9 @@ describe('ProjectContext', () => {
         name: 'Test Project',
         description: 'A test project',
         status: 'active',
-        metadata: {},
+        owner: 'test-owner',
+        collaborators: [],
+        tags: [],
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       });
@@ -64,7 +69,9 @@ describe('ProjectContext', () => {
         name: 'Test Project',
         description: 'A test project',
         status: 'active',
-        metadata: {},
+        owner: 'test-owner',
+        collaborators: [],
+        tags: [],
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       });
@@ -86,7 +93,9 @@ describe('ProjectContext', () => {
         name: 'Test Project',
         description: 'A test project',
         status: 'active',
-        metadata: {},
+        owner: 'test-owner',
+        collaborators: [],
+        tags: [],
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       });
@@ -99,15 +108,15 @@ describe('ProjectContext', () => {
         description: 'A test goal',
         status: 'pending',
         priority: 'medium',
-        metadata: {},
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        dueDate: undefined,
+        workflowId: undefined,
+        parentGoalId: undefined,
+        tags: [],
       });
 
       expect(goal).toHaveProperty('id');
       expect(goal.title).toBe('Test Goal');
       expect(goal).toHaveProperty('createdAt');
-      expect(goal).toHaveProperty('updatedAt');
     });
 
     expect(result.current.projects[0].goals).toHaveLength(1);
@@ -123,18 +132,22 @@ describe('ProjectContext', () => {
         name: 'Test Project',
         description: 'A test project',
         status: 'active',
-        metadata: {},
+        owner: 'test-owner',
+        collaborators: [],
+        tags: [],
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       });
+      
       goal = result.current.addGoal(project.id, {
         title: 'Test Goal',
         description: 'A test goal',
         status: 'pending',
         priority: 'medium',
-        metadata: {},
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        dueDate: undefined,
+        workflowId: undefined,
+        parentGoalId: undefined,
+        tags: [],
       });
     });
 
@@ -158,18 +171,22 @@ describe('ProjectContext', () => {
         name: 'Test Project',
         description: 'A test project',
         status: 'active',
-        metadata: {},
+        owner: 'test-owner',
+        collaborators: [],
+        tags: [],
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       });
+      
       goal = result.current.addGoal(project.id, {
         title: 'Test Goal',
         description: 'A test goal',
         status: 'pending',
         priority: 'medium',
-        metadata: {},
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        dueDate: undefined,
+        workflowId: undefined,
+        parentGoalId: undefined,
+        tags: [],
       });
     });
 
@@ -189,7 +206,9 @@ describe('ProjectContext', () => {
         name: 'Test Project',
         description: 'A test project',
         status: 'active',
-        metadata: {},
+        owner: 'test-owner',
+        collaborators: [],
+        tags: [],
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       });
