@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { usePineconeProject } from '@/hooks/usePineconeProject';
-import type { Project, ProjectContextType, Goal } from '../types/project';
+import type { Project, ProjectContextType, Goal } from '@/types/project';
 
 const ProjectContext = createContext<ProjectContextType | undefined>(undefined);
 
@@ -25,6 +25,12 @@ export const ProjectProvider: React.FC<{ children: React.ReactNode }> = ({ child
       goals: [],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
+      // Ensure owner is present as required by the Project type in types/project.ts
+      owner: project.owner || 'default-owner',
+      // Ensure other required fields from types/project.ts are present
+      collaborators: project.collaborators || [],
+      tags: project.tags || [],
+      status: project.status || 'active',
     };
     setProjects(prev => [...prev, newProject]);
     
@@ -61,6 +67,7 @@ export const ProjectProvider: React.FC<{ children: React.ReactNode }> = ({ child
     const newGoal: Goal = {
       ...goal,
       id: uuidv4(),
+      projectId, // Add projectId as required by the Goal type in types/project.ts
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
@@ -79,14 +86,20 @@ export const ProjectProvider: React.FC<{ children: React.ReactNode }> = ({ child
   }, [indexGoal]);
 
   const updateGoal = useCallback((projectId: string, goal: Goal) => {
+    // Ensure the goal has the projectId property
+    const updatedGoal: Goal = {
+      ...goal,
+      projectId: projectId,
+    };
+    
     setProjects(prev => prev.map(p => 
       p.id === projectId
-        ? { ...p, goals: p.goals.map(g => g.id === goal.id ? goal : g) }
+        ? { ...p, goals: p.goals.map(g => g.id === goal.id ? updatedGoal : g) }
         : p
     ));
     
     // Update goal in Pinecone
-    indexGoal(goal).catch(error => 
+    indexGoal(updatedGoal).catch(error => 
       console.error(`Failed to update goal in Pinecone: ${error}`)
     );
   }, [indexGoal]);
