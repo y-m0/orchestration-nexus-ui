@@ -1,4 +1,3 @@
-
 import { useCallback } from 'react';
 import { predefinedWorkflows } from '@/data/workflows';
 import { useWorkflowState } from './useWorkflowState';
@@ -12,6 +11,7 @@ import {
   updateDashboardMetrics 
 } from '@/components/workflow/WorkflowIntegrations';
 import { useStore } from '@/lib/store';
+import { usePineconeWorkflow } from './usePineconeWorkflow';
 import type { Activity } from '@/lib/store';
 
 export const useWorkflow = () => {
@@ -46,6 +46,12 @@ export const useWorkflow = () => {
     updateNodeStatus,
     setWorkflowRuns,
   });
+  
+  const { 
+    indexWorkflow, 
+    findSimilarWorkflows, 
+    deleteWorkflowFromIndex 
+  } = usePineconeWorkflow();
 
   const loadWorkflow = useCallback((workflowId: string) => {
     const workflow = predefinedWorkflows.find(wf => wf.id === workflowId);
@@ -92,8 +98,13 @@ export const useWorkflow = () => {
       workflowName: workflow.title
     });
     
+    // Index workflow in Pinecone for vector search
+    indexWorkflow(workflow).catch(error => 
+      console.error(`Failed to index workflow in Pinecone: ${error}`)
+    );
+    
     return workflow;
-  }, [setCurrentWorkflow, setNodes, setConnections, addActivity]);
+  }, [setCurrentWorkflow, setNodes, setConnections, addActivity, indexWorkflow]);
   
   const runWorkflowWithLogging = useCallback(() => {
     const result = runWorkflow();
@@ -177,5 +188,7 @@ export const useWorkflow = () => {
     stopWorkflow: stopWorkflowWithLogging,
     approveHumanTask: approveHumanTaskWithLogging,
     rejectHumanTask: rejectHumanTaskWithLogging,
+    findSimilarWorkflows,
+    deleteWorkflowFromIndex,
   };
 };
