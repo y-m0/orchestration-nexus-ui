@@ -1,4 +1,5 @@
-import { useState } from "react";
+
+import { useState, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,16 +11,54 @@ import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { useAuth } from "@/lib/auth";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
+import HCaptcha from "@hcaptcha/react-hcaptcha";
 
 export default function Login() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { login, loading } = useAuth();
   const [credentials, setCredentials] = useState({ email: "", password: "" });
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [captchaVerifying, setCaptchaVerifying] = useState(false);
+  const captchaRef = useRef<HCaptcha | null>(null);
+
+  const handleCaptchaVerify = (token: string) => {
+    setCaptchaToken(token);
+    setCaptchaVerifying(false);
+  };
+
+  const handleCaptchaExpire = () => {
+    setCaptchaToken(null);
+    toast({
+      variant: "destructive",
+      title: "Captcha expired",
+      description: "Please verify the captcha again.",
+    });
+  };
+
+  const handleCaptchaError = () => {
+    setCaptchaToken(null);
+    setCaptchaVerifying(false);
+    toast({
+      variant: "destructive", 
+      title: "Captcha verification failed",
+      description: "Please try again.",
+    });
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!captchaToken) {
+      toast({
+        variant: "destructive",
+        title: "Verification required",
+        description: "Please complete the captcha verification first.",
+      });
+      return;
+    }
+
     try {
+      setCaptchaVerifying(true);
       await login(credentials.email, credentials.password);
       toast({
         title: "Success",
@@ -32,11 +71,23 @@ export default function Login() {
         title: "Error",
         description: error instanceof Error ? error.message : "Failed to login",
       });
+    } finally {
+      setCaptchaVerifying(false);
     }
   };
 
   const handleGoogleLogin = async () => {
+    if (!captchaToken) {
+      toast({
+        variant: "destructive",
+        title: "Verification required",
+        description: "Please complete the captcha verification first.",
+      });
+      return;
+    }
+
     try {
+      setCaptchaVerifying(true);
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
@@ -52,6 +103,7 @@ export default function Login() {
         title: "Error",
         description: error instanceof Error ? error.message : "Failed to login with Google",
       });
+      setCaptchaVerifying(false);
     }
   };
 
@@ -92,11 +144,22 @@ export default function Login() {
             </div>
 
             <div className="space-y-4">
+              <div className="flex justify-center mb-4">
+                <HCaptcha
+                  sitekey={import.meta.env.VITE_HCAPTCHA_SITE_KEY || "10000000-ffff-ffff-ffff-000000000001"} 
+                  onVerify={handleCaptchaVerify}
+                  onExpire={handleCaptchaExpire}
+                  onError={handleCaptchaError}
+                  ref={captchaRef}
+                />
+              </div>
+
               <Button
                 type="button"
                 variant="outline"
                 className="w-full"
                 onClick={handleGoogleLogin}
+                disabled={!captchaToken || captchaVerifying}
               >
                 <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
                   <path
@@ -168,8 +231,12 @@ export default function Login() {
               </div>
             </div>
 
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Signing in..." : "Sign In"}
+            <Button 
+              type="submit" 
+              className="w-full" 
+              disabled={loading || !captchaToken || captchaVerifying}
+            >
+              {loading || captchaVerifying ? "Processing..." : "Sign In"}
             </Button>
 
             <div className="text-center">
