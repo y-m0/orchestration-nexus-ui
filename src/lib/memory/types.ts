@@ -4,7 +4,7 @@ export interface MemoryMetadata {
   workflowId?: string;
   timestamp: number;
   tags: string[];
-  type: 'agent' | 'workflow' | 'tool';
+  type: 'agent' | 'workflow' | 'tool' | 'system' | 'user';
   importance?: 'low' | 'medium' | 'high';
   [key: string]: any;
 }
