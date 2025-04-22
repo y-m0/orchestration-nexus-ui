@@ -3,7 +3,19 @@ import React, { createContext, useContext, useState, useCallback } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { usePineconeProject } from '@/hooks/usePineconeProject';
 import type { Project, Goal } from '@/types/project';
-import type { ProjectContextType } from '@/lib/types/project';
+
+// Define the ProjectContextType directly here instead of importing from conflicting files
+export interface ProjectContextType {
+  projects: Project[];
+  selectedProject: Project | null;
+  setSelectedProject: (project: Project | null) => void;
+  createProject: (project: Omit<Project, 'id' | 'goals'>) => Project;
+  updateProject: (project: Project) => void;
+  deleteProject: (projectId: string) => void;
+  addGoal: (projectId: string, goal: Omit<Goal, 'id' | 'projectId'>) => Goal;
+  updateGoal: (projectId: string, goal: Goal) => void;
+  deleteGoal: (projectId: string, goalId: string) => void;
+}
 
 const ProjectContext = createContext<ProjectContextType | undefined>(undefined);
 
@@ -64,14 +76,19 @@ export const ProjectProvider: React.FC<{ children: React.ReactNode }> = ({ child
     );
   }, [selectedProject, deleteProjectFromIndex]);
 
-  const addGoal = useCallback((projectId: string, goal: Omit<Goal, 'id'>): Goal => {
+  const addGoal = useCallback((projectId: string, goal: Omit<Goal, 'id' | 'projectId'>): Goal => {
     const newGoal: Goal = {
       ...goal,
       id: uuidv4(),
       projectId, // Add projectId as required by the Goal type in types/project.ts
       createdAt: new Date().toISOString(),
-      // Remove updatedAt as it's not in the Goal type in types/project.ts
+      // Ensure other required fields are present
+      status: goal.status || 'pending',
+      priority: goal.priority || 'medium',
+      description: goal.description || '',
+      title: goal.title || '',
     };
+    
     setProjects(prev => prev.map(p => 
       p.id === projectId 
         ? { ...p, goals: [...p.goals, newGoal] }
@@ -87,20 +104,14 @@ export const ProjectProvider: React.FC<{ children: React.ReactNode }> = ({ child
   }, [indexGoal]);
 
   const updateGoal = useCallback((projectId: string, goal: Goal) => {
-    // Ensure the goal has the projectId property
-    const updatedGoal: Goal = {
-      ...goal,
-      projectId: projectId,
-    };
-    
     setProjects(prev => prev.map(p => 
       p.id === projectId
-        ? { ...p, goals: p.goals.map(g => g.id === goal.id ? updatedGoal : g) }
+        ? { ...p, goals: p.goals.map(g => g.id === goal.id ? goal : g) }
         : p
     ));
     
     // Update goal in Pinecone
-    indexGoal(updatedGoal).catch(error => 
+    indexGoal(goal).catch(error => 
       console.error(`Failed to update goal in Pinecone: ${error}`)
     );
   }, [indexGoal]);
