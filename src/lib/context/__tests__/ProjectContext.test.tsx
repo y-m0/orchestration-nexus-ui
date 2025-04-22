@@ -112,6 +112,7 @@ describe('ProjectContext', () => {
         workflowId: undefined,
         parentGoalId: undefined,
         tags: [],
+        createdAt: new Date().toISOString(), // Added the missing createdAt property
       });
 
       expect(goal).toHaveProperty('id');
@@ -148,6 +149,7 @@ describe('ProjectContext', () => {
         workflowId: undefined,
         parentGoalId: undefined,
         tags: [],
+        createdAt: new Date().toISOString(), // Added the missing createdAt property
       });
     });
 
@@ -187,6 +189,7 @@ describe('ProjectContext', () => {
         workflowId: undefined,
         parentGoalId: undefined,
         tags: [],
+        createdAt: new Date().toISOString(), // Added the missing createdAt property
       });
     });
 
@@ -226,4 +229,4 @@ describe('ProjectContext', () => {
 
     expect(result.current.selectedProject).toBeNull();
   });
-}); 
+});
