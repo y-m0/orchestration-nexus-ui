@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Textarea } from "@/components/ui/textarea";
-import { Database, MoreHorizontal } from "lucide-react";
+import { Database, MoreHorizontal, Plus, ArrowRight } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 
 interface Connection {
@@ -96,6 +96,10 @@ export function DataConnectionsSettings() {
     gcp: "••••••••••••••••••••••••••••••"
   });
 
+  const [llms, setLlms] = useState({
+    localUrl: "",
+  });
+
   const [isTestingConnection, setIsTestingConnection] = useState(false);
   const [isSyncingSchema, setIsSyncingSchema] = useState(false);
   const [selectedConnection, setSelectedConnection] = useState<Connection | null>(null);
@@ -103,6 +107,15 @@ export function DataConnectionsSettings() {
   const [isSchemaModalOpen, setIsSchemaModalOpen] = useState(false);
   const [isSchemaMappingOpen, setIsSchemaMappingOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("connections");
+
+  const [llmValue, setLlmValue] = useState(llms.localUrl);
+  const handleSaveLlm = () => {
+    setLlms({ localUrl: llmValue.trim() });
+    toast({
+      title: "LLM Base URL Saved",
+      description: "Your local LLM endpoint has been updated.",
+    });
+  };
 
   const handleTestConnection = (connectionId: string) => {
     setIsTestingConnection(true);
@@ -156,6 +169,7 @@ export function DataConnectionsSettings() {
         <TabsList className="mb-4">
           <TabsTrigger value="connections">Data Connections</TabsTrigger>
           <TabsTrigger value="api-keys">API Keys</TabsTrigger>
+          <TabsTrigger value="llms">LLMs</TabsTrigger>
         </TabsList>
         
         <TabsContent value="connections">
@@ -272,6 +286,49 @@ export function DataConnectionsSettings() {
                   <Button variant="outline">Update</Button>
                 </div>
               </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="llms">
+          <Card>
+            <CardHeader>
+              <CardTitle>Local LLM Connections</CardTitle>
+              <CardDescription>
+                Add a local Large Language Model endpoint for your workflows and agents.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form
+                onSubmit={e => {
+                  e.preventDefault();
+                  handleSaveLlm();
+                }}
+                className="space-y-4 max-w-md"
+              >
+                <div className="grid gap-2">
+                  <Label htmlFor="llm-endpoint">Local LLM Base URL</Label>
+                  <Input
+                    id="llm-endpoint"
+                    type="url"
+                    inputMode="url"
+                    placeholder="http://localhost:8000/v1/"
+                    value={llmValue}
+                    onChange={e => setLlmValue(e.target.value)}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Example: http://localhost:8000/v1/ (Ollama, LM Studio, etc)
+                  </p>
+                </div>
+                <Button type="submit" variant="default">
+                  Save
+                </Button>
+                {llms.localUrl && (
+                  <div className="mt-4 text-sm text-green-600 dark:text-green-400">
+                    Current LLM Base URL: <span className="font-mono break-all">{llms.localUrl}</span>
+                  </div>
+                )}
+              </form>
             </CardContent>
           </Card>
         </TabsContent>
@@ -434,12 +491,4 @@ export function DataConnectionsSettings() {
       </Dialog>
     </div>
   );
-}
-
-function ArrowRight(props: any) {
-  return <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-}
-
-function Plus(props: any) {
-  return <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M5 12h14"/><path d="M12 5v14"/></svg>
 }
