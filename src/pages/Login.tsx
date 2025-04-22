@@ -1,5 +1,5 @@
 
-import { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,15 +12,25 @@ import { useAuth } from "@/lib/auth";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
 import HCaptcha from "@hcaptcha/react-hcaptcha";
+import { useTheme } from "next-themes";
 
 export default function Login() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { login, loading } = useAuth();
+  const { theme } = useTheme();
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [captchaVerifying, setCaptchaVerifying] = useState(false);
   const captchaRef = useRef<HCaptcha | null>(null);
+
+  // Determine hCaptcha theme based on current app theme
+  const getCaptchaTheme = () => {
+    if (theme === 'dark') return 'dark';
+    if (theme === 'light') return 'light';
+    // Use system preference as fallback
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  };
 
   const handleCaptchaVerify = (token: string) => {
     setCaptchaToken(token);
@@ -151,6 +161,7 @@ export default function Login() {
                   onExpire={handleCaptchaExpire}
                   onError={handleCaptchaError}
                   ref={captchaRef}
+                  theme={getCaptchaTheme()}
                 />
               </div>
 
