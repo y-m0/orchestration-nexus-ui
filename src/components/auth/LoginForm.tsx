@@ -11,17 +11,11 @@ import { useNavigate } from "react-router-dom";
 interface LoginFormProps {
   credentials: { email: string; password: string };
   setCredentials: (c: { email: string; password: string }) => void;
-  captchaToken: string | null;
-  captchaVerifying: boolean;
-  setCaptchaVerifying: (verifying: boolean) => void;
 }
 
 export const LoginForm: React.FC<LoginFormProps> = ({
   credentials,
   setCredentials,
-  captchaToken,
-  captchaVerifying,
-  setCaptchaVerifying,
 }) => {
   const { toast } = useToast();
   const { login, loading } = useAuth();
@@ -29,17 +23,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!captchaToken) {
-      toast({
-        variant: "destructive",
-        title: "Verification required",
-        description: "Please complete the captcha verification first.",
-      });
-      return;
-    }
 
     try {
-      setCaptchaVerifying(true);
       await login(credentials.email, credentials.password);
       toast({
         title: "Success",
@@ -52,8 +37,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         title: "Error",
         description: error instanceof Error ? error.message : "Failed to login",
       });
-    } finally {
-      setCaptchaVerifying(false);
     }
   };
 
@@ -107,9 +90,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({
       <Button 
         type="submit" 
         className="w-full" 
-        disabled={loading || !captchaToken || captchaVerifying}
+        disabled={loading}
       >
-        {loading || captchaVerifying ? "Processing..." : "Sign In"}
+        {loading ? "Processing..." : "Sign In"}
       </Button>
 
       {/* Sign Up Link */}

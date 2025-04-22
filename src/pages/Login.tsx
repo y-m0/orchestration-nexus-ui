@@ -11,7 +11,6 @@ import { useToast } from "@/components/ui/use-toast";
 
 // Split-out components
 import { LoginForm } from "@/components/auth/LoginForm";
-import { CaptchaVerification } from "@/components/auth/CaptchaVerification";
 import { SocialLogin } from "@/components/auth/SocialLogin";
 import { Home } from "lucide-react";
 
@@ -21,10 +20,8 @@ export default function Login() {
   const { theme } = useTheme();
   const { toast } = useToast();
 
-  // Shared state for subcomponents
+  // Simplified state for credentials
   const [credentials, setCredentials] = useState({ email: "", password: "" });
-  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
-  const [captchaVerifying, setCaptchaVerifying] = useState(false);
 
   if (loading) {
     return (
@@ -59,19 +56,8 @@ export default function Login() {
       <main className="flex-1 flex items-center justify-center p-6">
         <Card className="w-full max-w-md shadow-xl border-border/60 overflow-hidden">
           <CardContent className="p-8 space-y-8">
-            {/* Captcha block */}
-            <CaptchaVerification
-              captchaToken={captchaToken}
-              setCaptchaToken={setCaptchaToken}
-              setCaptchaVerifying={setCaptchaVerifying}
-            />
-
             {/* Social Logins */}
-            <SocialLogin 
-              captchaToken={captchaToken}
-              captchaVerifying={captchaVerifying}
-              setCaptchaVerifying={setCaptchaVerifying}
-            />
+            <SocialLogin />
 
             {/* Divider */}
             <div className="relative">
@@ -89,9 +75,6 @@ export default function Login() {
             <LoginForm
               credentials={credentials}
               setCredentials={setCredentials}
-              captchaToken={captchaToken}
-              captchaVerifying={captchaVerifying}
-              setCaptchaVerifying={setCaptchaVerifying}
             />
           </CardContent>
         </Card>

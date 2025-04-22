@@ -4,31 +4,11 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 
-interface SocialLoginProps {
-  captchaToken: string | null;
-  captchaVerifying: boolean;
-  setCaptchaVerifying: (verifying: boolean) => void;
-}
-
-export const SocialLogin: React.FC<SocialLoginProps> = ({
-  captchaToken,
-  captchaVerifying,
-  setCaptchaVerifying,
-}) => {
+export const SocialLogin: React.FC = () => {
   const { toast } = useToast();
 
   const handleGoogleLogin = async () => {
-    if (!captchaToken) {
-      toast({
-        variant: "destructive",
-        title: "Verification required",
-        description: "Please complete the captcha verification first.",
-      });
-      return;
-    }
-
     try {
-      setCaptchaVerifying(true);
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
@@ -42,7 +22,6 @@ export const SocialLogin: React.FC<SocialLoginProps> = ({
         title: "Error",
         description: error instanceof Error ? error.message : "Failed to login with Google",
       });
-      setCaptchaVerifying(false);
     }
   };
 
@@ -52,7 +31,6 @@ export const SocialLogin: React.FC<SocialLoginProps> = ({
       variant="outline"
       className="w-full"
       onClick={handleGoogleLogin}
-      disabled={!captchaToken || captchaVerifying}
     >
       <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
         <path
