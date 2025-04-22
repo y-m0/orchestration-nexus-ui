@@ -4,7 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { User, Lock, Home } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
@@ -134,7 +134,8 @@ export default function Login() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <div className="w-full p-4 flex items-center border-b border-border/40">
+      {/* Header with navigation and theme toggle */}
+      <header className="w-full p-4 flex items-center border-b border-border/40">
         <Button variant="ghost" size="icon" asChild>
           <Link to="/">
             <Home className="h-5 w-5" />
@@ -143,29 +144,34 @@ export default function Login() {
         </Button>
         <div className="flex-1 text-center font-medium">Orchestration Nexus</div>
         <ThemeToggle />
-      </div>
+      </header>
 
-      <div className="flex-1 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md shadow-lg">
-          <form onSubmit={handleLogin} className="p-6 space-y-6">
-            <div className="text-center mb-6">
-              <h1 className="text-2xl font-bold text-foreground">Welcome Back</h1>
-              <p className="text-muted-foreground mt-1">Please sign in to continue</p>
-            </div>
-
-            <div className="space-y-5">
-              {/* Captcha centered and with proper spacing */}
-              <div className="flex justify-center my-4">
-                <HCaptcha
-                  sitekey={import.meta.env.VITE_HCAPTCHA_SITE_KEY || "10000000-ffff-ffff-ffff-000000000001"} 
-                  onVerify={handleCaptchaVerify}
-                  onExpire={handleCaptchaExpire}
-                  onError={handleCaptchaError}
-                  ref={captchaRef}
-                  theme={getCaptchaTheme()}
-                />
+      {/* Main content area */}
+      <main className="flex-1 flex items-center justify-center p-6">
+        <Card className="w-full max-w-md shadow-xl border-border/60 overflow-hidden">
+          <CardContent className="p-8">
+            <form onSubmit={handleLogin} className="space-y-8">
+              {/* Header */}
+              <div className="text-center space-y-2">
+                <h1 className="text-2xl font-bold tracking-tight">Welcome Back</h1>
+                <p className="text-muted-foreground text-sm">Please sign in to continue</p>
+              </div>
+              
+              {/* Captcha */}
+              <div className="flex justify-center pt-2">
+                <div className="overflow-hidden rounded-lg border border-border bg-card/30">
+                  <HCaptcha
+                    sitekey={import.meta.env.VITE_HCAPTCHA_SITE_KEY || "10000000-ffff-ffff-ffff-000000000001"} 
+                    onVerify={handleCaptchaVerify}
+                    onExpire={handleCaptchaExpire}
+                    onError={handleCaptchaError}
+                    ref={captchaRef}
+                    theme={getCaptchaTheme()}
+                  />
+                </div>
               </div>
 
+              {/* Google Login Button */}
               <Button
                 type="button"
                 variant="outline"
@@ -195,22 +201,24 @@ export default function Login() {
                 Continue with Google
               </Button>
 
-              <div className="relative my-6">
+              {/* Divider */}
+              <div className="relative">
                 <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t border-border" />
+                  <span className="w-full border-t border-border/60" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-3 text-muted-foreground">
+                  <span className="bg-background px-4 text-muted-foreground">
                     Or continue with email
                   </span>
                 </div>
               </div>
 
+              {/* Email Field */}
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-sm font-medium">Email</Label>
                 <div className="relative">
-                  <div className="absolute left-3 top-2.5 text-muted-foreground">
-                    <User className="h-5 w-5" />
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                    <User className="h-4 w-4" />
                   </div>
                   <Input
                     id="email"
@@ -224,11 +232,12 @@ export default function Login() {
                 </div>
               </div>
 
+              {/* Password Field */}
               <div className="space-y-2">
                 <Label htmlFor="password" className="text-sm font-medium">Password</Label>
                 <div className="relative">
-                  <div className="absolute left-3 top-2.5 text-muted-foreground">
-                    <Lock className="h-5 w-5" />
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                    <Lock className="h-4 w-4" />
                   </div>
                   <Input
                     id="password"
@@ -241,29 +250,31 @@ export default function Login() {
                   />
                 </div>
               </div>
-            </div>
 
-            <Button 
-              type="submit" 
-              className="w-full" 
-              disabled={loading || !captchaToken || captchaVerifying}
-            >
-              {loading || captchaVerifying ? "Processing..." : "Sign In"}
-            </Button>
-
-            <div className="text-center mt-4">
+              {/* Submit Button */}
               <Button 
-                variant="link" 
-                type="button"
-                className="text-sm"
-                onClick={() => navigate("/onboarding")}
+                type="submit" 
+                className="w-full" 
+                disabled={loading || !captchaToken || captchaVerifying}
               >
-                Don't have an account? Sign up
+                {loading || captchaVerifying ? "Processing..." : "Sign In"}
               </Button>
-            </div>
-          </form>
+
+              {/* Sign Up Link */}
+              <div className="text-center">
+                <Button 
+                  variant="link" 
+                  type="button"
+                  className="text-sm"
+                  onClick={() => navigate("/onboarding")}
+                >
+                  Don't have an account? Sign up
+                </Button>
+              </div>
+            </form>
+          </CardContent>
         </Card>
-      </div>
+      </main>
     </div>
   );
 }
