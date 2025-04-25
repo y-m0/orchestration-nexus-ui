@@ -9,6 +9,7 @@ import { CallToAction } from "@/components/landing/CallToAction";
 import { useEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
+import { HowItWorks } from "@/components/landing/HowItWorks";
 
 export default function Index() {
   return (
@@ -16,8 +17,9 @@ export default function Index() {
       <div className="flex flex-col w-full">
         <HeroSection />
         <FeaturesCarousel />
-        <DemoPreview />
         <UseCases />
+        <HowItWorks />
+        <DemoPreview />
         <Testimonials />
         <CallToAction />
       </div>
