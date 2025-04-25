@@ -35,10 +35,15 @@ export function WorkflowActivityLogger({
       if (latestRun) {
         const text = `Workflow ${latestRun.workflowId} ${latestRun.status} at ${formatDateTime(latestRun.startTime)}`;
         
-        const memoryItem = await storeMemory(text, {
-          workflowId: latestRun.workflowId,
-          type: 'workflow',
-          tags: ['activity', latestRun.status]
+        await storeMemory({
+          agentId: "system",
+          content: text,
+          type: "short_term",
+          metadata: {
+            workflowId: latestRun.workflowId,
+            type: 'workflow',
+            tags: ['activity', latestRun.status]
+          }
         });
         
         // Notify parent component if needed
@@ -55,9 +60,9 @@ export function WorkflowActivityLogger({
   useEffect(() => {
     const fetchWorkflowLogs = async () => {
       try {
-        const results = await searchMemory('workflow activity', { limit });
-        const logItems = results.map(result => result.item);
-        setLogs(logItems);
+        const searchFilter = { content: 'workflow activity' };
+        const results = await searchMemory(searchFilter);
+        setLogs(results);
       } catch (err) {
         console.error('Error fetching workflow logs:', err);
       }
@@ -81,9 +86,9 @@ export function WorkflowActivityLogger({
       {logs.map(log => (
         <div key={log.id} className="text-sm">
           <Badge variant="outline" className="mr-2">
-            {log.metadata.type}
+            {log.metadata?.type || "unknown"}
           </Badge>
-          <span>{log.text}</span>
+          <span>{log.content || log.text}</span>
         </div>
       ))}
     </div>

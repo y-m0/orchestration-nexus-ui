@@ -1,4 +1,3 @@
-
 import { Bot, BarChart3, CheckCircle2, AlertCircle, User, FolderOpen, Calendar, Clock } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -31,7 +30,10 @@ function useDashboardActivity() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      searchMemory("system status")
+      searchMemory({ content: "system status" })
+        .then(results => {
+          // Process results if needed
+        })
         .catch(err => console.error("Error searching memory:", err));
     }, 60000);
     
@@ -166,7 +168,7 @@ export default function Dashboard() {
 
     const searchMemoryItems = async () => {
       try {
-        const results = await searchMemory(searchQuery);
+        const results = await searchMemory({ content: searchQuery });
         setMemoryResults(results);
         if (results.length > 0) {
           console.log(`Activity Log: Memory searched for "${searchQuery}" with ${results.length} results`);
