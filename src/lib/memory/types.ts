@@ -1,4 +1,3 @@
-
 export interface MemoryMetadata {
   agentId: string;
   workflowId?: string;
@@ -35,7 +34,7 @@ export interface MemoryContextType {
 
 export interface MemoryService {
   storeMemory: (text: string, metadata: Omit<MemoryMetadata, 'timestamp'>) => Promise<string>;
-  searchMemory: (query: string, options?: { limit?: number; filter?: Partial<MemoryMetadata> }) => Promise<MemoryItem[]>;
+  searchMemory: (query: string, options?: { limit?: number; filter?: Partial<MemoryMetadata> }) => Promise<Memory[]>;
   clearMemory: (filter?: Partial<MemoryMetadata>) => Promise<void>;
-  getMemoryById: (id: string) => Promise<MemoryItem | null>;
+  getMemoryById: (id: string) => Promise<Memory | null>;
 }

@@ -3,12 +3,11 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "next-themes";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter as Router, Routes, Route, Link, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { MainLayout } from "./components/layout/MainLayout";
 import { ThemeToggle } from "./components/theme/ThemeToggle";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
-import Login from "./pages/Login";
 import WorkflowBuilder from "./pages/WorkflowBuilder";
 import ActivityLog from "./pages/ActivityLog";
 import ApprovalsInbox from "./pages/ApprovalsInbox";
@@ -33,9 +32,8 @@ import {
   ChevronDown
 } from "lucide-react";
 import { ErrorBoundary } from './components/ui/ErrorBoundary'
-import { AuthProvider, useAuth } from './lib/auth'
 import { useStore } from './lib/store'
-import { MemoryProvider } from './lib/memory'
+import { MemoryProvider } from './lib/memory/MemoryContext'
 import * as React from "react";
 import { useIsMobile } from "./hooks/use-mobile";
 import {
@@ -62,7 +60,6 @@ const Navigation = () => {
   const isMobile = useIsMobile();
 
   if (isMobile) {
-    // Mobile: dropdown menu with hamburger
     return (
       <nav className="border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 w-full">
         <div className="flex h-14 items-center px-4 justify-between">
@@ -89,7 +86,6 @@ const Navigation = () => {
     );
   }
 
-  // Desktop: horizontal navigation menu
   return (
     <nav className="border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex h-14 items-center px-4">
@@ -116,136 +112,103 @@ const Navigation = () => {
   );
 };
 
-function PrivateRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, loading } = useAuth()
-
-  if (loading) {
-    return <div>Loading...</div>
-  }
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" />
-  }
-
-  return <>{children}</>
-}
-
 const App = () => {
   const { settings } = useStore()
 
   return (
     <ErrorBoundary>
-      <AuthProvider>
-        <QueryClientProvider client={queryClient}>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-            <TooltipProvider>
-              <MemoryProvider>
-                <div className={settings.theme === 'dark' ? 'dark' : ''}>
-                  <Router>
-                    <Routes>
-                      <Route path="/" element={<Index />} />
-                      <Route path="/login" element={<Login />} />
-                      <Route path="/onboarding" element={<Onboarding />} />
-                      
-                      <Route path="/dashboard" element={
-                        <PrivateRoute>
-                          <>
-                            <Navigation />
-                            <MainLayout>
-                              <Dashboard />
-                            </MainLayout>
-                          </>
-                        </PrivateRoute>
-                      } />
-                      
-                      <Route path="/workflows" element={
-                        <PrivateRoute>
-                          <>
-                            <Navigation />
-                            <MainLayout>
-                              <WorkflowBuilder />
-                            </MainLayout>
-                          </>
-                        </PrivateRoute>
-                      } />
-                      
-                      <Route path="/projects" element={
-                        <PrivateRoute>
-                          <>
-                            <Navigation />
-                            <MainLayout>
-                              <Projects />
-                            </MainLayout>
-                          </>
-                        </PrivateRoute>
-                      } />
-                      
-                      <Route path="/projects/:projectId" element={
-                        <PrivateRoute>
-                          <>
-                            <Navigation />
-                            <MainLayout>
-                              <ProjectDetail />
-                            </MainLayout>
-                          </>
-                        </PrivateRoute>
-                      } />
-                      
-                      <Route path="/tools" element={
-                        <PrivateRoute>
-                          <>
-                            <Navigation />
-                            <MainLayout>
-                              <Tools />
-                            </MainLayout>
-                          </>
-                        </PrivateRoute>
-                      } />
-                      
-                      <Route path="/activity" element={
-                        <PrivateRoute>
-                          <>
-                            <Navigation />
-                            <MainLayout>
-                              <ActivityLog />
-                            </MainLayout>
-                          </>
-                        </PrivateRoute>
-                      } />
-                      
-                      <Route path="/approvals" element={
-                        <PrivateRoute>
-                          <>
-                            <Navigation />
-                            <MainLayout>
-                              <ApprovalsInbox />
-                            </MainLayout>
-                          </>
-                        </PrivateRoute>
-                      } />
-                      
-                      <Route path="/settings" element={
-                        <PrivateRoute>
-                          <>
-                            <Navigation />
-                            <MainLayout>
-                              <Settings />
-                            </MainLayout>
-                          </>
-                        </PrivateRoute>
-                      } />
-                      
-                      <Route path="*" element={<NotFound />} />
-                    </Routes>
-                    <Toaster />
-                    <Sonner />
-                  </Router>
-                </div>
-              </MemoryProvider>
-            </TooltipProvider>
-          </ThemeProvider>
-        </QueryClientProvider>
-      </AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <TooltipProvider>
+            <MemoryProvider>
+              <div className={settings.theme === 'dark' ? 'dark' : ''}>
+                <Router>
+                  <Routes>
+                    <Route path="/" element={<Index />} />
+                    <Route path="/onboarding" element={<Onboarding />} />
+                    
+                    <Route path="/dashboard" element={
+                      <>
+                        <Navigation />
+                        <MainLayout>
+                          <Dashboard />
+                        </MainLayout>
+                      </>
+                    } />
+                    
+                    <Route path="/workflows" element={
+                      <>
+                        <Navigation />
+                        <MainLayout>
+                          <WorkflowBuilder />
+                        </MainLayout>
+                      </>
+                    } />
+                    
+                    <Route path="/projects" element={
+                      <>
+                        <Navigation />
+                        <MainLayout>
+                          <Projects />
+                        </MainLayout>
+                      </>
+                    } />
+                    
+                    <Route path="/projects/:projectId" element={
+                      <>
+                        <Navigation />
+                        <MainLayout>
+                          <ProjectDetail />
+                        </MainLayout>
+                      </>
+                    } />
+                    
+                    <Route path="/tools" element={
+                      <>
+                        <Navigation />
+                        <MainLayout>
+                          <Tools />
+                        </MainLayout>
+                      </>
+                    } />
+                    
+                    <Route path="/activity" element={
+                      <>
+                        <Navigation />
+                        <MainLayout>
+                          <ActivityLog />
+                        </MainLayout>
+                      </>
+                    } />
+                    
+                    <Route path="/approvals" element={
+                      <>
+                        <Navigation />
+                        <MainLayout>
+                          <ApprovalsInbox />
+                        </MainLayout>
+                      </>
+                    } />
+                    
+                    <Route path="/settings" element={
+                      <>
+                        <Navigation />
+                        <MainLayout>
+                          <Settings />
+                        </MainLayout>
+                      </>
+                    } />
+                    
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                  <Toaster />
+                  <Sonner />
+                </Router>
+              </div>
+            </MemoryProvider>
+          </TooltipProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
     </ErrorBoundary>
   )
 }

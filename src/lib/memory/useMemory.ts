@@ -1,11 +1,11 @@
 
 import { useCallback } from 'react'
-import { useMemory as useMemoryContext } from './MemoryContext'
+import { useMemory } from './MemoryContext'
 import { mockMemoryService } from './mockService'
 import type { Memory, MemoryMetadata } from './types'
 
-export const useMemory = () => {
-  const memoryContext = useMemoryContext()
+export const useMemoryHook = () => {
+  const memoryContext = useMemory()
 
   const storeMemory = useCallback(async (
     content: string,
