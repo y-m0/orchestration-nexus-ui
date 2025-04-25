@@ -57,21 +57,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
+  // Remove the Supabase auth and implement the mockAuth for testing
   const login = async (email: string, password: string) => {
     try {
       setLoading(true);
       setError(null);
       
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (error) throw error;
+      // Use mockAuth for login during development
+      const { token, user } = await import('@/lib/mockAuth').then(module => 
+        module.mockAuth.login(email, password)
+      );
       
-      setSession(data.session);
-      setUser(data.user);
-      setIsAuthenticated(!!data.user);
+      // Store token in localStorage for auth persistence
+      localStorage.setItem('auth_token', token);
+      
+      // Set the authenticated state
+      setUser(user as unknown as User);
+      setIsAuthenticated(true);
       
       return Promise.resolve();
     } catch (error: any) {
@@ -92,10 +94,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(true);
       setError(null);
       
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
+      // Use mockAuth for logout during development
+      await import('@/lib/mockAuth').then(module => module.mockAuth.logout());
       
-      setSession(null);
+      // Clear token from localStorage
+      localStorage.removeItem('auth_token');
+      
+      // Reset the authenticated state
       setUser(null);
       setIsAuthenticated(false);
       
@@ -118,16 +123,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(true);
       setError(null);
       
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-      });
-
-      if (error) throw error;
+      // In a real app, this would call Supabase auth.signUp
+      // For now, we'll just use the mock login
+      await login(email, password);
       
       toast({
         title: "Account Created",
-        description: "Please check your email to confirm your account.",
+        description: "Your account has been created successfully.",
       });
       
       return Promise.resolve();

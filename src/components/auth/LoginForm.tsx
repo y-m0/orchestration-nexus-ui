@@ -41,14 +41,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleLogin} className="space-y-8">
-      {/* Header */}
-      <div className="text-center space-y-2">
-        <h1 className="text-2xl font-bold tracking-tight">Welcome Back</h1>
-        <p className="text-muted-foreground text-sm">Please sign in to continue</p>
-      </div>
-
-      {/* Email Field */}
+    <form onSubmit={handleLogin} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="email" className="text-sm font-medium">Email</Label>
         <div className="relative">
@@ -67,7 +60,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         </div>
       </div>
 
-      {/* Password Field */}
       <div className="space-y-2">
         <Label htmlFor="password" className="text-sm font-medium">Password</Label>
         <div className="relative">
@@ -86,7 +78,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         </div>
       </div>
 
-      {/* Submit Button */}
       <Button 
         type="submit" 
         className="w-full" 
@@ -95,16 +86,10 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         {loading ? "Processing..." : "Sign In"}
       </Button>
 
-      {/* Sign Up Link */}
-      <div className="text-center">
-        <Button 
-          variant="link" 
-          type="button"
-          className="text-sm"
-          onClick={() => navigate("/onboarding")}
-        >
-          Don't have an account? Sign up
-        </Button>
+      <div className="text-sm text-center text-muted-foreground">
+        <p>For demo purposes use:</p>
+        <p>Email: test@example.com</p>
+        <p>Password: password</p>
       </div>
     </form>
   );
