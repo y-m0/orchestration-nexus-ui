@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { LoginForm } from "@/components/auth/LoginForm";
@@ -8,13 +7,13 @@ import { Separator } from "@/components/ui/separator";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { useAuth } from "@/lib/auth";
 import { useEffect } from "react";
+import { LayoutDashboard, Workflow, Activity, Settings } from "lucide-react";
 
 export default function Login() {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
-  // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
       navigate('/dashboard');
@@ -55,32 +54,44 @@ export default function Login() {
             
             <div className="grid grid-cols-2 gap-3 text-xs">
               <Link 
-                to="/login" 
-                className="p-3 border border-border/50 rounded-md hover:bg-accent/50 transition-colors text-center"
+                to="/dashboard" 
+                className="p-3 border border-border/50 rounded-md hover:bg-accent/50 transition-colors text-center flex flex-col items-center justify-center space-y-2 group"
               >
-                <div className="text-purple-400 font-medium">Dashboard</div>
-                <div className="text-muted-foreground mt-1">Agent status & metrics</div>
+                <LayoutDashboard 
+                  className="h-6 w-6 text-purple-400 group-hover:text-purple-300 transition-colors" 
+                />
+                <div className="text-purple-400 font-medium group-hover:text-purple-300 transition-colors">Dashboard</div>
+                <div className="text-muted-foreground mt-1 text-xs">Agent status & metrics</div>
               </Link>
               <Link 
                 to="/workflows" 
-                className="p-3 border border-border/50 rounded-md hover:bg-accent/50 transition-colors text-center"
+                className="p-3 border border-border/50 rounded-md hover:bg-accent/50 transition-colors text-center flex flex-col items-center justify-center space-y-2 group"
               >
-                <div className="text-purple-400 font-medium">Workflows</div>
-                <div className="text-muted-foreground mt-1">LLM agent orchestration</div>
+                <Workflow 
+                  className="h-6 w-6 text-purple-400 group-hover:text-purple-300 transition-colors" 
+                />
+                <div className="text-purple-400 font-medium group-hover:text-purple-300 transition-colors">Workflows</div>
+                <div className="text-muted-foreground mt-1 text-xs">LLM agent orchestration</div>
               </Link>
               <Link 
                 to="/activity" 
-                className="p-3 border border-border/50 rounded-md hover:bg-accent/50 transition-colors text-center"
+                className="p-3 border border-border/50 rounded-md hover:bg-accent/50 transition-colors text-center flex flex-col items-center justify-center space-y-2 group"
               >
-                <div className="text-purple-400 font-medium">Activity</div>
-                <div className="text-muted-foreground mt-1">Execution history</div>
+                <Activity 
+                  className="h-6 w-6 text-purple-400 group-hover:text-purple-300 transition-colors" 
+                />
+                <div className="text-purple-400 font-medium group-hover:text-purple-300 transition-colors">Activity</div>
+                <div className="text-muted-foreground mt-1 text-xs">Execution history</div>
               </Link>
               <Link 
                 to="/settings" 
-                className="p-3 border border-border/50 rounded-md hover:bg-accent/50 transition-colors text-center"
+                className="p-3 border border-border/50 rounded-md hover:bg-accent/50 transition-colors text-center flex flex-col items-center justify-center space-y-2 group"
               >
-                <div className="text-purple-400 font-medium">Settings</div>
-                <div className="text-muted-foreground mt-1">Data connections & API keys</div>
+                <Settings 
+                  className="h-6 w-6 text-purple-400 group-hover:text-purple-300 transition-colors" 
+                />
+                <div className="text-purple-400 font-medium group-hover:text-purple-300 transition-colors">Settings</div>
+                <div className="text-muted-foreground mt-1 text-xs">Data connections & API keys</div>
               </Link>
             </div>
           </CardContent>
