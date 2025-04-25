@@ -55,7 +55,7 @@ export default function Login() {
             
             <div className="grid grid-cols-2 gap-3 text-xs">
               <Link 
-                to="/dashboard" 
+                to="/login" 
                 className="p-3 border border-border/50 rounded-md hover:bg-accent/50 transition-colors text-center"
               >
                 <div className="text-purple-400 font-medium">Dashboard</div>
