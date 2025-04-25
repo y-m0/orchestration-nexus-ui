@@ -43,6 +43,7 @@ import {
   DropdownMenuItem
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { DataConnections } from './components/settings/DataConnections';
 
 const queryClient = new QueryClient();
 
@@ -195,6 +196,15 @@ const App = () => {
                         <Navigation />
                         <MainLayout>
                           <Settings />
+                        </MainLayout>
+                      </>
+                    } />
+                    
+                    <Route path="/settings/data-connections" element={
+                      <>
+                        <Navigation />
+                        <MainLayout>
+                          <DataConnections />
                         </MainLayout>
                       </>
                     } />
