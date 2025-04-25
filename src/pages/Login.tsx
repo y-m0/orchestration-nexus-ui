@@ -1,4 +1,5 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { LoginForm } from "@/components/auth/LoginForm";
 import { SocialLogin } from "@/components/auth/SocialLogin";
@@ -6,19 +7,19 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Separator } from "@/components/ui/separator";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { useAuth } from "@/lib/auth";
-import { useEffect } from "react";
 import { LayoutDashboard, Workflow, Activity, Settings } from "lucide-react";
 
 export default function Login() {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isAuthenticated) {
+    // If the user is already authenticated, redirect to dashboard
+    if (isAuthenticated && !loading) {
       navigate('/dashboard');
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, loading, navigate]);
 
   return (
     <div className="min-h-screen bg-background flex flex-col bg-gradient-to-br from-background to-purple-950/20">
@@ -28,9 +29,11 @@ export default function Login() {
       </header>
       
       <main className="flex-1 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md mx-auto neo-border glass-card">
+        <Card className="w-full max-w-md mx-auto shadow-lg border-purple-500/20">
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-bold text-center text-gradient">Agent Orchestration System</CardTitle>
+            <CardTitle className="text-2xl font-bold text-center bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">
+              Agent Orchestration System
+            </CardTitle>
             <CardDescription className="text-center">
               Enter your credentials to access the workflow dashboard
             </CardDescription>

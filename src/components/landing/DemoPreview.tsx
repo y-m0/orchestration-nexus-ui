@@ -50,10 +50,17 @@ export function DemoPreview() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6, duration: 0.5 }}
+                className="space-y-4"
               >
                 <Button asChild size="lg" className="bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900">
                   <Link to="/onboarding">Get Started</Link>
                 </Button>
+                
+                <div className="flex justify-center">
+                  <Link to="/login" className="text-purple-300 hover:text-purple-200 text-sm underline">
+                    Already have an account? Login
+                  </Link>
+                </div>
               </motion.div>
             </div>
           </motion.div>

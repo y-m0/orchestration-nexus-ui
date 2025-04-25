@@ -18,7 +18,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   setCredentials,
 }) => {
   const { toast } = useToast();
-  const { login, loading } = useAuth();
+  const { login, loading, error } = useAuth();
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -26,17 +26,10 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 
     try {
       await login(credentials.email, credentials.password);
-      toast({
-        title: "Success",
-        description: "Successfully logged in",
-      });
       navigate("/dashboard");
     } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: error instanceof Error ? error.message : "Failed to login",
-      });
+      console.error("Login error:", error);
+      // Error is already displayed by the useAuth hook
     }
   };
 
@@ -77,6 +70,12 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           />
         </div>
       </div>
+
+      {error && (
+        <div className="bg-destructive/10 text-destructive p-3 rounded-md text-sm">
+          {error}
+        </div>
+      )}
 
       <Button 
         type="submit" 

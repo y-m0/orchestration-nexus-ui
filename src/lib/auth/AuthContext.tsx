@@ -28,27 +28,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Set up auth state listener first
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        setIsAuthenticated(!!session?.user);
-        
-        if (event === 'SIGNED_OUT') {
-          setIsAuthenticated(false);
-          setUser(null);
-        }
+      (_event, currentSession) => {
+        setSession(currentSession);
+        setUser(currentSession?.user ?? null);
+        setIsAuthenticated(!!currentSession?.user);
       }
     );
 
     // Then check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setIsAuthenticated(!!session?.user);
+    supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
+      setSession(currentSession);
+      setUser(currentSession?.user ?? null);
+      setIsAuthenticated(!!currentSession?.user);
       setLoading(false);
-    }).catch((error) => {
-      console.error('Error getting session:', error);
-      setError(error.message);
+    }).catch((err) => {
+      console.error('Error getting session:', err);
+      setError(err.message);
       setLoading(false);
     });
 
@@ -57,27 +52,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
-  // Remove the Supabase auth and implement the mockAuth for testing
   const login = async (email: string, password: string) => {
     try {
       setLoading(true);
       setError(null);
       
-      // Use mockAuth for login during development
-      const { token, user } = await import('@/lib/mockAuth').then(module => 
-        module.mockAuth.login(email, password)
-      );
+      // For demo purposes, using mockAuth
+      const mockAuthModule = await import('@/lib/mockAuth');
+      const { token, user: mockUser } = await mockAuthModule.mockAuth.login(email, password);
       
       // Store token in localStorage for auth persistence
       localStorage.setItem('auth_token', token);
       
-      // Set the authenticated state
-      setUser(user as unknown as User);
+      // Set the authenticated state - use the mock user data
+      setUser(mockUser as unknown as User);
       setIsAuthenticated(true);
+      
+      toast({
+        title: "Login successful",
+        description: `Welcome back, ${mockUser.name}`,
+      });
       
       return Promise.resolve();
     } catch (error: any) {
       setError(error.message);
+      setIsAuthenticated(false);
       toast({
         variant: "destructive",
         title: "Login Failed",
@@ -92,17 +91,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = async () => {
     try {
       setLoading(true);
-      setError(null);
       
       // Use mockAuth for logout during development
-      await import('@/lib/mockAuth').then(module => module.mockAuth.logout());
+      const mockAuthModule = await import('@/lib/mockAuth');
+      await mockAuthModule.mockAuth.logout();
       
       // Clear token from localStorage
       localStorage.removeItem('auth_token');
       
       // Reset the authenticated state
       setUser(null);
+      setSession(null);
       setIsAuthenticated(false);
+      
+      toast({
+        title: "Logged out",
+        description: "You have been successfully logged out",
+      });
       
       return Promise.resolve();
     } catch (error: any) {
@@ -123,7 +128,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(true);
       setError(null);
       
-      // In a real app, this would call Supabase auth.signUp
       // For now, we'll just use the mock login
       await login(email, password);
       
