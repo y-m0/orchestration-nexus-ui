@@ -49,25 +49,25 @@ export function WorkflowCard({
   };
   
   const complexityColors = {
-    low: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
-    medium: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300",
-    high: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300",
+    low: "bg-green-500/20 text-green-400",
+    medium: "bg-yellow-500/20 text-yellow-400",
+    high: "bg-red-500/20 text-red-400",
   };
   
   const statusColors = {
-    idle: "bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300",
-    running: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
-    completed: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
-    error: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300",
+    idle: "bg-slate-500/20 text-slate-300",
+    running: "bg-blue-500/20 text-blue-300",
+    completed: "bg-green-500/20 text-green-400",
+    error: "bg-red-500/20 text-red-400",
   };
 
   return (
     <>
-      <Card className="w-full hover:shadow-md transition-shadow duration-200">
-        <CardContent className="p-5">
+      <Card className="w-full hover:shadow-md transition-all duration-300 hover:shadow-purple-500/10 overflow-hidden group">
+        <CardContent className="p-5 bg-gradient-to-br from-purple-900/20 to-background">
           <div className="flex justify-between items-start mb-3">
             <div>
-              <h3 className="text-lg font-semibold">{title}</h3>
+              <h3 className="text-lg font-semibold bg-clip-text bg-gradient-to-r from-purple-300 to-purple-500 text-transparent">{title}</h3>
               <p className="text-muted-foreground text-sm mb-2">{description}</p>
               {lastModifiedBy && updatedAt && (
                 <p className="text-xs text-muted-foreground flex items-center">
@@ -82,7 +82,7 @@ export function WorkflowCard({
           </div>
           
           <div className="flex flex-wrap gap-2 mb-4">
-            <Badge variant="outline" className="flex gap-1 items-center">
+            <Badge variant="outline" className="flex gap-1 items-center bg-purple-500/10 border-purple-500/30">
               <Clock className="h-3 w-3" /> Trigger: {trigger}
             </Badge>
             {status && (
@@ -91,17 +91,17 @@ export function WorkflowCard({
               </Badge>
             )}
             {successRate !== undefined && (
-              <Badge variant="outline" className="bg-background">
+              <Badge variant="outline" className="bg-background/30 border-purple-500/30">
                 {successRate}% Success Rate
               </Badge>
             )}
             {avgRunTime && (
-              <Badge variant="outline" className="bg-background">
+              <Badge variant="outline" className="bg-background/30 border-purple-500/30">
                 Avg. Run: {avgRunTime}
               </Badge>
             )}
             {totalRuns > 0 && (
-              <Badge variant="outline" className="bg-background flex gap-1 items-center">
+              <Badge variant="outline" className="bg-background/30 border-purple-500/30 flex gap-1 items-center">
                 <Activity className="h-3 w-3" />
                 {totalRuns} Runs
               </Badge>
@@ -109,10 +109,13 @@ export function WorkflowCard({
           </div>
           
           <div className="flex justify-between items-center">
-            <Button variant="outline" onClick={() => setIsOpen(true)}>
+            <Button variant="outline" onClick={() => setIsOpen(true)} className="border-purple-500/30 hover:bg-purple-500/20">
               Open Workflow <ChevronRight className="h-4 w-4 ml-1" />
             </Button>
-            <Button onClick={handleToggleRun}>
+            <Button 
+              variant={isRunning ? "outline" : "gradient"} 
+              onClick={handleToggleRun}
+              className={isRunning ? "border-red-500/30 text-red-400 hover:bg-red-500/20" : ""}>
               {isRunning ? (
                 <>
                   <Square className="h-4 w-4 mr-1" /> Stop
@@ -128,29 +131,31 @@ export function WorkflowCard({
       </Card>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="max-w-4xl h-[80vh] flex flex-col">
+        <DialogContent className="max-w-4xl h-[80vh] flex flex-col bg-gradient-to-br from-purple-900/30 to-background backdrop-blur-sm border border-purple-500/20 rounded-xl">
           <DialogHeader>
             <DialogTitle className="flex justify-between items-center">
-              <span>{title}</span>
+              <span className="bg-clip-text bg-gradient-to-r from-purple-300 to-purple-500 text-transparent">{title}</span>
               <Badge className={statusColors[status]}>
                 {status.charAt(0).toUpperCase() + status.slice(1)}
               </Badge>
             </DialogTitle>
             <p className="text-sm text-muted-foreground">{description}</p>
           </DialogHeader>
-          <div className="flex-1 overflow-auto p-2 bg-muted/20">
+          <div className="flex-1 overflow-auto p-2 bg-purple-900/5 rounded-lg">
             <WorkflowCanvas workflowId={workflowId} />
           </div>
-          <DialogFooter className="flex justify-between items-center border-t pt-2">
+          <DialogFooter className="flex justify-between items-center border-t border-purple-500/20 pt-2">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Calendar className="h-4 w-4" />
               <span>Last Run: {updatedAt || 'Never'}</span>
             </div>
             <div className="flex gap-2">
-              <Button variant="outline" onClick={() => setIsOpen(false)}>
+              <Button variant="outline" onClick={() => setIsOpen(false)} className="border-purple-500/30">
                 Close
               </Button>
-              <Button onClick={handleToggleRun}>
+              <Button variant={isRunning ? "outline" : "gradient"} 
+                onClick={handleToggleRun}
+                className={isRunning ? "border-red-500/30 text-red-400 hover:bg-red-500/20" : ""}>
                 {isRunning ? (
                   <>
                     <Square className="h-4 w-4 mr-1" /> Stop

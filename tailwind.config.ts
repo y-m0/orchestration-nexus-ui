@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,7 +62,21 @@ export default {
           'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
           border: 'hsl(var(--sidebar-border))',
           ring: 'hsl(var(--sidebar-ring))'
-        }
+        },
+        purple: {
+          DEFAULT: '#9b87f5',
+          50: '#f5f2ff',
+          100: '#ede8ff',
+          200: '#dbd0ff',
+          300: '#c2adff',
+          400: '#a98aff',
+          500: '#9b87f5',
+          600: '#7e69ab',
+          700: '#6e59a5',
+          800: '#483c6c',
+          900: '#2e263e',
+          950: '#1a1f2c',
+        },
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -84,13 +99,34 @@ export default {
         "accordion-up": {
           from: { height: "var(--radix-accordion-content-height)", opacity: "1" },
           to: { height: "0", opacity: "0" }
+        },
+        "fade-in": {
+          "0%": { opacity: "0", transform: "translateY(10px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" }
+        },
+        "fade-out": {
+          "0%": { opacity: "1", transform: "translateY(0)" },
+          "100%": { opacity: "0", transform: "translateY(10px)" }
+        },
+        "pulse-purple": {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.5" }
         }
       },
       animation: {
         "collapsible-down": "collapsible-down 0.2s ease-out",
         "collapsible-up": "collapsible-up 0.2s ease-out",
         "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out"
+        "accordion-up": "accordion-up 0.2s ease-out",
+        "fade-in": "fade-in 0.3s ease-out",
+        "fade-out": "fade-out 0.3s ease-out",
+        "pulse-purple": "pulse-purple 2s cubic-bezier(0.4, 0, 0.6, 1) infinite"
+      },
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+        'gradient-purple': 'linear-gradient(to right, #9b87f5, #7e69ab)',
+        'gradient-dark': 'linear-gradient(to bottom right, #1a1f2c, #2e263e)',
       }
     }
   },

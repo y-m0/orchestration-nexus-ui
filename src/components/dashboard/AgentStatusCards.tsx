@@ -15,37 +15,37 @@ export function AgentStatusCards({
 }: AgentStatusCardsProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <Card className="border-l-4 border-l-green-500">
+      <Card className="overflow-hidden bg-gradient-to-b from-purple-900/20 to-background border-l-2 border-l-green-500">
         <CardContent className="flex items-center p-6">
-          <div className="bg-green-500/10 p-3 rounded-full mr-4">
+          <div className="bg-green-500/20 p-3 rounded-xl mr-4 backdrop-blur-sm">
             <Bot className="h-6 w-6 text-green-500" />
           </div>
           <div>
-            <p className="font-semibold text-2xl">{activeAgents}</p>
+            <p className="font-semibold text-2xl text-gradient">{activeAgents}</p>
             <p className="text-sm text-muted-foreground">Active Agents</p>
           </div>
         </CardContent>
       </Card>
       
-      <Card className="border-l-4 border-l-yellow-500">
+      <Card className="overflow-hidden bg-gradient-to-b from-purple-900/20 to-background border-l-2 border-l-yellow-500">
         <CardContent className="flex items-center p-6">
-          <div className="bg-yellow-500/10 p-3 rounded-full mr-4">
+          <div className="bg-yellow-500/20 p-3 rounded-xl mr-4 backdrop-blur-sm">
             <Clock className="h-6 w-6 text-yellow-500" />
           </div>
           <div>
-            <p className="font-semibold text-2xl">{idleAgents}</p>
+            <p className="font-semibold text-2xl text-gradient">{idleAgents}</p>
             <p className="text-sm text-muted-foreground">Idle Agents</p>
           </div>
         </CardContent>
       </Card>
       
-      <Card className="border-l-4 border-l-red-500">
+      <Card className="overflow-hidden bg-gradient-to-b from-purple-900/20 to-background border-l-2 border-l-red-500">
         <CardContent className="flex items-center p-6">
-          <div className="bg-red-500/10 p-3 rounded-full mr-4">
+          <div className="bg-red-500/20 p-3 rounded-xl mr-4 backdrop-blur-sm">
             <AlertCircle className="h-6 w-6 text-red-500" />
           </div>
           <div>
-            <p className="font-semibold text-2xl">{errorAgents}</p>
+            <p className="font-semibold text-2xl text-gradient">{errorAgents}</p>
             <p className="text-sm text-muted-foreground">Error State</p>
           </div>
         </CardContent>
