@@ -22,18 +22,18 @@ export default function Login() {
   }, [isAuthenticated, navigate]);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col bg-gradient-to-br from-background to-purple-950/20">
       <header className="w-full p-4 flex justify-between items-center">
-        <Link to="/" className="text-xl font-bold">Orchestration Nexus</Link>
+        <Link to="/" className="text-xl font-bold bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">Orchestration Nexus</Link>
         <ThemeToggle />
       </header>
       
       <main className="flex-1 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md mx-auto">
+        <Card className="w-full max-w-md mx-auto neo-border glass-card">
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-bold text-center">Sign In</CardTitle>
+            <CardTitle className="text-2xl font-bold text-center text-gradient">Agent Orchestration System</CardTitle>
             <CardDescription className="text-center">
-              Enter your credentials to access your account
+              Enter your credentials to access the workflow dashboard
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -47,20 +47,42 @@ export default function Login() {
                 <Separator className="w-full" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">
-                  Or continue with
+                <span className="bg-background/80 backdrop-blur-sm px-2 text-muted-foreground">
+                  Explore Features
                 </span>
               </div>
             </div>
             
-            <SocialLogin />
-            
-            <p className="text-center text-sm">
-              Don't have an account?{" "}
-              <Link to="/onboarding" className="text-primary font-medium hover:underline">
-                Sign up
+            <div className="grid grid-cols-2 gap-3 text-xs">
+              <Link 
+                to="/dashboard" 
+                className="p-3 border border-border/50 rounded-md hover:bg-accent/50 transition-colors text-center"
+              >
+                <div className="text-purple-400 font-medium">Dashboard</div>
+                <div className="text-muted-foreground mt-1">Agent status & metrics</div>
               </Link>
-            </p>
+              <Link 
+                to="/workflows" 
+                className="p-3 border border-border/50 rounded-md hover:bg-accent/50 transition-colors text-center"
+              >
+                <div className="text-purple-400 font-medium">Workflows</div>
+                <div className="text-muted-foreground mt-1">LLM agent orchestration</div>
+              </Link>
+              <Link 
+                to="/activity" 
+                className="p-3 border border-border/50 rounded-md hover:bg-accent/50 transition-colors text-center"
+              >
+                <div className="text-purple-400 font-medium">Activity</div>
+                <div className="text-muted-foreground mt-1">Execution history</div>
+              </Link>
+              <Link 
+                to="/settings" 
+                className="p-3 border border-border/50 rounded-md hover:bg-accent/50 transition-colors text-center"
+              >
+                <div className="text-purple-400 font-medium">Settings</div>
+                <div className="text-muted-foreground mt-1">Data connections & API keys</div>
+              </Link>
+            </div>
           </CardContent>
         </Card>
       </main>
