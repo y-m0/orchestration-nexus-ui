@@ -40,6 +40,8 @@ export function WorkflowActivityLogger({
           content: text,
           type: "short_term",
           metadata: {
+            agentId: "system", // Add required agentId
+            timestamp: Date.now(), // Add required timestamp
             workflowId: latestRun.workflowId,
             type: 'workflow',
             tags: ['activity', latestRun.status]
@@ -62,7 +64,9 @@ export function WorkflowActivityLogger({
       try {
         const searchFilter = { content: 'workflow activity' };
         const results = await searchMemory(searchFilter);
-        setLogs(results);
+        // Ensure we're setting state with the correct type
+        const typedResults = results as unknown as MemoryItem[];
+        setLogs(typedResults);
       } catch (err) {
         console.error('Error fetching workflow logs:', err);
       }
@@ -88,7 +92,7 @@ export function WorkflowActivityLogger({
           <Badge variant="outline" className="mr-2">
             {log.metadata?.type || "unknown"}
           </Badge>
-          <span>{log.content || log.text}</span>
+          <span>{log.text || log.content}</span>
         </div>
       ))}
     </div>

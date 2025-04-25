@@ -29,12 +29,13 @@ function useDashboardActivity() {
   });
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      searchMemory({ content: "system status" })
-        .then(results => {
-          // Process results if needed
-        })
-        .catch(err => console.error("Error searching memory:", err));
+    const interval = setInterval(async () => {
+      try {
+        const results = await searchMemory({ content: "system status" });
+        // Process results if needed
+      } catch (err) {
+        console.error("Error searching memory:", err);
+      }
     }, 60000);
     
     return () => clearInterval(interval);
@@ -169,7 +170,7 @@ export default function Dashboard() {
     const searchMemoryItems = async () => {
       try {
         const results = await searchMemory({ content: searchQuery });
-        setMemoryResults(results);
+        setMemoryResults(results as any[]);
         if (results.length > 0) {
           console.log(`Activity Log: Memory searched for "${searchQuery}" with ${results.length} results`);
         }

@@ -2,6 +2,7 @@
 export interface MemoryItem {
   id: string;
   text: string;
+  content?: string; // Add content property for compatibility
   vector?: number[];
   metadata: MemoryMetadata;
   createdAt: string;
