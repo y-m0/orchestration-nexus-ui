@@ -1,7 +1,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Mail, Search, ForwardIcon, Database, CheckCircle, ArrowRight } from "lucide-react";
+import { Mail, Search, ForwardIcon, Database, CheckCircle } from "lucide-react";
 import { useInView } from "react-intersection-observer";
 
 export function WorkflowHeroDemo() {
@@ -29,7 +29,8 @@ export function WorkflowHeroDemo() {
   ];
 
   useEffect(() => {
-    let timeout: number;
+    // Change from number to NodeJS.Timeout for proper type definition
+    let timeout: NodeJS.Timeout | undefined;
     
     if (inView) {
       // Reset workflow state when coming into view
@@ -53,12 +54,14 @@ export function WorkflowHeroDemo() {
       }, 800);
     } else {
       // Reset when out of view
-      clearTimeout(timeout);
+      if (timeout) clearTimeout(timeout);
       setActiveNodeIndex(-1);
       setWorkflowCompleted(false);
     }
     
-    return () => clearTimeout(timeout);
+    return () => {
+      if (timeout) clearTimeout(timeout);
+    };
   }, [inView, nodes.length]);
 
   return (
