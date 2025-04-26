@@ -109,13 +109,55 @@ export function HeroSection() {
           </motion.div>
         </motion.div>
 
+        {/* Invoice Workflow Demo Section */}
         <motion.div 
-          className="relative"
+          className="mb-16"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.5 }}
         >
+          <div className="text-center mb-8">
+            <motion.h2 
+              className="text-2xl md:text-3xl font-bold mb-2"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+            >
+              Let automation handle the busywork
+            </motion.h2>
+            <motion.p 
+              className="text-muted-foreground"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.4 }}
+            >
+              Forward, log, and track — without lifting a finger
+            </motion.p>
+          </div>
+          
+          {/* Workflow Demo */}
           <WorkflowHeroDemo />
+          
+          {/* CTA after demo */}
+          <motion.div 
+            className="text-center mt-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+          >
+            <h3 className="text-xl md:text-2xl font-bold mb-6">Ready to automate?</h3>
+            <div className="flex justify-center gap-4 flex-wrap">
+              <Button asChild size="lg" variant="default">
+                <Link to="/login">Log In</Link>
+              </Button>
+              <Button asChild size="lg" className="bg-gradient-to-r from-purple-400 to-purple-600 hover:from-purple-500 hover:to-purple-700 shadow-lg shadow-purple-500/20">
+                <Link to="/onboarding">Sign Up</Link>
+              </Button>
+            </div>
+          </motion.div>
         </motion.div>
       </div>
     </section>

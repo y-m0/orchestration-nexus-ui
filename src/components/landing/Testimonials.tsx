@@ -11,9 +11,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Star, StarHalf } from "lucide-react";
 
 export function Testimonials() {
+  // Add workflow-specific testimonials focused on the email sorting use case
   const testimonials = [
     {
-      quote: "Orchestration Nexus has transformed how our team handles customer inquiries. The AI assistance combined with human oversight creates the perfect balance.",
+      quote: "Cut our email handling time by 30% with Orchestration Nexus! The email-to-invoice automation changed how our finance department operates.",
       author: "Alex Morgan",
       role: "Operations Manager",
       company: "TechSolutions Inc.",
@@ -21,7 +22,7 @@ export function Testimonials() {
       rating: 5
     },
     {
-      quote: "The workflow builder is intuitive enough for non-technical users while providing the depth that our developers appreciate. We've cut process development time in half.",
+      quote: "Automation so intuitive, even non-tech teams started building workflows. Our HR department created their own document processing system in days.",
       author: "Jamie Chen",
       role: "Product Lead",
       company: "InnovateAI",
@@ -29,15 +30,15 @@ export function Testimonials() {
       rating: 4.5
     },
     {
-      quote: "Our approval workflows used to take days. With Orchestration Nexus, we've reduced that to hours while improving compliance and documentation.",
+      quote: "Email classification workflows saved us countless hours of manual sorting. Now our team focuses on analysis instead of inbox management.",
       author: "Taylor Williams",
-      role: "Compliance Director",
+      role: "Finance Director",
       company: "FinSecure",
       avatar: "https://i.pravatar.cc/100?img=3",
       rating: 5
     },
     {
-      quote: "The platform has democratized AI for our entire organization. Even team members with no technical background can create powerful workflows.",
+      quote: "Our approval workflows used to take days. With Orchestration Nexus, we've reduced that to hours while improving compliance and documentation.",
       author: "Jordan Smith",
       role: "Digital Transformation Lead",
       company: "Global Services Ltd.",
@@ -72,7 +73,7 @@ export function Testimonials() {
         transition={{ duration: 0.7 }}
       >
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">
-          What Our Users Say
+          Trusted by teams looking to automate smarter
         </h2>
         <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-12">
           Join hundreds of teams using Orchestration Nexus to revolutionize their workflow automation.
