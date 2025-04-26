@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -51,7 +50,11 @@ export function CallToAction() {
                 <p className="text-xs text-muted-foreground">No credit card required to start</p>
               </div>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" asChild className="bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 w-full">
+                <Button 
+                  size="lg" 
+                  asChild 
+                  className="bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-600 hover:to-purple-800 w-full text-white shadow-lg shadow-purple-500/30 brightness-110 saturate-150"
+                >
                   <Link to="/onboarding">Create Free Account</Link>
                 </Button>
                 <Button size="lg" variant="outline" asChild className="w-full">
