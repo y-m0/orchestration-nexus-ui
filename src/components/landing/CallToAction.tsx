@@ -53,7 +53,7 @@ export function CallToAction() {
                 <Button 
                   size="lg" 
                   asChild 
-                  className="bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-600 hover:to-purple-800 w-full text-white shadow-lg shadow-purple-500/30 brightness-110 saturate-150"
+                  className="bg-gradient-to-r from-purple-400 to-purple-600 hover:from-purple-500 hover:to-purple-700 w-full text-white shadow-xl shadow-purple-500/50 brightness-125 saturate-200 hover:brightness-150 transition-all duration-300"
                 >
                   <Link to="/onboarding">Create Free Account</Link>
                 </Button>
