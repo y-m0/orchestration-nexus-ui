@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { LoginForm } from "@/components/auth/LoginForm";
@@ -38,6 +37,7 @@ export default function Login() {
               Enter your credentials to access the workflow dashboard
             </CardDescription>
           </CardHeader>
+          
           <CardContent className="space-y-4">
             <LoginForm 
               credentials={credentials} 

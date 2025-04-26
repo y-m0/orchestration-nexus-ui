@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
@@ -80,13 +79,22 @@ export function HeroSection() {
             className="flex flex-wrap justify-center gap-4 mb-8"
             variants={item}
           >
-            <Button size="lg" asChild className="bg-gradient-to-r from-purple-400 to-purple-600 hover:from-purple-500 hover:to-purple-700 group shadow-xl shadow-purple-500/30">
+            <Button 
+              size="lg" 
+              asChild 
+              className="bg-gradient-to-r from-purple-600 to-purple-800 text-white hover:from-purple-700 hover:to-purple-900 group shadow-xl shadow-purple-500/30"
+            >
               <Link to="/onboarding">
                 Create Free Account
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" asChild className="group">
+            <Button 
+              size="lg" 
+              variant="outline" 
+              asChild 
+              className="group"
+            >
               <Link to="#demo" className="flex items-center">
                 <Play className="mr-2 h-4 w-4" />
                 Watch Demo

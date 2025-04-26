@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -84,14 +83,18 @@ export function CallToAction() {
               <Button 
                 size="lg" 
                 asChild 
-                className="bg-gradient-to-r from-purple-400 to-purple-600 hover:from-purple-500 hover:to-purple-700 text-white shadow-xl shadow-purple-500/50 brightness-125 saturate-200 hover:brightness-150 transition-all duration-300 group"
+                className="bg-gradient-to-r from-purple-600 to-purple-800 text-white hover:from-purple-700 hover:to-purple-900 shadow-xl shadow-purple-500/50 brightness-125 saturate-200 hover:brightness-150 transition-all duration-300 group"
               >
                 <Link to="/onboarding">
                   Create Free Account
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" asChild>
+              <Button 
+                size="lg" 
+                variant="outline" 
+                asChild
+              >
                 <Link to="/login">Sign In</Link>
               </Button>
             </div>
