@@ -1,7 +1,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Database, Human, Circle, CircleCheck } from "lucide-react";
+import { Database, User, Circle, CircleCheck } from "lucide-react";
 
 export function WorkflowHeroDemo() {
   const [activeNodeIndex, setActiveNodeIndex] = useState(0);
@@ -9,7 +9,7 @@ export function WorkflowHeroDemo() {
   const nodes = [
     { id: "agent", icon: Circle, label: "AI Agent", x: "25%", y: "30%" },
     { id: "db", icon: Database, label: "Database", x: "50%", y: "50%" },
-    { id: "human", icon: Human, label: "Human Task", x: "75%", y: "30%" },
+    { id: "human", icon: User, label: "Human Task", x: "75%", y: "30%" },
     { id: "approval", icon: CircleCheck, label: "Approval", x: "50%", y: "70%" },
   ];
 
