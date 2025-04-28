@@ -7,7 +7,6 @@ import { UseCases } from "@/components/landing/UseCases";
 import { Testimonials } from "@/components/landing/Testimonials";
 import { CallToAction } from "@/components/landing/CallToAction";
 import { HowItWorks } from "@/components/landing/HowItWorks";
-import { Link } from "react-router-dom";
 
 export default function Index() {
   return (

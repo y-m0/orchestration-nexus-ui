@@ -31,7 +31,7 @@ export function HowItWorks() {
   ];
 
   return (
-    <section className="py-20 px-4">
+    <section className="py-20 px-4" id="how-it-works">
       <motion.div 
         className="max-w-7xl mx-auto"
         initial={{ opacity: 0, y: 20 }}

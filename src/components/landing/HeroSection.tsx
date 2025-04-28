@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
@@ -95,10 +96,10 @@ export function HeroSection() {
               asChild 
               className="group"
             >
-              <Link to="#demo" className="flex items-center">
+              <a href="#demo" className="flex items-center">
                 <Play className="mr-2 h-4 w-4" />
                 Watch Demo
-              </Link>
+              </a>
             </Button>
           </motion.div>
           
@@ -123,6 +124,7 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.5 }}
+          id="demo"
         >
           <div className="text-center mb-8">
             <motion.h2 

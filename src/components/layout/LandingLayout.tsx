@@ -36,6 +36,33 @@ export function LandingLayout({ children }: LandingLayoutProps) {
     };
   }, []);
 
+  // Add smooth scrolling behavior
+  useEffect(() => {
+    // Function to handle smooth scrolling when clicking on anchor links
+    const handleAnchorClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'A' && target.getAttribute('href')?.startsWith('#')) {
+        e.preventDefault();
+        const href = target.getAttribute('href') as string;
+        const targetElement = document.querySelector(href);
+        
+        if (targetElement) {
+          targetElement.scrollIntoView({
+            behavior: 'smooth'
+          });
+          
+          // Update URL without reload (optional)
+          window.history.pushState({}, '', href);
+        }
+      }
+    };
+
+    document.addEventListener('click', handleAnchorClick);
+    return () => {
+      document.removeEventListener('click', handleAnchorClick);
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
       <header 
@@ -64,10 +91,17 @@ export function LandingLayout({ children }: LandingLayoutProps) {
           </nav>
           
           <div className="flex items-center gap-4">
-            <Button variant="ghost" asChild className="text-sm">
+            <Button 
+              variant="ghost" 
+              asChild 
+              className="text-sm hover:bg-purple-500/10"
+            >
               <Link to="/login">Sign In</Link>
             </Button>
-            <Button asChild className="bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900">
+            <Button 
+              asChild 
+              className="bg-gradient-to-r from-purple-600 to-purple-800 text-white hover:from-purple-700 hover:to-purple-900 shadow-lg shadow-purple-500/20"
+            >
               <Link to="/onboarding">Create Account</Link>
             </Button>
           </div>
@@ -136,7 +170,7 @@ export function LandingLayout({ children }: LandingLayoutProps) {
                 <a href="#features" className="hover:text-purple-400 transition-colors">Features</a>
                 <a href="#use-cases" className="hover:text-purple-400 transition-colors">Use Cases</a>
                 <a href="#demo" className="hover:text-purple-400 transition-colors">Demo</a>
-                <a href="#" className="hover:text-purple-400 transition-colors">Pricing</a>
+                <a href="#get-started" className="hover:text-purple-400 transition-colors">Pricing</a>
               </div>
             </div>
             
