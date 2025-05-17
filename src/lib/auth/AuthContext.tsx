@@ -57,22 +57,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(true);
       setError(null);
       
-      // For demo purposes, using mockAuth
-      const mockAuthModule = await import('@/lib/mockAuth');
-      const { token, user: mockUser } = await mockAuthModule.mockAuth.login(email, password);
-      
-      // Store token in localStorage for auth persistence
-      localStorage.setItem('auth_token', token);
-      
-      // Set the authenticated state - use the mock user data
-      setUser(mockUser as unknown as User);
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      setUser(data.user);
+      setSession(data.session);
       setIsAuthenticated(true);
-      
+
       toast({
         title: "Login successful",
-        description: `Welcome back, ${mockUser.name}`,
+        description: "You have been successfully logged in.",
       });
-      
+
       return Promise.resolve();
     } catch (error: any) {
       setError(error.message);
@@ -92,23 +94,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       setLoading(true);
       
-      // Use mockAuth for logout during development
-      const mockAuthModule = await import('@/lib/mockAuth');
-      await mockAuthModule.mockAuth.logout();
-      
-      // Clear token from localStorage
-      localStorage.removeItem('auth_token');
-      
-      // Reset the authenticated state
+      const { error } = await supabase.auth.signOut();
+
+      if (error) {
+        throw error;
+      }
+
       setUser(null);
       setSession(null);
       setIsAuthenticated(false);
-      
+
       toast({
         title: "Logged out",
-        description: "You have been successfully logged out",
+        description: "You have been successfully logged out.",
       });
-      
+
       return Promise.resolve();
     } catch (error: any) {
       setError(error.message);
