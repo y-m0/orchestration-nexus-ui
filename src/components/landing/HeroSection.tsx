@@ -62,7 +62,7 @@ export function HeroSection() {
             className="text-4xl sm:text-5xl md:text-6xl font-bold bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent tracking-tight mb-6"
             variants={item}
           >
-            Orchestration Nexus
+            Orchestra
           </motion.h1>
           <motion.p 
             className="text-xl md:text-2xl text-muted-foreground mb-4"
@@ -114,7 +114,7 @@ export function HeroSection() {
                 </div>
               ))}
             </div>
-            <span>Join 500+ teams already using Orchestration Nexus</span>
+            <span>Join 500+ teams already using Orchestra</span>
           </motion.div>
         </motion.div>
 

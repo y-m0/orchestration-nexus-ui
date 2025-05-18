@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { LoginForm } from "@/components/auth/LoginForm";
@@ -23,7 +24,7 @@ export default function Login() {
   return (
     <div className="min-h-screen bg-background flex flex-col bg-gradient-to-br from-background to-purple-950/20">
       <header className="w-full p-4 flex justify-between items-center">
-        <Link to="/" className="text-xl font-bold bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">Orchestration Nexus</Link>
+        <Link to="/" className="text-xl font-bold bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">Orchestra</Link>
         <ThemeToggle />
       </header>
       

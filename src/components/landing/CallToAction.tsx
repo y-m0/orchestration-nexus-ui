@@ -38,7 +38,7 @@ export function CallToAction() {
             Ready to Automate Your Email Workflows?
           </h2>
           <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-8">
-            Get started with Orchestration Nexus today and experience the power of intelligent workflow automation.
+            Get started with Orchestra today and experience the power of intelligent workflow automation.
           </p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">

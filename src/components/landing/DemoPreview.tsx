@@ -18,7 +18,7 @@ export function DemoPreview() {
           See It In Action
         </h2>
         <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-12">
-          Experience the power of Orchestration Nexus with our interactive demo. Build workflows, trigger LLMs, and manage approvals.
+          Experience the power of Orchestra with our interactive demo. Build workflows, trigger LLMs, and manage approvals.
         </p>
 
         <div className="relative max-w-5xl mx-auto">

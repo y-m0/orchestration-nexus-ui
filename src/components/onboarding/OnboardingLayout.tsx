@@ -21,7 +21,7 @@ export function OnboardingLayout({ children }: OnboardingLayoutProps) {
             <span className="sr-only">Back to home</span>
           </Link>
         </Button>
-        <div className="flex-1 text-center font-medium">Orchestration Nexus</div>
+        <div className="flex-1 text-center font-medium">Orchestra</div>
         <ThemeToggle />
       </div>
       
