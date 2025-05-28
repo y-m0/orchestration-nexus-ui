@@ -73,7 +73,7 @@ export function LandingLayout({ children }: LandingLayoutProps) {
         }`}
       >
         <Link to="/" className="text-xl font-bold bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">
-          Orchestration Nexus
+          Orchestra
         </Link>
         
         {/* Desktop Navigation */}
@@ -157,7 +157,7 @@ export function LandingLayout({ children }: LandingLayoutProps) {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <Link to="/" className="text-xl font-bold bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent mb-4 block">
-                Orchestration Nexus
+                Orchestra
               </Link>
               <p className="text-sm text-muted-foreground max-w-xs">
                 Building the future of intelligent workflow automation for teams of all sizes
@@ -198,7 +198,7 @@ export function LandingLayout({ children }: LandingLayoutProps) {
           <div className="border-t border-border/30 pt-8 mt-4 flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="text-center md:text-left">
               <p className="text-sm text-muted-foreground">
-                © {new Date().getFullYear()} Orchestration Nexus. All rights reserved.
+                © {new Date().getFullYear()} Orchestra. All rights reserved.
               </p>
             </div>
             <div className="flex items-center gap-4">

@@ -14,7 +14,7 @@ export function Testimonials() {
   // Add workflow-specific testimonials focused on the email sorting use case
   const testimonials = [
     {
-      quote: "Cut our email handling time by 30% with Orchestration Nexus! The email-to-invoice automation changed how our finance department operates.",
+      quote: "Cut our email handling time by 30% with Orchestra! The email-to-invoice automation changed how our finance department operates.",
       author: "Alex Morgan",
       role: "Operations Manager",
       company: "TechSolutions Inc.",
@@ -38,7 +38,7 @@ export function Testimonials() {
       rating: 5
     },
     {
-      quote: "Our approval workflows used to take days. With Orchestration Nexus, we've reduced that to hours while improving compliance and documentation.",
+      quote: "Our approval workflows used to take days. With Orchestra, we've reduced that to hours while improving compliance and documentation.",
       author: "Jordan Smith",
       role: "Digital Transformation Lead",
       company: "Global Services Ltd.",
@@ -76,7 +76,7 @@ export function Testimonials() {
           Trusted by teams looking to automate smarter
         </h2>
         <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-12">
-          Join hundreds of teams using Orchestration Nexus to revolutionize their workflow automation.
+          Join hundreds of teams using Orchestra to revolutionize their workflow automation.
         </p>
 
         <Carousel
