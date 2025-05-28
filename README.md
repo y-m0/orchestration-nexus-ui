@@ -1,5 +1,3 @@
-# Welcome to your Lovable project
-
 # Deployment and Hosting
 - deployed via release to dockerhub
 - hosted on google cloud run 
