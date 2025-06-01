@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -57,6 +56,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(true);
       setError(null);
       
+      // For demo purposes, allow login with test credentials
+      if (email === 'test@example.com' && password === 'password') {
+        // Mock successful login
+        const mockUser = {
+          id: 'test-user-id',
+          email: 'test@example.com',
+          user_metadata: { name: 'Test User' }
+        };
+        
+        setUser(mockUser as User);
+        setIsAuthenticated(true);
+        
+        // Store mock session in localStorage for persistence
+        localStorage.setItem('supabase.auth.token', JSON.stringify({
+          currentSession: {
+            access_token: 'mock-token',
+            user: mockUser
+          }
+        }));
+        
+        toast({
+          title: "Login successful",
+          description: "You have been successfully logged in with demo credentials.",
+        });
+        
+        return Promise.resolve();
+      }
+      
+      // Real Supabase authentication
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -94,6 +122,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       setLoading(true);
       
+      // Check if we're using mock auth
+      if (user?.email === 'test@example.com') {
+        // Clear mock session
+        localStorage.removeItem('supabase.auth.token');
+        setUser(null);
+        setSession(null);
+        setIsAuthenticated(false);
+        
+        toast({
+          title: "Logged out",
+          description: "You have been successfully logged out.",
+        });
+        
+        return Promise.resolve();
+      }
+      
+      // Real logout
       const { error } = await supabase.auth.signOut();
 
       if (error) {
@@ -128,13 +173,41 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(true);
       setError(null);
       
-      // For now, we'll just use the mock login
-      await login(email, password);
+      // For demo purposes, simulate successful signup
+      if (email === 'test@example.com') {
+        // Just use the login function for the demo account
+        await login(email, password);
+        
+        toast({
+          title: "Account Created",
+          description: "Your demo account has been created successfully.",
+        });
+        
+        return Promise.resolve();
+      }
       
-      toast({
-        title: "Account Created",
-        description: "Your account has been created successfully.",
+      // Real signup
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
       });
+
+      if (error) {
+        throw error;
+      }
+
+      // Note: Supabase might require email confirmation
+      if (data.user?.identities?.length === 0) {
+        toast({
+          title: "Email already registered",
+          description: "This email is already registered. Please login instead.",
+        });
+      } else {
+        toast({
+          title: "Account Created",
+          description: "Your account has been created successfully. Please check your email for confirmation.",
+        });
+      }
       
       return Promise.resolve();
     } catch (error: any) {
