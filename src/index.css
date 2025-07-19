@@ -1,163 +1,59 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
- 
-@layer base {
-  :root {
-    /* Light theme colors (will be overridden by dark theme) */
-    --background: 250 30% 98%;
-    --foreground: 254 10% 10%;
- 
-    --card: 0 0% 100%;
-    --card-foreground: 254 10% 10%;
- 
-    --popover: 0 0% 100%;
-    --popover-foreground: 254 10% 10%;
- 
-    --primary: 255 90% 75%;
-    --primary-foreground: 255 10% 10%;
- 
-    --secondary: 255 10% 90%;
-    --secondary-foreground: 254 10% 10%;
- 
-    --muted: 255 10% 95%;
-    --muted-foreground: 255 10% 40%;
- 
-    --accent: 255 10% 90%;
-    --accent-foreground: 254 10% 10%;
- 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 255 10% 98%;
- 
-    --border: 255 10% 85%;
-    --input: 255 10% 85%;
-    --ring: 255 50% 75%;
- 
-    --radius: 0.75rem;
 
-    /* Sidebar specific colors */
-    --sidebar-background: 255 10% 90%;
-    --sidebar-foreground: 254 10% 10%;
-    --sidebar-primary: 255 90% 75%;
-    --sidebar-primary-foreground: 255 10% 10%;
-    --sidebar-accent: 255 10% 80%;
-    --sidebar-accent-foreground: 254 10% 10%;
-    --sidebar-border: 255 10% 80%;
-    --sidebar-ring: 255 50% 75%;
-  }
- 
-  .dark {
-    /* Dark theme colors - futuristic purple palette */
-    --background: 254 15% 10%;
-    --foreground: 255 10% 98%;
- 
-    --card: 254 20% 12%;
-    --card-foreground: 255 10% 98%;
- 
-    --popover: 254 20% 12%;
-    --popover-foreground: 255 10% 98%;
- 
-    --primary: 255 90% 75%;
-    --primary-foreground: 255 10% 10%;
- 
-    --secondary: 255 15% 20%;
-    --secondary-foreground: 255 10% 98%;
- 
-    --muted: 255 15% 20%;
-    --muted-foreground: 255 10% 70%;
- 
-    --accent: 255 15% 20%;
-    --accent-foreground: 255 10% 98%;
- 
-    --destructive: 0 62.8% 40%;
-    --destructive-foreground: 255 10% 98%;
- 
-    --border: 255 15% 20%;
-    --input: 255 15% 20%;
-    --ring: 255 50% 75%;
-
-    /* Sidebar specific colors */
-    --sidebar-background: 254 25% 8%;
-    --sidebar-foreground: 255 10% 98%;
-    --sidebar-primary: 255 90% 75%;
-    --sidebar-primary-foreground: 255 10% 10%;
-    --sidebar-accent: 255 15% 25%;
-    --sidebar-accent-foreground: 255 10% 98%;
-    --sidebar-border: 255 15% 18%;
-    --sidebar-ring: 255 50% 75%;
-  }
-}
- 
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
-  }
-}
-
-@layer utilities {
-  /* Custom utilities for the futuristic UI */
-  .bg-blur {
-    @apply backdrop-blur-sm bg-opacity-80;
-  }
-
-  .card-gradient {
-    @apply bg-gradient-to-br from-purple-800/20 via-purple-900/20 to-purple-950/20;
-  }
-
-  .glass-card {
-    @apply bg-background/60 backdrop-blur-md border border-white/10;
-  }
-
-  .neo-border {
-    @apply border border-purple-500/20 shadow-[0_0_15px_rgba(155,135,245,0.15)];
-  }
-  
-  .text-gradient {
-    @apply bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent;
-  }
-
-  .glow-purple {
-    @apply shadow-[0_0_15px_rgba(155,135,245,0.5)];
-  }
-
-  .animate-enter {
-    @apply animate-fade-in;
-  }
-
-  .purple-link {
-    @apply text-purple-400 hover:text-purple-300 transition-colors;
-  }
-  
-  .status-pulse {
-    @apply relative before:absolute before:inset-0 before:rounded-full before:animate-pulse-purple;
-  }
-}
-
-/* Force dark mode by default */
 :root {
-  color-scheme: dark;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Improved scrollbar styling */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
 }
 
-::-webkit-scrollbar-track {
-  @apply bg-purple-950/20;
-}
-
-::-webkit-scrollbar-thumb {
-  @apply bg-purple-600/50 rounded-full hover:bg-purple-500/70 transition-colors;
-}
-
-/* Improved chart styles */
-.recharts-surface {
-  @apply overflow-visible;
+@layer components {
+  .btn {
+    @apply px-4 py-2 rounded-md font-medium transition-colors;
+  }
+  
+  .btn-primary {
+    @apply bg-primary-600 text-white hover:bg-primary-700;
+  }
+  
+  .btn-secondary {
+    @apply bg-secondary-600 text-white hover:bg-secondary-700;
+  }
+  
+  .btn-outline {
+    @apply border border-gray-300 hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-800;
+  }
+  
+  .card {
+    @apply bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden;
+  }
+  
+  .input {
+    @apply w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md 
+    bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100
+    focus:outline-none focus:ring-2 focus:ring-primary-500;
+  }
+  
+  .textarea {
+    @apply w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md 
+    bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100
+    focus:outline-none focus:ring-2 focus:ring-primary-500;
+  }
 }

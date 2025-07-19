@@ -45,7 +45,7 @@ interface AppState {
 
 export const useStore = create<AppState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       workflows: [],
       selectedWorkflow: null,
       agents: [],
@@ -57,14 +57,14 @@ export const useStore = create<AppState>()(
         autoSave: true,
         dashboardRefreshInterval: 30, // seconds
       },
-      setWorkflows: (workflows) => set({ workflows }),
-      setSelectedWorkflow: (id) => set({ selectedWorkflow: id }),
-      setAgents: (agents) => set({ agents }),
-      setSelectedAgent: (id) => set({ selectedAgent: id }),
-      setActivities: (activities) => set((state) => ({
+      setWorkflows: (workflows: any[]) => set({ workflows }),
+      setSelectedWorkflow: (id: string | null) => set({ selectedWorkflow: id }),
+      setAgents: (agents: any[]) => set({ agents }),
+      setSelectedAgent: (id: string | null) => set({ selectedAgent: id }),
+      setActivities: (activities: Activity[] | ((prev: Activity[]) => Activity[])) => set((state: any) => ({
         activities: typeof activities === 'function' ? activities(state.activities) : activities
       })),
-      addActivity: (activity) => set((state) => {
+      addActivity: (activity: Omit<Activity, 'id' | 'timestamp'>) => set((state: any) => {
         const newActivity = {
           ...activity,
           id: `activity-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
@@ -79,8 +79,8 @@ export const useStore = create<AppState>()(
           activities: [newActivity, ...state.activities].slice(0, 100) // Keep last 100 activities
         };
       }),
-      updateSettings: (settings) => 
-        set((state) => ({ settings: { ...state.settings, ...settings } })),
+      updateSettings: (settings: Partial<AppState['settings']>) => 
+        set((state: any) => ({ settings: { ...state.settings, ...settings } })),
     }),
     {
       name: 'orchestration-nexus-storage',

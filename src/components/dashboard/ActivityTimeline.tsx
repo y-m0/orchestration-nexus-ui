@@ -1,8 +1,7 @@
-import { Activity, Calendar, Clock, User, CheckCircle2, XCircle, CirclePause, MessageSquare, Settings, FolderOpen } from "lucide-react";
-import { WorkflowRun } from "@/types/workflow";
+import { Activity as ActivityIcon, Calendar, Clock, User, CheckCircle2, XCircle, CirclePause, MessageSquare, Settings, FolderOpen } from "lucide-react";
 import { useWorkflow } from "@/hooks/useWorkflow";
 import { useState, useEffect } from "react";
-import { useStore } from "@/lib/store";
+import { useStore, Activity } from "@/lib/store";
 import { Badge } from "@/components/ui/badge";
 
 export interface TimelineItem {
@@ -46,7 +45,7 @@ export function ActivityTimeline({
     const consoleLog = console.log;
     const activityLogs: TimelineItem[] = [];
     
-    console.log = function(message: any, ...optionalParams: any[]) {
+    console.log = function(message: unknown, ...optionalParams: unknown[]) {
       consoleLog.apply(console, [message, ...optionalParams]);
       
       if (typeof message === 'string' && message.startsWith('Activity Log:')) {
@@ -97,7 +96,7 @@ export function ActivityTimeline({
       .slice()
       .reverse()
       .slice(0, maxItems)
-      .map(run => {
+      .map((run: any) => {
         const status = run.status === 'completed' ? 'success' : 
                       run.status === 'running' ? 'pending' : 'error';
                       
@@ -113,7 +112,7 @@ export function ActivityTimeline({
       });
     
     // Capture store activities
-    const storeActivityItems: TimelineItem[] = activities.slice(0, maxItems).map(activity => {
+    const storeActivityItems: TimelineItem[] = activities.slice(0, maxItems).map((activity: Activity) => {
       const status = 
         activity.type.includes('completed') || activity.type.includes('approved') ? 'success' :
         activity.type.includes('failed') || activity.type.includes('rejected') || activity.type.includes('error') ? 'error' :
@@ -186,7 +185,7 @@ export function ActivityTimeline({
       case 'tool':
         return <Settings className="h-4 w-4" />;
       default:
-        return <Activity className="h-4 w-4" />;
+        return <ActivityIcon className="h-4 w-4" />;
     }
   };
   
@@ -194,7 +193,7 @@ export function ActivityTimeline({
     <div className="bg-card rounded-lg p-6 shadow-sm border border-border dark:bg-[#1A1F2C] dark:border-[#403E43]">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-semibold flex items-center gap-2">
-          <Activity className="h-5 w-5 text-primary dark:text-[#9b87f5]" />
+          <ActivityIcon className="h-5 w-5 text-primary dark:text-[#9b87f5]" />
           <span className="dark:text-foreground">System Activity</span>
         </h2>
         {showFilters && (

@@ -1,5 +1,5 @@
 
-import { Check, XCircle, Clock } from "lucide-react";
+import { XCircle, Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 export interface Approval {

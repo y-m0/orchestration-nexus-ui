@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { ToolCard } from '@/components/tools/ToolCard';
 import { ToolTestModal } from '@/components/tools/ToolTestModal';
 import { ToolConfigModal } from '@/components/tools/ToolConfigModal';
-import { AgentTool, ToolCategory } from '@/types/tool';
+import { AgentTool } from '@/types/tool';
 import { useToolRegistry } from '@/lib/tools/registry';
 import { useToast } from '@/hooks/use-toast';
 

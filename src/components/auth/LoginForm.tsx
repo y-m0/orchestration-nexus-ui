@@ -1,10 +1,8 @@
-
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Lock, User } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
 import { useAuth } from "@/lib/auth";
 import { useNavigate } from "react-router-dom";
 
@@ -17,9 +15,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   credentials,
   setCredentials,
 }) => {
-  const { toast } = useToast();
   const { login, loading, error } = useAuth();
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,13 +59,20 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           </div>
           <Input
             id="password"
-            type="password"
+            type={showPassword ? "text" : "password"}
             placeholder="Enter your password"
             value={credentials.password}
             onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
             className="pl-10 bg-background/60 backdrop-blur-sm border-purple-500/30"
             required
           />
+          <button 
+            type="button"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-xs"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? "Hide" : "Show"}
+          </button>
         </div>
       </div>
 
