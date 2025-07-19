@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Save, Play, PanelLeft, ChevronRight, ChevronDown, Plus, Filter, FileCheck } from "lucide-react";
+import { Play, PanelLeft, ChevronRight, ChevronDown, Plus, Filter, FileCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";

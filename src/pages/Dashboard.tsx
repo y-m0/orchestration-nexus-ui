@@ -1,4 +1,4 @@
-import { Bot, BarChart3, CheckCircle2, AlertCircle, User, FolderOpen, Calendar, Clock } from "lucide-react";
+import { BarChart3, User, FolderOpen, Clock } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AgentStatusCards } from "@/components/dashboard/AgentStatusCards";

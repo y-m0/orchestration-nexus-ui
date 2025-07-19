@@ -1,14 +1,13 @@
 import React from 'react';
-import { useStore } from '../../lib/store';
+import { useStore, Activity } from '../../lib/store';
 import { useWorkflowStore } from '../../lib/workflowStore';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { ScrollArea } from '../ui/scroll-area';
 import {
-  Activity,
+  Activity as ActivityIcon,
   CheckCircle,
   Clock,
-  GitBranch,
   AlertCircle,
   XCircle,
 } from 'lucide-react';
@@ -59,12 +58,14 @@ const StatusCard: React.FC<{
   );
 };
 
-const ActivityItem: React.FC<{
+interface ActivityItemProps {
   type: string;
   status: string;
   details: string;
   timestamp: string;
-}> = ({ type, status, details, timestamp }) => {
+}
+
+const ActivityItem: React.FC<ActivityItemProps> = ({ type, status, details, timestamp }) => {
   const getStatusBadge = () => {
     switch (status) {
       case 'success':
@@ -80,7 +81,7 @@ const ActivityItem: React.FC<{
 
   return (
     <div className="flex items-center gap-4 rounded-lg border p-4">
-      <Activity className="h-5 w-5 text-muted-foreground" />
+      <ActivityIcon className="h-5 w-5 text-muted-foreground" />
       <div className="flex-1 space-y-1">
         <p className="text-sm font-medium leading-none">{type}</p>
         <p className="text-sm text-muted-foreground">{details}</p>
@@ -99,12 +100,12 @@ export const Dashboard: React.FC = () => {
   const { activities } = useStore();
   const { workflows } = useWorkflowStore();
 
-  const activeWorkflows = workflows.filter((w) => w.status === 'active').length;
+  const activeWorkflows = workflows.filter((w: any) => w.status === 'active').length;
   const completedWorkflows = activities.filter(
-    (a) => a.type === 'workflow' && a.status === 'success'
+    (a: Activity) => a.type === 'workflow' && a.status === 'success'
   ).length;
   const failedWorkflows = activities.filter(
-    (a) => a.type === 'workflow' && a.status === 'error'
+    (a: Activity) => a.type === 'workflow' && a.status === 'error'
   ).length;
 
   return (
@@ -139,14 +140,14 @@ export const Dashboard: React.FC = () => {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Activity className="h-5 w-5" />
+            <ActivityIcon className="h-5 w-5" />
             Recent Activity
           </CardTitle>
         </CardHeader>
         <CardContent>
           <ScrollArea className="h-[400px]">
             <div className="space-y-4">
-              {activities.slice(0, 10).map((activity) => (
+              {activities.slice(0, 10).map((activity: Activity) => (
                 <ActivityItem
                   key={activity.id}
                   type={activity.type}

@@ -1,7 +1,6 @@
 
 import { useState, useEffect } from "react";
 import { useWorkflow } from "@/hooks/useWorkflow";
-import { WorkflowRun } from "@/types/workflow";
 
 interface WorkflowActivityLoggerProps {
   onLogActivity?: (logEntry: string) => void;

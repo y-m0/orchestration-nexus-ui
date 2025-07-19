@@ -9,7 +9,6 @@ import {
   ArrowLeft, 
   Plus, 
   Calendar, 
-  CheckCircle, 
   User, 
   Edit, 
   Trash,

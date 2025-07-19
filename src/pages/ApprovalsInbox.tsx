@@ -1,10 +1,10 @@
 
 import { useState, useEffect } from "react";
-import { Search, Filter, CheckCircle, XCircle, Edit, UserCircle } from "lucide-react";
+import { Search, CheckCircle, XCircle, Edit, UserCircle } from "lucide-react";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { WorkflowApprovals } from "@/components/approvals/WorkflowApprovals";
 import { useNavigate } from 'react-router-dom';
 import { useWorkflow } from "@/hooks/useWorkflow";
