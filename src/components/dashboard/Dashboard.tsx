@@ -11,6 +11,10 @@ import {
   AlertCircle,
   XCircle,
 } from 'lucide-react';
+import ClaudeFlowDashboard from './ClaudeFlowDashboard';
+import ClaudeFlowTaskTrigger from './ClaudeFlowTaskTrigger';
+import ClaudeFlowStatus from './ClaudeFlowStatus';
+import ClaudeFlowSecurity from './ClaudeFlowSecurity';
 
 const StatusCard: React.FC<{
   title: string;
@@ -164,6 +168,10 @@ export const Dashboard: React.FC = () => {
           </ScrollArea>
         </CardContent>
       </Card>
+      <ClaudeFlowDashboard />
+      <ClaudeFlowTaskTrigger />
+      <ClaudeFlowStatus />
+      <ClaudeFlowSecurity />
     </div>
   );
 }; 
