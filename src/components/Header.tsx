@@ -15,8 +15,10 @@ const Header = ({ darkMode, toggleDarkMode }: HeaderProps) => {
 
   const navItems = [
     { name: 'Home', path: '/' },
-    { name: 'Summarize', path: '/summarize' },
-    { name: 'About', path: '/about' },
+    { name: 'Dashboard', path: '/dashboard' },
+    { name: 'Projects', path: '/projects' },
+    { name: 'Workflow Builder', path: '/workflow-builder' },
+    { name: 'Tools', path: '/tools' },
   ]
 
   return (
@@ -26,7 +28,7 @@ const Header = ({ darkMode, toggleDarkMode }: HeaderProps) => {
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
               <span className="text-xl font-bold text-primary-600 dark:text-primary-400">
-                DataSummarizer
+                Orchestration Nexus
               </span>
             </Link>
           </div>

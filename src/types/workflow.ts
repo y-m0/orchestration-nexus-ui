@@ -57,8 +57,8 @@ export interface WorkflowRun {
     status: 'idle' | 'running' | 'completed' | 'error';
     startTime: string;
     endTime?: string;
-    input?: any;
-    output?: any;
+    input?: Record<string, unknown>;
+    output?: Record<string, unknown>;
     error?: string;
   }[];
 }

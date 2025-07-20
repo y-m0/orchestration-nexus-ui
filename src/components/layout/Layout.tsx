@@ -61,14 +61,14 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             <SidebarItem
               icon={<LayoutDashboard className="h-4 w-4" />}
               label="Dashboard"
-              href="/"
-              isActive={isActive('/')}
+              href="/dashboard"
+              isActive={isActive('/dashboard')}
             />
             <SidebarItem
               icon={<GitBranch className="h-4 w-4" />}
-              label="Workflows"
-              href="/workflows"
-              isActive={isActive('/workflows')}
+              label="Workflow Builder"
+              href="/workflow-builder"
+              isActive={isActive('/workflow-builder')}
             />
             <SidebarItem
               icon={<Activity className="h-4 w-4" />}
@@ -78,15 +78,15 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             />
             <SidebarItem
               icon={<Database className="h-4 w-4" />}
-              label="Data Connections"
-              href="/settings/data-connections"
-              isActive={isActive('/settings/data-connections')}
+              label="Projects"
+              href="/projects"
+              isActive={isActive('/projects')}
             />
             <SidebarItem
               icon={<Users className="h-4 w-4" />}
-              label="Team"
-              href="/team"
-              isActive={isActive('/team')}
+              label="Tools"
+              href="/tools"
+              isActive={isActive('/tools')}
             />
             <SidebarItem
               icon={<Settings className="h-4 w-4" />}

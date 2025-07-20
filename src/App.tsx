@@ -1,109 +1,135 @@
-import React from 'react';
+import { lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from '@/lib/auth/AuthContext';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import { Toaster } from '@/components/ui/toaster';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { LazyWrapper } from '@/components/LazyWrapper';
 
-// Landing and Auth Pages
-import Index from '@/pages/Index';
+// Landing and Auth Pages (keep these non-lazy for fast initial load)
+import SimpleIndex from '@/pages/SimpleIndex';
 import Login from '@/pages/Login';
-import Onboarding from '@/pages/Onboarding';
 
-// Main App Pages
-import Dashboard from '@/pages/Dashboard';
-import Projects from '@/pages/Projects';
-import ProjectDetail from '@/pages/ProjectDetail';
-import WorkflowBuilder from '@/pages/WorkflowBuilder';
-import Tools from '@/pages/Tools';
-import Settings from '@/pages/Settings';
-import ActivityLog from '@/pages/ActivityLog';
-import AgentDirectory from '@/pages/AgentDirectory';
-import ApprovalsInbox from '@/pages/ApprovalsInbox';
-
-// Simple Pages (fallback)
-import NotFound from '@/pages/NotFound';
+// Lazy load heavy components for code splitting
+const Onboarding = lazy(() => import('@/pages/Onboarding'));
+const Dashboard = lazy(() => import('@/pages/Dashboard'));
+const Projects = lazy(() => import('@/pages/Projects'));
+const ProjectDetail = lazy(() => import('@/pages/ProjectDetail'));
+const WorkflowBuilder = lazy(() => import('@/pages/WorkflowBuilder'));
+const Tools = lazy(() => import('@/pages/Tools'));
+const Settings = lazy(() => import('@/pages/Settings'));
+const ActivityLog = lazy(() => import('@/pages/ActivityLog'));
+const AgentDirectory = lazy(() => import('@/pages/AgentDirectory'));
+const ApprovalsInbox = lazy(() => import('@/pages/ApprovalsInbox'));
+const NotFound = lazy(() => import('@/pages/NotFound'));
 
 function App() {
   return (
-    <ThemeProvider defaultTheme="system" storageKey="orchestration-ui-theme">
-      <AuthProvider>
+    <ErrorBoundary>
+      <ThemeProvider defaultTheme="system" storageKey="orchestration-ui-theme">
+        <AuthProvider>
         <Router>
           <div className="min-h-screen bg-background text-foreground">
             <Routes>
               {/* Public Routes */}
-              <Route path="/" element={<Index />} />
+              <Route path="/" element={<SimpleIndex />} />
               <Route path="/login" element={<Login />} />
               
               {/* Protected Routes */}
               <Route path="/onboarding" element={
                 <ProtectedRoute>
-                  <Onboarding />
+                  <LazyWrapper>
+                    <Onboarding />
+                  </LazyWrapper>
                 </ProtectedRoute>
               } />
               
               <Route path="/dashboard" element={
                 <ProtectedRoute>
-                  <Dashboard />
+                  <LazyWrapper>
+                    <Dashboard />
+                  </LazyWrapper>
                 </ProtectedRoute>
               } />
               
               <Route path="/projects" element={
                 <ProtectedRoute>
-                  <Projects />
+                  <LazyWrapper>
+                    <Projects />
+                  </LazyWrapper>
                 </ProtectedRoute>
               } />
               
               <Route path="/projects/:id" element={
                 <ProtectedRoute>
-                  <ProjectDetail />
+                  <LazyWrapper>
+                    <ProjectDetail />
+                  </LazyWrapper>
                 </ProtectedRoute>
               } />
               
               <Route path="/workflow-builder" element={
                 <ProtectedRoute>
-                  <WorkflowBuilder />
+                  <LazyWrapper>
+                    <WorkflowBuilder />
+                  </LazyWrapper>
                 </ProtectedRoute>
               } />
               
               <Route path="/tools" element={
                 <ProtectedRoute>
-                  <Tools />
+                  <LazyWrapper>
+                    <Tools />
+                  </LazyWrapper>
                 </ProtectedRoute>
               } />
               
               <Route path="/activity" element={
                 <ProtectedRoute>
-                  <ActivityLog />
+                  <LazyWrapper>
+                    <ActivityLog />
+                  </LazyWrapper>
                 </ProtectedRoute>
               } />
               
               <Route path="/agents" element={
                 <ProtectedRoute>
-                  <AgentDirectory />
+                  <LazyWrapper>
+                    <AgentDirectory />
+                  </LazyWrapper>
                 </ProtectedRoute>
               } />
               
               <Route path="/approvals" element={
                 <ProtectedRoute>
-                  <ApprovalsInbox />
+                  <LazyWrapper>
+                    <ApprovalsInbox />
+                  </LazyWrapper>
                 </ProtectedRoute>
               } />
               
               <Route path="/settings" element={
                 <ProtectedRoute>
-                  <Settings />
+                  <LazyWrapper>
+                    <Settings />
+                  </LazyWrapper>
                 </ProtectedRoute>
               } />
               
               {/* Catch all route */}
-              <Route path="*" element={<NotFound />} />
+              <Route path="*" element={
+                <LazyWrapper>
+                  <NotFound />
+                </LazyWrapper>
+              } />
             </Routes>
             <Toaster />
           </div>
         </Router>
-      </AuthProvider>
-    </ThemeProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 }
 

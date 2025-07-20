@@ -7,8 +7,8 @@ export interface AgentTool {
   category: ToolCategory;
   enabled: boolean;
   requiresConfig: boolean;
-  configSchema?: Record<string, any>;
-  run: (input: string, context?: any) => Promise<ToolResult>;
+  configSchema?: Record<string, unknown>;
+  run: (input: string, context?: Record<string, unknown>) => Promise<ToolResult>;
 }
 
 export type ToolCategory = 'search' | 'data' | 'communication' | 'analysis' | 'utility';
@@ -16,7 +16,7 @@ export type ToolCategory = 'search' | 'data' | 'communication' | 'analysis' | 'u
 export interface ToolResult {
   success: boolean;
   result: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   error?: string;
 }
 
@@ -27,5 +27,5 @@ export interface ToolRegistry {
   registerTool: (tool: AgentTool) => void;
   enableTool: (id: string) => void;
   disableTool: (id: string) => void;
-  configureToolSettings: (id: string, settings: Record<string, any>) => void;
+  configureToolSettings: (id: string, settings: Record<string, unknown>) => void;
 }

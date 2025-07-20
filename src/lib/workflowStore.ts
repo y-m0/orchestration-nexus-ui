@@ -167,7 +167,7 @@ interface WorkflowState {
 
 export const useWorkflowStore = create<WorkflowState>()(
   persist(
-    (set: any) => ({
+    (set, get) => ({
       workflows: [],
       selectedWorkflow: null,
       llmNodes: [],
@@ -235,7 +235,7 @@ export const useWorkflowStore = create<WorkflowState>()(
         dataConnections: {
           ...state.dataConnections,
           [type]: state.dataConnections[type].filter(
-            (connection: any) => connection.id !== id
+            (connection: PostgreSQLConnection | S3Connection | PineconeConnection) => connection.id !== id
           ),
         },
       })),

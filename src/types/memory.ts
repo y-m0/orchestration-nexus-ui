@@ -16,7 +16,7 @@ export interface MemoryMetadata {
   type: 'workflow' | 'agent' | 'system' | 'user';
   importance?: number;
   timestamp: number;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface SearchResult {
