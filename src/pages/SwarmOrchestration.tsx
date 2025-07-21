@@ -38,10 +38,13 @@ interface SwarmMetrics {
 
 export default function SwarmOrchestration() {
   const [swarmStatus, setSwarmStatus] = useState<any>(null);
+  const [swarmError, setSwarmError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [taskInput, setTaskInput] = useState("");
   const [orchestrationResult, setOrchestrationResult] = useState<any>(null);
+  const [orchestrationError, setOrchestrationError] = useState<string | null>(null);
   const [securityResults, setSecurityResults] = useState<any>(null);
+  const [securityError, setSecurityError] = useState<string | null>(null);
   
   // Mock swarm data
   const [swarmAgents] = useState<SwarmAgent[]>([
@@ -71,19 +74,23 @@ export default function SwarmOrchestration() {
 
   const fetchSwarmStatus = async () => {
     try {
+      setSwarmError(null);
       const status = await getWorkflowStatus();
       setSwarmStatus(status);
     } catch (error) {
       console.error("Failed to fetch swarm status:", error);
+      setSwarmError(error instanceof Error ? error.message : 'Unknown error occurred');
     }
   };
 
   const fetchSecurityAnalysis = async () => {
     try {
+      setSecurityError(null);
       const results = await getSecurityAnalysis();
       setSecurityResults(results);
     } catch (error) {
       console.error("Failed to fetch security analysis:", error);
+      setSecurityError(error instanceof Error ? error.message : 'Unknown error occurred');
     }
   };
 
@@ -91,6 +98,7 @@ export default function SwarmOrchestration() {
     if (!taskInput.trim()) return;
     
     setIsLoading(true);
+    setOrchestrationError(null);
     try {
       const result = await triggerOrchestration(taskInput);
       setOrchestrationResult(result);
@@ -100,6 +108,7 @@ export default function SwarmOrchestration() {
       setTimeout(fetchSwarmStatus, 1000);
     } catch (error) {
       console.error("Failed to trigger orchestration:", error);
+      setOrchestrationError(error instanceof Error ? error.message : 'Unknown error occurred');
     } finally {
       setIsLoading(false);
     }
@@ -231,6 +240,13 @@ export default function SwarmOrchestration() {
               </pre>
             </div>
           )}
+          
+          {orchestrationError && (
+            <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md">
+              <h4 className="font-medium text-red-800 dark:text-red-200 mb-2">Orchestration Error</h4>
+              <p className="text-sm text-red-700 dark:text-red-300">{orchestrationError}</p>
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -280,7 +296,20 @@ export default function SwarmOrchestration() {
               <CardTitle>Claude Flow Workflow Status</CardTitle>
             </CardHeader>
             <CardContent>
-              {swarmStatus ? (
+              {swarmError ? (
+                <div className="text-center py-8">
+                  <AlertCircle className="h-12 w-12 mx-auto mb-4 text-red-500" />
+                  <p className="text-red-600 dark:text-red-400 font-medium mb-2">Connection Error</p>
+                  <p className="text-sm text-muted-foreground">{swarmError}</p>
+                  <Button 
+                    variant="outline" 
+                    onClick={fetchSwarmStatus}
+                    className="mt-4"
+                  >
+                    Retry Connection
+                  </Button>
+                </div>
+              ) : swarmStatus ? (
                 <pre className="bg-muted p-4 rounded-md text-sm overflow-auto">
                   {JSON.stringify(swarmStatus, null, 2)}
                 </pre>
@@ -301,7 +330,20 @@ export default function SwarmOrchestration() {
               <CardTitle>Security & Compliance Analysis</CardTitle>
             </CardHeader>
             <CardContent>
-              {securityResults ? (
+              {securityError ? (
+                <div className="text-center py-8">
+                  <AlertCircle className="h-12 w-12 mx-auto mb-4 text-red-500" />
+                  <p className="text-red-600 dark:text-red-400 font-medium mb-2">Connection Error</p>
+                  <p className="text-sm text-muted-foreground">{securityError}</p>
+                  <Button 
+                    variant="outline" 
+                    onClick={fetchSecurityAnalysis}
+                    className="mt-4"
+                  >
+                    Retry Connection
+                  </Button>
+                </div>
+              ) : securityResults ? (
                 <pre className="bg-muted p-4 rounded-md text-sm overflow-auto">
                   {JSON.stringify(securityResults, null, 2)}
                 </pre>
