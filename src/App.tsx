@@ -1,6 +1,7 @@
 import { lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from '@/lib/auth/AuthContext';
+import { MemoryProvider } from '@/lib/memory/MemoryContext';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import { Toaster } from '@/components/ui/toaster';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
@@ -29,104 +30,106 @@ function App() {
     <ErrorBoundary>
       <ThemeProvider defaultTheme="system" storageKey="orchestration-ui-theme">
         <AuthProvider>
-        <Router>
-          <div className="min-h-screen bg-background text-foreground">
-            <Routes>
-              {/* Public Routes */}
-              <Route path="/" element={<SimpleIndex />} />
-              <Route path="/login" element={<Login />} />
-              
-              {/* Protected Routes */}
-              <Route path="/onboarding" element={
-                <ProtectedRoute>
-                  <LazyWrapper>
-                    <Onboarding />
-                  </LazyWrapper>
-                </ProtectedRoute>
-              } />
-              
-              <Route path="/dashboard" element={
-                <ProtectedRoute>
-                  <LazyWrapper>
-                    <Dashboard />
-                  </LazyWrapper>
-                </ProtectedRoute>
-              } />
-              
-              <Route path="/projects" element={
-                <ProtectedRoute>
-                  <LazyWrapper>
-                    <Projects />
-                  </LazyWrapper>
-                </ProtectedRoute>
-              } />
-              
-              <Route path="/projects/:id" element={
-                <ProtectedRoute>
-                  <LazyWrapper>
-                    <ProjectDetail />
-                  </LazyWrapper>
-                </ProtectedRoute>
-              } />
-              
-              <Route path="/workflow-builder" element={
-                <ProtectedRoute>
-                  <LazyWrapper>
-                    <WorkflowBuilder />
-                  </LazyWrapper>
-                </ProtectedRoute>
-              } />
-              
-              <Route path="/tools" element={
-                <ProtectedRoute>
-                  <LazyWrapper>
-                    <Tools />
-                  </LazyWrapper>
-                </ProtectedRoute>
-              } />
-              
-              <Route path="/activity" element={
-                <ProtectedRoute>
-                  <LazyWrapper>
-                    <ActivityLog />
-                  </LazyWrapper>
-                </ProtectedRoute>
-              } />
-              
-              <Route path="/agents" element={
-                <ProtectedRoute>
-                  <LazyWrapper>
-                    <AgentDirectory />
-                  </LazyWrapper>
-                </ProtectedRoute>
-              } />
-              
-              <Route path="/approvals" element={
-                <ProtectedRoute>
-                  <LazyWrapper>
-                    <ApprovalsInbox />
-                  </LazyWrapper>
-                </ProtectedRoute>
-              } />
-              
-              <Route path="/settings" element={
-                <ProtectedRoute>
-                  <LazyWrapper>
-                    <Settings />
-                  </LazyWrapper>
-                </ProtectedRoute>
-              } />
-              
-              {/* Catch all route */}
-              <Route path="*" element={
-                <LazyWrapper>
-                  <NotFound />
-                </LazyWrapper>
-              } />
-            </Routes>
-            <Toaster />
-          </div>
-        </Router>
+          <MemoryProvider>
+            <Router>
+              <div className="min-h-screen bg-background text-foreground">
+                <Routes>
+                  {/* Public Routes */}
+                  <Route path="/" element={<SimpleIndex />} />
+                  <Route path="/login" element={<Login />} />
+                  
+                  {/* Protected Routes */}
+                  <Route path="/onboarding" element={
+                    <ProtectedRoute>
+                      <LazyWrapper>
+                        <Onboarding />
+                      </LazyWrapper>
+                    </ProtectedRoute>
+                  } />
+                  
+                  <Route path="/dashboard" element={
+                    <ProtectedRoute>
+                      <LazyWrapper>
+                        <Dashboard />
+                      </LazyWrapper>
+                    </ProtectedRoute>
+                  } />
+                  
+                  <Route path="/projects" element={
+                    <ProtectedRoute>
+                      <LazyWrapper>
+                        <Projects />
+                      </LazyWrapper>
+                    </ProtectedRoute>
+                  } />
+                  
+                  <Route path="/projects/:id" element={
+                    <ProtectedRoute>
+                      <LazyWrapper>
+                        <ProjectDetail />
+                      </LazyWrapper>
+                    </ProtectedRoute>
+                  } />
+                  
+                  <Route path="/workflow-builder" element={
+                    <ProtectedRoute>
+                      <LazyWrapper>
+                        <WorkflowBuilder />
+                      </LazyWrapper>
+                    </ProtectedRoute>
+                  } />
+                  
+                  <Route path="/tools" element={
+                    <ProtectedRoute>
+                      <LazyWrapper>
+                        <Tools />
+                      </LazyWrapper>
+                    </ProtectedRoute>
+                  } />
+                  
+                  <Route path="/activity" element={
+                    <ProtectedRoute>
+                      <LazyWrapper>
+                        <ActivityLog />
+                      </LazyWrapper>
+                    </ProtectedRoute>
+                  } />
+                  
+                  <Route path="/agents" element={
+                    <ProtectedRoute>
+                      <LazyWrapper>
+                        <AgentDirectory />
+                      </LazyWrapper>
+                    </ProtectedRoute>
+                  } />
+                  
+                  <Route path="/approvals" element={
+                    <ProtectedRoute>
+                      <LazyWrapper>
+                        <ApprovalsInbox />
+                      </LazyWrapper>
+                    </ProtectedRoute>
+                  } />
+                  
+                  <Route path="/settings" element={
+                    <ProtectedRoute>
+                      <LazyWrapper>
+                        <Settings />
+                      </LazyWrapper>
+                    </ProtectedRoute>
+                  } />
+                  
+                  {/* Catch all route */}
+                  <Route path="*" element={
+                    <LazyWrapper>
+                      <NotFound />
+                    </LazyWrapper>
+                  } />
+                </Routes>
+                <Toaster />
+              </div>
+            </Router>
+          </MemoryProvider>
         </AuthProvider>
       </ThemeProvider>
     </ErrorBoundary>
