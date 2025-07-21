@@ -7,6 +7,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { LazyWrapper } from '@/components/LazyWrapper';
+import { MainLayout } from '@/components/layout/MainLayout';
 
 // Landing and Auth Pages (keep these non-lazy for fast initial load)
 import SimpleIndex from '@/pages/SimpleIndex';
@@ -49,81 +50,101 @@ function App() {
                   
                   <Route path="/dashboard" element={
                     <ProtectedRoute>
-                      <LazyWrapper>
-                        <Dashboard />
-                      </LazyWrapper>
+                      <MainLayout>
+                        <LazyWrapper>
+                          <Dashboard />
+                        </LazyWrapper>
+                      </MainLayout>
                     </ProtectedRoute>
                   } />
                   
                   <Route path="/projects" element={
                     <ProtectedRoute>
-                      <LazyWrapper>
-                        <Projects />
-                      </LazyWrapper>
+                      <MainLayout>
+                        <LazyWrapper>
+                          <Projects />
+                        </LazyWrapper>
+                      </MainLayout>
                     </ProtectedRoute>
                   } />
                   
                   <Route path="/projects/:id" element={
                     <ProtectedRoute>
-                      <LazyWrapper>
-                        <ProjectDetail />
-                      </LazyWrapper>
+                      <MainLayout>
+                        <LazyWrapper>
+                          <ProjectDetail />
+                        </LazyWrapper>
+                      </MainLayout>
                     </ProtectedRoute>
                   } />
                   
                   <Route path="/workflow-builder" element={
                     <ProtectedRoute>
-                      <LazyWrapper>
-                        <WorkflowBuilder />
-                      </LazyWrapper>
+                      <MainLayout>
+                        <LazyWrapper>
+                          <WorkflowBuilder />
+                        </LazyWrapper>
+                      </MainLayout>
                     </ProtectedRoute>
                   } />
                   
                   <Route path="/tools" element={
                     <ProtectedRoute>
-                      <LazyWrapper>
-                        <Tools />
-                      </LazyWrapper>
+                      <MainLayout>
+                        <LazyWrapper>
+                          <Tools />
+                        </LazyWrapper>
+                      </MainLayout>
                     </ProtectedRoute>
                   } />
                   
                   <Route path="/activity" element={
                     <ProtectedRoute>
-                      <LazyWrapper>
-                        <ActivityLog />
-                      </LazyWrapper>
+                      <MainLayout>
+                        <LazyWrapper>
+                          <ActivityLog />
+                        </LazyWrapper>
+                      </MainLayout>
                     </ProtectedRoute>
                   } />
                   
                   <Route path="/agents" element={
                     <ProtectedRoute>
-                      <LazyWrapper>
-                        <AgentDirectory />
-                      </LazyWrapper>
+                      <MainLayout>
+                        <LazyWrapper>
+                          <AgentDirectory />
+                        </LazyWrapper>
+                      </MainLayout>
                     </ProtectedRoute>
                   } />
                   
                   <Route path="/approvals" element={
                     <ProtectedRoute>
-                      <LazyWrapper>
-                        <ApprovalsInbox />
-                      </LazyWrapper>
+                      <MainLayout>
+                        <LazyWrapper>
+                          <ApprovalsInbox />
+                        </LazyWrapper>
+                      </MainLayout>
                     </ProtectedRoute>
                   } />
                   
                   <Route path="/settings" element={
                     <ProtectedRoute>
-                      <LazyWrapper>
-                        <Settings />
-                      </LazyWrapper>
+                      <MainLayout>
+                        <LazyWrapper>
+                          <Settings />
+                        </LazyWrapper>
+                      </MainLayout>
                     </ProtectedRoute>
                   } />
                   
                   {/* Catch all route */}
                   <Route path="*" element={
-                    <LazyWrapper>
-                      <NotFound />
-                    </LazyWrapper>
+                    <MainLayout>
+                      <LazyWrapper>
+                        <NotFound />
+                      </LazyWrapper>
+                    </MainLayout>
                   } />
                 </Routes>
                 <Toaster />
