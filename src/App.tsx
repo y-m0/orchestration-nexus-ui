@@ -19,6 +19,7 @@ const Dashboard = lazy(() => import('@/pages/Dashboard'));
 const Projects = lazy(() => import('@/pages/Projects'));
 const ProjectDetail = lazy(() => import('@/pages/ProjectDetail'));
 const WorkflowBuilder = lazy(() => import('@/pages/WorkflowBuilder'));
+const SwarmOrchestration = lazy(() => import('@/pages/SwarmOrchestration'));
 const Tools = lazy(() => import('@/pages/Tools'));
 const Settings = lazy(() => import('@/pages/Settings'));
 const ActivityLog = lazy(() => import('@/pages/ActivityLog'));
@@ -83,6 +84,16 @@ function App() {
                       <MainLayout>
                         <LazyWrapper>
                           <WorkflowBuilder />
+                        </LazyWrapper>
+                      </MainLayout>
+                    </ProtectedRoute>
+                  } />
+                  
+                  <Route path="/swarm" element={
+                    <ProtectedRoute>
+                      <MainLayout>
+                        <LazyWrapper>
+                          <SwarmOrchestration />
                         </LazyWrapper>
                       </MainLayout>
                     </ProtectedRoute>
